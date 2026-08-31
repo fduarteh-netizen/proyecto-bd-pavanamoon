@@ -1,0 +1,41 @@
+<%- include('../partials/header') %>
+
+<h1><%= cliente && cliente.cliente_id ? 'Editar cliente' : 'Nuevo cliente' %></h1>
+
+<% if (errores && errores.length) { %>
+  <div class="alert alert-error">
+    <ul>
+      <% errores.forEach(function(e) { %><li><%= e %></li><% }); %>
+    </ul>
+  </div>
+<% } %>
+
+<form
+  action="<%= cliente && cliente.cliente_id ? '/clientes/' + cliente.cliente_id + '?_method=PUT' : '/clientes' %>"
+  method="POST" class="form">
+
+  <label for="tipo_cliente_id">Tipo de cliente</label>
+  <select id="tipo_cliente_id" name="tipo_cliente_id" required>
+    <option value="">-- Selecciona --</option>
+    <% tiposCliente.forEach(function(t) { %>
+      <option value="<%= t.tipo_cliente_id %>" <%= cliente && Number(cliente.tipo_cliente_id) === t.tipo_cliente_id ? 'selected' : '' %>>
+        <%= t.nombre %>
+      </option>
+    <% }); %>
+  </select>
+
+  <label for="nombre_cliente">Nombre del cliente</label>
+  <input type="text" id="nombre_cliente" name="nombre_cliente" maxlength="150" required
+         value="<%= cliente ? cliente.nombre_cliente : '' %>" />
+
+  <label for="nit">NIT</label>
+  <input type="text" id="nit" name="nit" maxlength="15" required value="<%= cliente ? cliente.nit : '' %>" />
+
+  <label for="telefono">Teléfono</label>
+  <input type="text" id="telefono" name="telefono" maxlength="20" value="<%= cliente ? (cliente.telefono || '') : '' %>" />
+
+  <button type="submit" class="btn btn-primary"><%= cliente && cliente.cliente_id ? 'Guardar cambios' : 'Crear cliente' %></button>
+  <a href="/clientes" class="btn-link">Cancelar</a>
+</form>
+
+<%- include('../partials/footer') %>

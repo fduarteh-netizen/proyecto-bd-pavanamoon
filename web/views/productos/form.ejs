@@ -1,0 +1,45 @@
+<%- include('../partials/header') %>
+
+<h1><%= producto ? 'Editar producto' : 'Nuevo producto' %></h1>
+
+<% if (errores && errores.length) { %>
+  <div class="alert alert-error">
+    <ul>
+      <% errores.forEach(function(e) { %><li><%= e %></li><% }); %>
+    </ul>
+  </div>
+<% } %>
+
+<form
+  action="<%= producto && producto.producto_id ? '/productos/' + producto.producto_id + '?_method=PUT' : '/productos' %>"
+  method="POST" class="form">
+
+  <label for="categoria_id">Categoría</label>
+  <select id="categoria_id" name="categoria_id" required>
+    <option value="">-- Selecciona --</option>
+    <% categorias.forEach(function(c) { %>
+      <option value="<%= c.categoria_id %>" <%= producto && Number(producto.categoria_id) === c.categoria_id ? 'selected' : '' %>>
+        <%= c.nombre_categoria %>
+      </option>
+    <% }); %>
+  </select>
+
+  <label for="modelo">Modelo</label>
+  <input type="text" id="modelo" name="modelo" maxlength="100" required value="<%= producto ? producto.modelo : '' %>" />
+
+  <label for="tipo_suela">Tipo de suela</label>
+  <select id="tipo_suela" name="tipo_suela" required>
+    <% ['hule','flex','tpu'].forEach(function(s) { %>
+      <option value="<%= s %>" <%= producto && producto.tipo_suela === s ? 'selected' : '' %>><%= s %></option>
+    <% }); %>
+  </select>
+
+  <label for="precio_venta">Precio de venta (Q)</label>
+  <input type="number" id="precio_venta" name="precio_venta" step="0.01" min="0.01" required
+         value="<%= producto ? producto.precio_venta : '' %>" />
+
+  <button type="submit" class="btn btn-primary"><%= producto ? 'Guardar cambios' : 'Crear producto' %></button>
+  <a href="/productos" class="btn-link">Cancelar</a>
+</form>
+
+<%- include('../partials/footer') %>

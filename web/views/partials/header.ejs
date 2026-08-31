@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pavanamoon</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <% if (typeof usuarioActual !== 'undefined' && usuarioActual) { %>
+  <header class="navbar">
+    <div class="navbar-brand">
+      <a href="/">Pavanamoon</a>
+      <span class="badge">Entrega 2 · 30%</span>
+    </div>
+    <nav class="navbar-links">
+      <a href="/productos">Productos</a>
+      <a href="/clientes">Clientes</a>
+    </nav>
+    <div class="navbar-user">
+      <span><%= usuarioActual.nombre_completo %> · <em><%= usuarioActual.rol %></em></span>
+      <form action="/logout" method="POST" style="display:inline">
+        <button type="submit" class="btn-link">Cerrar sesión</button>
+      </form>
+    </div>
+  </header>
+  <% } %>
+  <main class="container">

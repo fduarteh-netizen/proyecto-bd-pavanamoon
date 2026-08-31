@@ -1,0 +1,22 @@
+<%- include('partials/header') %>
+
+<h1>Bienvenido, <%= usuarioActual.nombre_completo %></h1>
+<p>Rol: <strong><%= usuarioActual.rol %></strong></p>
+
+<div class="card-grid">
+  <a class="card" href="/productos">
+    <h2>Productos</h2>
+    <p>Alta, edición, listado y eliminación de productos del catálogo.</p>
+  </a>
+  <a class="card" href="/clientes">
+    <h2>Clientes</h2>
+    <p>Alta, edición, listado y eliminación de clientes (detalle y mayoreo).</p>
+  </a>
+</div>
+
+<p class="note">
+  Módulos de Compras, Pedidos y Movimientos de Stock se incorporan en la Entrega 3
+  (ver <code>docs/entrega-2/AVANCE_WEB.md</code>).
+</p>
+
+<%- include('partials/footer') %>
