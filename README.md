@@ -31,7 +31,7 @@ pavanamoon/
 │   └── casos-prueba/
 ├── sql/
 │   └── ddl/ dml/ views/ triggers/ procedures/ security/
-└── web/                # Aplicación web (desde Entrega 2)
+└── web/                # Aplicación web (Node.js + Express + EJS, desde Entrega 2)
 ```
 
 ## Estado del proyecto
@@ -39,9 +39,18 @@ pavanamoon/
 | Entrega | Estado | Tag |
 |---|---|---|
 | Entrega 1 — Análisis y diseño conceptual | ✅ Completada | `entrega-1` |
-| Entrega 2 — Diseño lógico e implementación base | ⏳ Pendiente | `entrega-2` |
+| Entrega 2 — Diseño lógico e implementación base | 🔶 Validado (DDL ejecutado y app probada contra MySQL real); pendiente que el equipo firme la certificación y haga el tag | `entrega-2` |
 | Entrega 3 — Implementación avanzada y seguridad | ⏳ Pendiente | `entrega-3` |
 | Entrega 4 — Integración y defensa oral | ⏳ Pendiente | `entrega-4` |
+
+> **Nota de corrección (Entrega 2):** se detectó que el texto de
+> `docs/entrega-1/ENTREGA1_PROPUESTA.md` no reflejaba el diagrama ER final aprobado en
+> la Entrada 7 de la bitácora de IA (que reemplazó `PROVEEDOR`/`COMPRA` por
+> `FURGON`/`INGRESO_MERCADERIA`). La Entrega 2 usa el diagrama corregido como fuente
+> de verdad; también se corrigió una duplicación del precio de venta que existía
+> entre `PRODUCTO` y `PRESENTACION_VENTA` (el precio vive ahora una sola vez en
+> `PRODUCTO`). El detalle completo de ambas correcciones está en
+> `docs/entrega-2/ENTREGA2_DISENO_LOGICO.md`, Sección 1.
 
 ## Modelo de negocio (resumen)
 
@@ -49,16 +58,19 @@ Pavanamoon es marca propia de calzado deportivo especializado en fútbol, con mo
 
 ## Instalación
 
-Ver [`INSTALL.md`](./INSTALL.md). Los scripts DDL ejecutables se agregan a partir de la Entrega 2 (`sql/ddl/`); hasta entonces este archivo documenta únicamente los requisitos previos (MySQL 8.x, motor InnoDB, variables de entorno en `.env.example`).
+Ver [`INSTALL.md`](./INSTALL.md): scripts DDL ejecutables (`sql/ddl/`), datos semilla y pasos para levantar la aplicación web localmente.
 
 ## Documentación
 
-- Propuesta y diseño conceptual: [`docs/entrega-1/Entrega1_propuesta.md`](./docs/entrega-1/Entrega1_propuesta.md)
-- Diagrama ER (Chen, editable + PNG/PDF): [`docs/diagramas/`](./docs/diagramas/)
-- Bitácora de uso de IA: [`docs/bitacora-ia/Bitacora_ia.md`](./docs/bitacora-ia/Bitacora_ia.md)
+- Propuesta y diseño conceptual (Entrega 1): [`docs/entrega-1/ENTREGA1_PROPUESTA.md`](./docs/entrega-1/ENTREGA1_PROPUESTA.md)
+- Diseño lógico, 3FN y diccionario de datos (Entrega 2): [`docs/entrega-2/ENTREGA2_DISENO_LOGICO.md`](./docs/entrega-2/ENTREGA2_DISENO_LOGICO.md)
+- Avance de la aplicación web (Entrega 2): [`docs/entrega-2/AVANCE_WEB.md`](./docs/entrega-2/AVANCE_WEB.md)
+- Diagrama ER (Chen) y modelo relacional (MySQL Workbench), cada uno editable + PNG/PDF — **fuente de verdad del modelo de datos**: [`docs/diagramas/`](./docs/diagramas/)
+- Bitácora de uso de IA: [`docs/bitacora-ia/BITACORA_IA.md`](./docs/bitacora-ia/BITACORA_IA.md)
 - Certificaciones de calidad por entrega: [`docs/certificaciones/`](./docs/certificaciones/)
+- Casos de prueba y evidencia real de ejecución (SQL + app web): [`docs/casos-prueba/CASOS_PRUEBA.md`](./docs/casos-prueba/CASOS_PRUEBA.md)
 
 ## Enlaces
 
 - Repositorio: https://github.com/fduarteh-netizen/proyecto-bd-pavanamoon
-- Aplicación desplegada: _(se agregará desde Entrega 2)_
+- Aplicación desplegada: _(pendiente; ver estándar S5, se agrega antes de Entrega 4)_

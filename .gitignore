@@ -1,20 +1,23 @@
-# Entorno y credenciales
-.env
-*.env
-!.env.example
-
 # Dependencias
 node_modules/
-vendor/
-__pycache__/
-*.pyc
+web/node_modules/
 
-# Binarios / temporales
+# Variables de entorno reales (NUNCA subir credenciales)
+.env
+web/.env
+*.env
+!.env.example
+!web/.env.example
+
+# Logs
+npm-debug.log*
 *.log
-*.tmp
+
+# Sistema operativo / editores
 .DS_Store
 Thumbs.db
-
-# Editor
 .vscode/
 .idea/
+
+# Archivos temporales de MySQL Workbench
+*.mwb.bak

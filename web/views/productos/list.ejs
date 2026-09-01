@@ -1,0 +1,42 @@
+<%- include('../partials/header') %>
+
+<div class="page-heading">
+  <h1>Productos</h1>
+  <a class="btn btn-primary" href="/productos/nuevo">+ Nuevo producto</a>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Modelo</th>
+      <th>Categoría</th>
+      <th>Suela</th>
+      <th>Precio</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (productos.length === 0) { %>
+      <tr><td colspan="6">No hay productos registrados todavía.</td></tr>
+    <% } %>
+    <% productos.forEach(function(p) { %>
+      <tr>
+        <td><%= p.producto_id %></td>
+        <td><%= p.modelo %></td>
+        <td><%= p.nombre_categoria %></td>
+        <td><%= p.tipo_suela %></td>
+        <td>Q<%= Number(p.precio_venta).toFixed(2) %></td>
+        <td class="actions">
+          <a href="/productos/<%= p.producto_id %>/editar">Editar</a>
+          <form action="/productos/<%= p.producto_id %>?_method=DELETE" method="POST"
+                onsubmit="return confirm('¿Eliminar este producto?');" style="display:inline">
+            <button type="submit" class="btn-link btn-danger">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>
+
+<%- include('../partials/footer') %>
