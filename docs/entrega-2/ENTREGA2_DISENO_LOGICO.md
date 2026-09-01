@@ -56,7 +56,10 @@ ajusta dos cardinalidades. Esta es la versión que se usa como fuente de verdad 
 | 4 | `VARIANTE_PRODUCTO.sku` | Marcado como atributo derivado (línea punteada) | Marcado como llave candidata (subrayado) | Se mantiene como `UNIQUE`, generado por la aplicación (no por SQL); se ajustó la redacción para no llamarlo "derivado" |
 | 5 | Relación `ROL`–`USUARIO` ("tiene") | `ROL(1,1)` – `USUARIO(0,N)` | `ROL(1,N)` – `USUARIO(1,1)` | Corrige la dirección de la relación (cada usuario tiene exactamente un rol); ya coincidía con la implementación (`usuario.rol_id NOT NULL`), sin cambios en el DDL |
 | 6 | Nombres de relaciones | Dos relaciones distintas compartían el nombre `corresponde_a` | Renombradas a `corresponde_a_ingreso` y `corresponde_a_pedido` | Solo mejora de legibilidad del diagrama, sin impacto en el DDL |
+<<<<<<< HEAD
 | 7 | `PRESENTACION_VENTA.precio_venta` | El diagrama tenía un atributo `precio_venta` en `PRESENTACION_VENTA`, además del ya existente en `PRODUCTO` — dos fuentes de precio para el mismo concepto | Se **eliminó** `precio_venta` de `PRESENTACION_VENTA` (diagrama, DDL, diccionario y semilla). El precio vive **una sola vez** en `producto.precio_venta` (precio por par); `detalle_pedido.precio_unitario` es el precio realmente aplicado en cada línea, calculado por la aplicación | Evita que el precio de un mismo producto se pueda leer de dos lugares distintos y quedar desincronizado; además `MAYORISTA` se confirma como valor de `tipo_cliente`, nunca como fila de `presentacion_venta` (que ahora solo representa `unidad`/`caja`, sin connotación de segmento de cliente) |
+=======
+>>>>>>> 49325c0 (Entrega 2)
 
 Se mantienen, además, las dos adiciones justificadas de la versión anterior de este
 documento (el diagrama corregido no las incorporó, pero siguen siendo necesarias
@@ -72,6 +75,7 @@ También se mantiene el ajuste de `movimiento_stock.tipo_movimiento` a
 los valores permitidos de ese ENUM y el concepto de "devolución a proveedor" ya no
 aplica al modelo basado en furgones.
 
+<<<<<<< HEAD
 ### 1.3 Pendiente manual: archivo `.mwb` (MySQL Workbench)
 
 El modelo relacional editable en `docs/diagramas/Modelo_Entidad_R_Pavanamoon.mwb`
@@ -91,6 +95,8 @@ corromperlo. Por eso:
   confirmar que los ya generados siguen siendo válidos). Es un cambio de ~30
   segundos una vez que alguien del equipo tenga Workbench instalado.
 
+=======
+>>>>>>> 49325c0 (Entrega 2)
 ### 1.3 Alcance de la entrega
 
 Esta entrega cubre el **diseño lógico** derivado del diagrama ER vigente: el modelo
@@ -255,6 +261,7 @@ cliente no se repite en `detalle_pedido`, se obtiene por JOIN con `cliente`) y a
 | Columna | Tipo | Restricciones | Descripción |
 |---|---|---|---|
 | presentacion_id | INT | PK, AUTO_INCREMENT | Identificador |
+<<<<<<< HEAD
 | nombre | VARCHAR(50) | NN, UK | unidad / caja |
 | cantidad_pares | INT | NN, CHECK > 0 | Pares que representa la presentación |
 | estado | ENUM('activo','inactivo') | NN, DEFAULT 'activo' | Disponibilidad |
@@ -268,6 +275,13 @@ cliente no se repite en `detalle_pedido`, se obtiene por JOIN con `cliente`) y a
 > `presentacion_venta`. `MAYORISTA` es un valor de `tipo_cliente`, **no** una
 > presentación de venta.
 
+=======
+| nombre | VARCHAR(50) | NN, UK | par individual / docena / caja |
+| cantidad_pares | INT | NN, CHECK > 0 | Pares que representa la presentación |
+| precio_venta | DECIMAL(10,2) | NN, CHECK > 0 | Precio de esa presentación |
+| estado | ENUM('activo','inactivo') | NN, DEFAULT 'activo' | Disponibilidad |
+
+>>>>>>> 49325c0 (Entrega 2)
 ### 4.7 empleado
 | Columna | Tipo | Restricciones | Descripción |
 |---|---|---|---|
@@ -371,7 +385,11 @@ cliente no se repite en `detalle_pedido`, se obtiene por JOIN con `cliente`) y a
 |---|---|---|---|
 | pedido_id | INT | PK compuesta, FK → pedido | Pedido al que pertenece |
 | variante_id | INT | PK compuesta, FK → variante_producto | Variante vendida (única por pedido) |
+<<<<<<< HEAD
 | presentacion_id | INT | NN, FK → presentacion_venta | Unidad de venta (unidad/caja) |
+=======
+| presentacion_id | INT | NN, FK → presentacion_venta | Unidad de venta (par/docena/caja) |
+>>>>>>> 49325c0 (Entrega 2)
 | cantidad | INT | NN, CHECK > 0 | Cantidad de esa presentación |
 | precio_unitario | DECIMAL(10,2) | NN, CHECK > 0 | Precio aplicado en esa línea |
 | subtotal | DECIMAL(12,2) | GENERATED (cantidad × precio_unitario) | {derivado} |
@@ -395,7 +413,11 @@ cliente no se repite en `detalle_pedido`, se obtiene por JOIN con `cliente`) y a
 | ≥8 entidades principales | ✅ 15 entidades principales + 2 asociativas + 2 de normalización (19 tablas totales) |
 | ≥2 relaciones N:M resueltas | ✅ `detalle_ingreso` (Ingreso↔Variante) y `detalle_pedido` (Pedido↔Variante, con FK adicional a Presentación) |
 | Normalización hasta 3FN con ejemplo | ✅ Sección 3 de este documento |
+<<<<<<< HEAD
 | ≥15 restricciones explícitas | ✅ 19 PK + 20 FK + 13 UNIQUE + 10 CHECK + NOT NULL en prácticamente todas las columnas (ver `sql/ddl/`) |
+=======
+| ≥15 restricciones explícitas | ✅ 19 PK + 20 FK + 13 UNIQUE + 11 CHECK + NOT NULL en prácticamente todas las columnas (ver `sql/ddl/`) |
+>>>>>>> 49325c0 (Entrega 2)
 | Scripts DDL ejecutables | ✅ `sql/ddl/01` a `sql/ddl/05` (orden de ejecución en `INSTALL.md`), validados sintácticamente con un parser de MySQL |
 | ≥2 triggers / procedimientos | ⏳ Planeado para Entrega 3 (cálculo de `total_pedido`, actualización de stock al registrar ingresos/ventas) |
 | ≥3 roles de seguridad a nivel de BD | ⏳ La tabla `rol` ya tiene 3 roles cargados (seed); los roles de MySQL (`CREATE USER`/`GRANT`) van en Entrega 3 (`sql/security/`) |
