@@ -133,6 +133,7 @@ Registro obligatorio de uso de agentes de inteligencia artificial durante el des
 | **Validación del grupo** | Pendiente que el equipo: confirme los nombres/carnés en la certificación firmada; revise las capturas de `docs/casos-prueba/evidencias/` y, si lo desea, las reemplace por capturas propias tomadas desde su navegador; y aplique el ajuste manual pendiente en el `.mwb` (Sección 1.3 de `ENTREGA2_DISENO_LOGICO.md`). |
 | **Estándares aplicados (post-IA)** | R6 (credenciales reales detectadas y eliminadas antes de subir a GitHub), S7 (eliminación de la redundancia de precio entre dos tablas), S8 (validación real contra MySQL, no solo sintáctica, antes de certificar la entrega), D3/D4 (diagramas exportados en los 3 formatos exigidos y sincronizados con la implementación; trazabilidad completa de cada corrección) |
 | **Responsable** | Cristian Otoniel Pérez Ríos |
+<<<<<<< HEAD
 
 ## Entrada 11
 
@@ -146,3 +147,5 @@ Registro obligatorio de uso de agentes de inteligencia artificial durante el des
 | **Validación del grupo** | Pendiente que el equipo: mueva o recree el tag `entrega-1` apuntando a un commit reciente; genere commits reales y sustantivos para el integrante señalado por el catedrático; y confirme que la Sección 7 actualizada de `ENTREGA1_PROPUESTA.md` sigue reflejando decisiones con las que todos están de acuerdo (especialmente el uso de `TIPO_CLIENTE` y `PRESENTACION_VENTA`). |
 | **Estándares aplicados (post-IA)** | R1 (estructura de carpetas obligatoria, ahora completa), R4 (participación visible — diagnóstico entregado, corrección pendiente en Git real), D4 (trazabilidad: texto, diagrama y DDL sincronizados), S8 (transparencia: la corrección posterior a la calificación queda fechada y documentada, no oculta) |
 | **Responsable** | José Alejandro Cabrera Gramajo |
+=======
+>>>>>>> 7399d866bb8fa8177cff65f7e16ca968569ddf08

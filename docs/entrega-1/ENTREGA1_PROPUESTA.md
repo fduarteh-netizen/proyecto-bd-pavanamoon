@@ -109,7 +109,11 @@ Esta entrega cubre exclusivamente la fase de **análisis y diseño conceptual**:
 | RD07 | El NIT/identificador fiscal del cliente debe ser único. |
 | RD08 | El nombre de usuario (username) debe ser único por usuario del sistema. |
 | RD09 | Todo usuario del sistema debe tener asignado exactamente un rol. |
+<<<<<<< HEAD
 | RD10 | El tipo de movimiento de stock debe restringirse a un conjunto cerrado de valores (entrada, salida, devolución de cliente, ajuste). |
+=======
+| RD10 | El tipo de movimiento de stock debe restringirse a un conjunto cerrado de valores (entrada, salida, devolución de cliente, devolución). |
+>>>>>>> 7399d866bb8fa8177cff65f7e16ca968569ddf08
 | RD11 | El precio/costo unitario y la cantidad en el detalle de ingresos/pedidos deben ser valores positivos. |
 
 ---
@@ -123,8 +127,13 @@ Esta entrega cubre exclusivamente la fase de **análisis y diseño conceptual**:
 | RF06 | FURGON | Recepción |
 | RF07, RF08, RF09, RD05, RD11 | FURGON, INGRESO_MERCADERIA, DETALLE_INGRESO | Recepción / Inventario |
 | RF08 | INGRESO_MERCADERIA, DETALLE_INGRESO, VARIANTE_PRODUCTO, MOVIMIENTO_STOCK | Recepción / Inventario |
+<<<<<<< HEAD
 | RF10, RD07 | CLIENTE, TIPO_CLIENTE | Clientes |
 | RF11, RF12, RF13, RF14, RD04, RD11 | PEDIDO, DETALLE_PEDIDO, CLIENTE, PRESENTACION_VENTA | Pedidos |
+=======
+| RF10, RD07 | CLIENTE | Clientes |
+| RF11, RF12, RF13, RF14, RD04, RD11 | PEDIDO, DETALLE_PEDIDO, CLIENTE | Pedidos |
+>>>>>>> 7399d866bb8fa8177cff65f7e16ca968569ddf08
 | RF15, RF16, RF17, RF18, RD06, RD10 | MOVIMIENTO_STOCK, VARIANTE_PRODUCTO | Movimientos |
 | RF19, RF20, RF21, RD08, RD09 | ROL, USUARIO, EMPLEADO | Seguridad |
 
@@ -156,6 +165,7 @@ La guía del proyecto exige notación Chen (óvalos para atributos, rombos para 
 > Convención: **PK** = llave primaria, **FK** = llave foránea, *[multivaluado]*, *{derivado}*, *UK* = único.
 
 1. **ROL** (rol_id **PK**, nombre_rol *UK*, descripcion)
+<<<<<<< HEAD
 2. **USUARIO** (usuario_id **PK**, username *UK*, password_hash, estado, fecha_creacion, rol_id **FK**, empleado_id **FK** *UK*)
 3. **EMPLEADO** (empleado_id **PK**, nombres_apellidos, dpi *UK*, telefono *[multivaluado]*)
 4. **TIPO_CLIENTE** (tipo_cliente_id **PK**, nombre *UK* {individual|mayorista}, descripcion)
@@ -179,6 +189,27 @@ La guía del proyecto exige notación Chen (óvalos para atributos, rombos para 
 
 - **DETALLE_INGRESO** (ingreso_id **FK**, variante_id **FK**, cantidad, costo_unitario, subtotal *{derivado}*) → resuelve **INGRESO_MERCADERIA (N,M) VARIANTE_PRODUCTO**; llave primaria compuesta (ingreso_id, variante_id).
 - **DETALLE_PEDIDO** (pedido_id **FK**, variante_id **FK**, presentacion_id **FK**, cantidad, precio_unitario, subtotal *{derivado}*) → resuelve **PEDIDO (N,M) VARIANTE_PRODUCTO**; llave primaria compuesta (pedido_id, variante_id). Cada línea además indica en qué `PRESENTACION_VENTA` se vendió (relación `se_utiliza_en`).
+=======
+2. **USUARIO** (usuario_id **PK**, username *UK*, password_hash, estado, fecha_creacion, rol_id **FK**, empleado_id **FK**)
+3. **EMPLEADO** (empleado_id **PK**, nombres, apellidos, dpi *UK*, telefono *[multivaluado]*, fecha_contratacion, salario)
+4. **CLIENTE** (cliente_id **PK**, tipo_cliente {individual|mayorista}, nombre_razon_social, nit *UK*, telefono *[multivaluado]*, email, direccion, porcentaje_descuento)
+5. **CATEGORIA** (categoria_id **PK**, nombre_categoria {Niño|Juvenil|Adulto}, descripcion)
+6. **PRODUCTO** (producto_id **PK**, categoria_id **FK**, modelo, tipo_suela {Hule|Flex|TPU}, descripcion, precio_venta, fecha_registro) — *sin campo `marca`: Pavanamoon es marca propia, todos los modelos pertenecen a la misma marca, por lo que ese atributo sería redundante.*
+7. **TALLA** (talla_id **PK**, valor_talla *UK*)
+8. **COLOR** (color_id **PK**, nombre_color *UK*, codigo_hex)
+9. **VARIANTE_PRODUCTO** (variante_id **PK**, producto_id **FK**, talla_id **FK**, color_id **FK**, sku *{derivado: producto+talla+color}* *UK*, stock_actual, stock_minimo)
+10. **FURGON** (furgon_id **PK**, numero_furgon *UK*, fecha_llegada, procedencia, transportista, estado)
+11. **INGRESO_MERCADERIA** (ingreso_id **PK**, furgon_id **FK**, empleado_id **FK**, fecha_ingreso, bodega_destino, estado)
+12. **PEDIDO** (pedido_id **PK**, cliente_id **FK**, empleado_id **FK**, fecha_pedido, tipo_venta {detalle|mayorista}, total_pedido *{derivado}*, estado)
+13. **MOVIMIENTO_STOCK** (movimiento_id **PK**, variante_id **FK**, empleado_id **FK**, tipo_movimiento {entrada|salida|devolucion_cliente}, cantidad, fecha_movimiento, referencia_documento, observaciones)
+
+> **Nota de diseño (decisión de negocio):** el equipo evaluó modelar una entidad `PROVEEDOR` independiente, pero se descartó porque Pavanamoon no gestiona relación comercial ni catálogo de proveedores externos — únicamente necesita trazabilidad del **furgón** que transporta cada carga hasta bodega. Por eso `FURGON` reemplaza lo que en versiones anteriores era `PROVEEDOR` + `COMPRA`.
+
+### 7.3 Entidades asociativas — Relaciones N:M resueltas (2 requeridas, mínimo cumplido)
+
+- **DETALLE_INGRESO** (ingreso_id **FK**, variante_id **FK**, cantidad, costo_unitario, subtotal *{derivado}*) → resuelve **INGRESO_MERCADERIA (N,M) VARIANTE_PRODUCTO**
+- **DETALLE_PEDIDO** (pedido_id **FK**, variante_id **FK**, cantidad, precio_unitario, subtotal *{derivado}*) → resuelve **PEDIDO (N,M) VARIANTE_PRODUCTO**
+>>>>>>> 7399d866bb8fa8177cff65f7e16ca968569ddf08
 
 ### 7.4 Relaciones (con cardinalidades, notación (mín,máx))
 
@@ -189,19 +220,32 @@ La guía del proyecto exige notación Chen (óvalos para atributos, rombos para 
 | registra | EMPLEADO | (0,N) | INGRESO_MERCADERIA | (1,1) |
 | atiende | EMPLEADO | (0,N) | PEDIDO | (1,1) |
 | ejecuta | EMPLEADO | (0,N) | MOVIMIENTO_STOCK | (1,1) |
+<<<<<<< HEAD
 | transporta | FURGON | (0,N) | INGRESO_MERCADERIA | (1,1) |
 | clasifica | TIPO_CLIENTE | (1,N) | CLIENTE | (1,1) |
+=======
+| transporta | FURGON | (1,1) | INGRESO_MERCADERIA | (1,1) |
+>>>>>>> 7399d866bb8fa8177cff65f7e16ca968569ddf08
 | realiza | CLIENTE | (0,N) | PEDIDO | (1,1) |
 | clasifica | CATEGORIA | (1,N) | PRODUCTO | (1,1) |
 | genera_variante | PRODUCTO | (1,N) | VARIANTE_PRODUCTO | (1,1) |
+<<<<<<< HEAD
 | define_talla | TALLA | (1,N) | VARIANTE_PRODUCTO | (1,1) |
 | define_color | COLOR | (1,N) | VARIANTE_PRODUCTO | (1,1) |
+=======
+| se_define_en_talla | TALLA | (1,N) | VARIANTE_PRODUCTO | (1,1) |
+| se_define_en_color | COLOR | (1,N) | VARIANTE_PRODUCTO | (1,1) |
+>>>>>>> 7399d866bb8fa8177cff65f7e16ca968569ddf08
 | **contiene** (N:M) | INGRESO_MERCADERIA | (1,N) | VARIANTE_PRODUCTO | (0,N) *(vía DETALLE_INGRESO)* |
 | **incluye** (N:M) | PEDIDO | (1,N) | VARIANTE_PRODUCTO | (0,N) *(vía DETALLE_PEDIDO)* |
 | se_utiliza_en | PRESENTACION_VENTA | (0,N) | DETALLE_PEDIDO | (1,1) |
 | genera_movimiento | VARIANTE_PRODUCTO | (0,N) | MOVIMIENTO_STOCK | (1,1) |
 
+<<<<<<< HEAD
 > Notas: `FURGON` representa el medio de transporte mediante el cual llega la mercadería; la relación `transporta` es **1:N** (no 1:1) porque un mismo furgón puede corresponder a más de un ingreso a bodega (ej. descargas parciales). `INGRESO_MERCADERIA` registra la recepción en bodega y `DETALLE_INGRESO` registra las variantes y cantidades recibidas. No se modela logística externa ni aduanas. `TIPO_CLIENTE` centraliza el segmento comercial (individual/mayorista) como catálogo, no como valor fijo dentro de `CLIENTE`, lo que permite agregar nuevos segmentos sin alterar el esquema.
+=======
+> Nota: `FURGON` representa el medio de transporte mediante el cual llega la mercadería. `INGRESO_MERCADERIA` registra la recepción en bodega y `DETALLE_INGRESO` registra las variantes y cantidades recibidas. No se modela logística externa ni aduanas.
+>>>>>>> 7399d866bb8fa8177cff65f7e16ca968569ddf08
 
 ### 7.5 Vista de apoyo — Mermaid ER (notación Crow's Foot, referencial, actualizada)
 
@@ -212,8 +256,12 @@ erDiagram
     EMPLEADO ||--o{ INGRESO_MERCADERIA : registra
     EMPLEADO ||--o{ PEDIDO : atiende
     EMPLEADO ||--o{ MOVIMIENTO_STOCK : ejecuta
+<<<<<<< HEAD
     FURGON ||--o{ INGRESO_MERCADERIA : transporta
     TIPO_CLIENTE ||--o{ CLIENTE : clasifica
+=======
+    FURGON ||--|| INGRESO_MERCADERIA : transporta
+>>>>>>> 7399d866bb8fa8177cff65f7e16ca968569ddf08
     CLIENTE ||--o{ PEDIDO : realiza
     CATEGORIA ||--o{ PRODUCTO : clasifica
     PRODUCTO ||--o{ VARIANTE_PRODUCTO : genera
@@ -300,11 +348,14 @@ erDiagram
         int stock_actual
         int stock_minimo
     }
+<<<<<<< HEAD
     PRESENTACION_VENTA {
         int presentacion_id PK
         string nombre "unidad, caja"
         int cantidad_pares
     }
+=======
+>>>>>>> 7399d866bb8fa8177cff65f7e16ca968569ddf08
     PEDIDO {
         int pedido_id PK
         int cliente_id FK
@@ -332,12 +383,21 @@ erDiagram
 
 | Requisito mínimo del proyecto | Cumplimiento en este diseño |
 |---|---|
+<<<<<<< HEAD
 | ≥8 entidades principales | ✅ 15 entidades principales (sin contar asociativas) |
 | ≥2 relaciones N:M resueltas | ✅ INGRESO_MERCADERIA↔VARIANTE_PRODUCTO y PEDIDO↔VARIANTE_PRODUCTO, vía DETALLE_INGRESO y DETALLE_PEDIDO |
 | Normalización 3FN | ✅ Demostrada con ejemplo en Entrega 2 (`ENTREGA2_DISENO_LOGICO.md`, Sección 3): separación de TALLA/COLOR/CATEGORIA como catálogos evita dependencias transitivas y redundancia en VARIANTE_PRODUCTO y PRODUCTO; EMPLEADO_TELEFONO/CLIENTE_TELEFONO resuelven 1FN |
 | ≥15 restricciones explícitas | ✅ Implementadas en DDL (Entrega 2, `sql/ddl/`): 19 PK + 20 FK + 13 UNIQUE + 10 CHECK, ejecutadas y probadas contra MySQL real (ver `docs/casos-prueba/CASOS_PRUEBA.md`) |
 | ≥2 triggers / procedimientos | Planeado para Entrega 3: trigger de actualización automática de stock al insertar DETALLE_INGRESO/DETALLE_PEDIDO/MOVIMIENTO_STOCK; procedimiento de cálculo de total de pedido con descuento por tipo de cliente |
 | ≥3 roles de seguridad | Administrador, Bodeguero, Vendedor — ya reflejados en entidad ROL y cargados en `sql/dml/00_seed_minimo.sql` |
+=======
+| ≥8 entidades principales | ✅ 13 entidades principales (sin contar asociativas) |
+| ≥2 relaciones N:M resueltas | ✅ INGRESO_MERCADERIA↔VARIANTE_PRODUCTO y PEDIDO↔VARIANTE_PRODUCTO, vía DETALLE_INGRESO y DETALLE_PEDIDO |
+| Normalización 3FN | Se demostrará con ejemplo en Entrega 2 (ej. separación de TALLA/COLOR/CATEGORIA como catálogos evita dependencias transitivas y redundancia en VARIANTE_PRODUCTO y PRODUCTO) |
+| ≥15 restricciones explícitas | Se implementan en DDL (Entrega 2): PKs, FKs, UNIQUE (nit, username, sku, numero_furgon), CHECK (stock_actual >= 0, cantidad > 0, tipo_suela IN ('Hule','Flex','TPU'), nombre_categoria IN ('Niño','Juvenil','Adulto'), tipo_movimiento IN (...)), NOT NULL |
+| ≥2 triggers / procedimientos | Planeado para Entrega 3: trigger de actualización automática de stock al insertar DETALLE_INGRESO/DETALLE_PEDIDO/MOVIMIENTO_STOCK; procedimiento de cálculo de total de pedido con descuento mayorista |
+| ≥3 roles de seguridad | Administrador, Bodeguero, Vendedor — ya reflejados en entidad ROL |
+>>>>>>> 7399d866bb8fa8177cff65f7e16ca968569ddf08
 
 ---
 
@@ -362,4 +422,8 @@ erDiagram
 
 ## 9. Declaración de uso de agentes de IA
 
+<<<<<<< HEAD
 El equipo utilizó agentes de IA (Claude de Anthropic y Gemini) como asistentes en: (1) la redacción inicial de la propuesta, RF/RD, matriz de trazabilidad y modelo ER conceptual; (2) la corrección de la estructura del repositorio conforme a la Sección 7 de la guía; (3) el ajuste del modelo de negocio al enfoque real de Pavanamoon como marca propia especializada en calzado de fútbol (eliminación del campo `marca`, incorporación de `tipo_suela`, categorías por edad); (4) el rediseño del módulo de recepción de mercadería, reemplazando `PROVEEDOR`/`COMPRA` por `FURGON`/`INGRESO_MERCADERIA`/`DETALLE_INGRESO`, tras confirmar con el equipo que Pavanamoon no requiere catálogo de proveedores; y (5) la resincronización completa de esta sección (7) con el diagrama `.drawio` y el DDL real tras la retroalimentación del catedrático sobre la Entrega 1 (agregado de `TIPO_CLIENTE` y `PRESENTACION_VENTA`, corrección de la cardinalidad `transporta`, y ajuste de atributos de `CLIENTE`/`EMPLEADO`). El detalle completo del uso, prompts y validación se documenta en `docs/bitacora-ia/BITACORA_IA.md`, conforme al estándar S8/R-Bitácora del proyecto.
+=======
+El equipo utilizó agentes de IA (Claude de Anthropic y Gemini) como asistentes en: (1) la redacción inicial de la propuesta, RF/RD, matriz de trazabilidad y modelo ER conceptual; (2) la corrección de la estructura del repositorio conforme a la Sección 7 de la guía; (3) el ajuste del modelo de negocio al enfoque real de Pavanamoon como marca propia especializada en calzado de fútbol (eliminación del campo `marca`, incorporación de `tipo_suela`, categorías por edad); y (4) el rediseño del módulo de recepción de mercadería, reemplazando `PROVEEDOR`/`COMPRA` por `FURGON`/`INGRESO_MERCADERIA`/`DETALLE_INGRESO`, tras confirmar con el equipo que Pavanamoon no requiere catálogo de proveedores. El detalle completo del uso, prompts y validación se documenta en `docs/bitacora-ia/BITACORA_IA.md`, conforme al estándar S8/R-Bitácora del proyecto.
+>>>>>>> 7399d866bb8fa8177cff65f7e16ca968569ddf08
