@@ -11,11 +11,12 @@
   <header class="navbar">
     <div class="navbar-brand">
       <a href="/">Pavanamoon</a>
-      <span class="badge">Entrega 2 · 30%</span>
+      <span class="badge">Entrega 3 · 70%</span>
     </div>
     <nav class="navbar-links">
-      <a href="/productos">Productos</a>
-      <a href="/clientes">Clientes</a>
+      <% (modulosMenu || []).forEach(function(m) { %>
+        <a href="<%= m.ruta %>"><%= m.titulo %></a>
+      <% }); %>
     </nav>
     <div class="navbar-user">
       <span><%= usuarioActual.nombre_completo %> · <em><%= usuarioActual.rol %></em></span>

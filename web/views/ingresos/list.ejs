@@ -1,0 +1,30 @@
+<%- include('../partials/header') %>
+
+<div class="page-heading">
+  <h1>Ingresos de mercadería</h1>
+  <a class="btn btn-primary" href="/ingresos/nuevo">+ Registrar ingreso</a>
+</div>
+
+<div class="table-wrap">
+<table class="table">
+  <thead><tr><th>#</th><th>Fecha</th><th>Furgón</th><th>Bodega</th><th>Responsable</th><th class="num">Líneas</th><th class="num">Pares</th><th class="num">Costo</th><th></th></tr></thead>
+  <tbody>
+    <% if (ingresos.length === 0) { %><tr><td colspan="9">No hay ingresos registrados.</td></tr><% } %>
+    <% ingresos.forEach(function(i) { %>
+      <tr>
+        <td><%= i.ingreso_id %></td>
+        <td><%= new Date(i.fecha_ingreso).toLocaleString('es-GT') %></td>
+        <td><%= i.numero_furgon %></td>
+        <td><%= i.bodega_destino || '—' %></td>
+        <td><%= i.responsable %></td>
+        <td class="num"><%= i.lineas %></td>
+        <td class="num"><%= i.pares_recibidos %></td>
+        <td class="num">Q <%= Number(i.costo_total).toFixed(2) %></td>
+        <td><a href="/ingresos/<%= i.ingreso_id %>">Ver</a></td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>
+</div>
+
+<%- include('../partials/footer') %>

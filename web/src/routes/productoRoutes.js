@@ -12,11 +12,11 @@ const express = require('express');
 const productoModel = require('../models/productoModel');
 const catalogoModel = require('../models/catalogoModel');
 const { validarProducto } = require('../utils/validate');
-const { requireAuth } = require('../middleware/auth');
+const { requireAuth, requireRole } = require('../middleware/auth');
 
 const router = express.Router();
 
-router.use(requireAuth);
+router.use(requireAuth, requireRole('productos'));
 
 router.get('/', async (req, res, next) => {
   try {

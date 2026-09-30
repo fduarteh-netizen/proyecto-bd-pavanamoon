@@ -1,0 +1,32 @@
+=== CP3-06 rol_vendedor ===
+[pvm_ventas] SELECT CURRENT_ROLE();
+    CURRENT_ROLE()
+    `rol_vendedor`@`%`
+[pvm_ventas] SELECT COUNT(*) AS clientes_visibles FROM cliente;
+    clientes_visibles
+    60
+[pvm_ventas] SELECT username, password_hash FROM usuario LIMIT 1;
+    ERROR 1142 (42000) at line 1: SELECT command denied to user 'pvm_ventas'@'localhost' for table 'usuario'
+[pvm_ventas] INSERT INTO furgon (numero_furgon, fecha_llegada) VALUES ('X-HACK', CURDATE());
+    ERROR 1142 (42000) at line 1: INSERT command denied to user 'pvm_ventas'@'localhost' for table 'furgon'
+[pvm_ventas] UPDATE variante_producto SET stock_actual = 9999 WHERE variante_id = 1;
+    ERROR 1142 (42000) at line 1: UPDATE command denied to user 'pvm_ventas'@'localhost' for table 'variante_producto'
+[pvm_ventas] DELETE FROM cliente WHERE cliente_id = 1;
+    ERROR 1142 (42000) at line 1: DELETE command denied to user 'pvm_ventas'@'localhost' for table 'cliente'
+[pvm_ventas] CALL sp_crear_pedido(1, 3, @p); SELECT @p AS pedido_creado_por_procedimiento;
+    pedido_creado_por_procedimiento
+    63
+=== CP3-07 rol_bodeguero ===
+[pvm_bodega] SELECT COUNT(*) FROM cliente;
+    ERROR 1142 (42000) at line 1: SELECT command denied to user 'pvm_bodega'@'localhost' for table 'cliente'
+[pvm_bodega] SELECT COUNT(*) FROM pedido;
+    ERROR 1142 (42000) at line 1: SELECT command denied to user 'pvm_bodega'@'localhost' for table 'pedido'
+[pvm_bodega] INSERT INTO furgon (numero_furgon, fecha_llegada, estado) VALUES ('FRG-PRUEBA-SEG', CURDATE(), 'en_transito'); SELECT numero_furgon, estado FROM furgon WHERE numero_furgon='FRG-PRUEBA-SEG';
+    numero_furgon	estado
+    FRG-PRUEBA-SEG	en_transito
+[pvm_bodega] DELETE FROM furgon WHERE numero_furgon='FRG-PRUEBA-SEG';
+    ERROR 1142 (42000) at line 1: DELETE command denied to user 'pvm_bodega'@'localhost' for table 'furgon'
+=== rol_administrador ===
+[pvm_admin] DELETE FROM furgon WHERE numero_furgon='FRG-PRUEBA-SEG'; DELETE FROM pedido WHERE estado='pendiente' AND total_pedido=0; SELECT 'admin puede borrar (limpieza de datos de prueba)' AS resultado;
+    resultado
+    admin puede borrar (limpieza de datos de prueba)

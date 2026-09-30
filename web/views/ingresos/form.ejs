@@ -1,0 +1,47 @@
+<%- include('../partials/header') %>
+
+<h1>Registrar ingreso de mercadería</h1>
+
+<% if (errores && errores.length) { %>
+  <div class="alert alert-error"><ul><% errores.forEach(function(e) { %><li><%= e %></li><% }); %></ul></div>
+<% } %>
+
+<form action="/ingresos" method="POST" class="form form-wide">
+  <label for="furgon_id">Furgón</label>
+  <select id="furgon_id" name="furgon_id" required>
+    <option value="">-- Selecciona --</option>
+    <% furgones.forEach(function(f) { %>
+      <option value="<%= f.furgon_id %>" <%= Number(datos.furgon_id) === f.furgon_id ? 'selected' : '' %>><%= f.numero_furgon %></option>
+    <% }); %>
+  </select>
+
+  <label for="bodega_destino">Bodega de destino</label>
+  <input type="text" id="bodega_destino" name="bodega_destino" maxlength="60" required value="<%= datos.bodega_destino || 'Bodega Central Xela' %>" />
+
+  <label>Mercadería recibida (deja vacías las filas que no uses)</label>
+  <table class="lineas">
+    <thead><tr><th>Variante</th><th style="width:120px">Pares</th><th style="width:140px">Costo unitario (Q)</th></tr></thead>
+    <tbody>
+    <% for (let i = 0; i < filas; i++) { const l = (datos.lineas && datos.lineas[i]) || {}; %>
+      <tr>
+        <td>
+          <select name="lineas[<%= i %>][variante_id]">
+            <option value="">—</option>
+            <% variantes.forEach(function(v) { %>
+              <option value="<%= v.variante_id %>" <%= Number(l.variante_id) === v.variante_id ? 'selected' : '' %>><%= v.sku %> · <%= v.modelo %> · T<%= v.talla %> · <%= v.color %> (stock <%= v.stock_actual %>)</option>
+            <% }); %>
+          </select>
+        </td>
+        <td><input type="number" min="1" step="1" name="lineas[<%= i %>][cantidad]" value="<%= l.cantidad || '' %>" /></td>
+        <td><input type="number" min="0.01" step="0.01" name="lineas[<%= i %>][costo_unitario]" value="<%= l.costo_unitario || '' %>" /></td>
+      </tr>
+    <% } %>
+    </tbody>
+  </table>
+
+  <p class="note" style="margin:0.5rem 0 0">Al guardar, el trigger <code>trg_detalle_ingreso_ai</code> suma los pares al stock y registra la entrada en el kardex. El responsable es tu usuario.</p>
+  <button type="submit" class="btn btn-primary">Guardar ingreso</button>
+  <a href="/ingresos" class="btn-link">Cancelar</a>
+</form>
+
+<%- include('../partials/footer') %>

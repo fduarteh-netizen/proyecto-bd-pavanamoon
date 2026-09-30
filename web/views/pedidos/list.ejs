@@ -1,0 +1,42 @@
+<%- include('../partials/header') %>
+
+<div class="page-heading">
+  <h1>Pedidos</h1>
+  <a class="btn btn-primary" href="/pedidos/nuevo">+ Nuevo pedido</a>
+</div>
+
+<form class="filters" method="GET" action="/pedidos">
+  <label>Historial por cliente (RF14)
+    <select name="cliente">
+      <option value="">Todos</option>
+      <% clientes.forEach(function(c) { %>
+        <option value="<%= c.cliente_id %>" <%= clienteId === c.cliente_id ? 'selected' : '' %>><%= c.nombre_cliente %> (<%= c.tipo_cliente %>)</option>
+      <% }); %>
+    </select>
+  </label>
+  <button class="btn btn-primary" type="submit">Filtrar</button>
+</form>
+
+<div class="table-wrap">
+<table class="table">
+  <thead><tr><th>#</th><th>Fecha</th><th>Cliente</th><th>Tipo</th><th>Vendedor</th><th class="num">Pares</th><th class="num">Total</th><th>Estado</th><th></th></tr></thead>
+  <tbody>
+    <% if (pedidos.length === 0) { %><tr><td colspan="9">No hay pedidos.</td></tr><% } %>
+    <% pedidos.forEach(function(p) { %>
+      <tr>
+        <td><%= p.pedido_id %></td>
+        <td><%= new Date(p.fecha_pedido).toLocaleString('es-GT') %></td>
+        <td><%= p.nombre_cliente %></td>
+        <td><span class="tag tag-<%= p.tipo_cliente %>"><%= p.tipo_cliente %></span></td>
+        <td><%= p.vendedor %></td>
+        <td class="num"><%= p.pares_totales %></td>
+        <td class="num">Q <%= Number(p.total_pedido).toFixed(2) %></td>
+        <td><span class="tag tag-<%= p.estado %>"><%= p.estado %></span></td>
+        <td><a href="/pedidos/<%= p.pedido_id %>">Ver</a></td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>
+</div>
+
+<%- include('../partials/footer') %>

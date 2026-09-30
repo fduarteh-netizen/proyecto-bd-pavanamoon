@@ -10,11 +10,11 @@ const express = require('express');
 const clienteModel = require('../models/clienteModel');
 const catalogoModel = require('../models/catalogoModel');
 const { validarCliente } = require('../utils/validate');
-const { requireAuth } = require('../middleware/auth');
+const { requireAuth, requireRole } = require('../middleware/auth');
 
 const router = express.Router();
 
-router.use(requireAuth);
+router.use(requireAuth, requireRole('clientes'));
 
 router.get('/', async (req, res, next) => {
   try {

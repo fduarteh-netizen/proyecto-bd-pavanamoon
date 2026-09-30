@@ -1,22 +1,20 @@
 <%- include('partials/header') %>
 
 <h1>Bienvenido, <%= usuarioActual.nombre_completo %></h1>
-<p>Rol: <strong><%= usuarioActual.rol %></strong></p>
+<p>Rol: <strong><%= usuarioActual.rol %></strong> &middot; Solo ves los módulos que tu rol tiene permitidos.</p>
 
 <div class="card-grid">
-  <a class="card" href="/productos">
-    <h2>Productos</h2>
-    <p>Alta, edición, listado y eliminación de productos del catálogo.</p>
+  <% modulosMenu.forEach(function(m) { %>
+  <a class="card" href="<%= m.ruta %>">
+    <h2><%= m.titulo %></h2>
+    <p><%= m.descripcion %></p>
   </a>
-  <a class="card" href="/clientes">
-    <h2>Clientes</h2>
-    <p>Alta, edición, listado y eliminación de clientes (detalle y mayoreo).</p>
-  </a>
+  <% }); %>
 </div>
 
 <p class="note">
-  Módulos de Compras, Pedidos y Movimientos de Stock se incorporan en la Entrega 3
-  (ver <code>docs/entrega-2/AVANCE_WEB.md</code>).
+  Avance Entrega 3 (~70%). Pendiente para Entrega 4: administración de usuarios/empleados,
+  reportes consolidados y despliegue (ver <code>docs/entrega-3/AVANCE_WEB.md</code>).
 </p>
 
 <%- include('partials/footer') %>

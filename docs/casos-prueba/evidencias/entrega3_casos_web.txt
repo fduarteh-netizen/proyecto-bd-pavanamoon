@@ -1,0 +1,32 @@
+login admin -> HTTP 302
+login ventas -> HTTP 302
+login bodega -> HTTP 302
+--- (a) Rutas por rol (200 = permitido, 403 = denegado)
+modulo       admin      bodega     ventas    
+productos    200        200        403       
+inventario   200        200        200       
+furgones     200        200        403       
+ingresos     200        200        403       
+clientes     200        403        200       
+pedidos      200        403        200       
+kardex       200        200        403       
+--- (b) Menú visible por rol
+admin: Productos Inventario Furgones Ingresos Clientes Pedidos Kardex 
+bodega: Productos Inventario Furgones Ingresos Kardex 
+ventas: Inventario Clientes Pedidos 
+--- (c) ventas registra pedido web (cliente mayorista 1 caja de variante 3)
+POST /pedidos -> HTTP 302 http://localhost:3000/pedidos/64
+stock variante 3: antes=60 despues=48 (esperado -12)
++-----------+-------------------------+--------------+---------------+--------------+
+| pedido_id | nombre_cliente          | tipo_cliente | pares_totales | total_pedido |
++-----------+-------------------------+--------------+---------------+--------------+
+|        64 | Distribuidora Salcaj� 5 | mayorista    |            12 |      2652.00 |
++-----------+-------------------------+--------------+---------------+--------------+
+--- (d) ventas intenta vender 999 cajas (stock insuficiente): mensaje de negocio y ROLLBACK
+<li>Stock insuficiente para la variante solicitada.</li>
+pedidos antes=62 despues=62 (esperado igual: no queda pedido huérfano)
+--- (e) bodega registra ingreso web de 30 pares a variante 5
+POST /ingresos -> HTTP 302 http://localhost:3000/ingresos/62
+stock variante 5: antes=48 despues=78 (esperado +30)
+--- (f) ventas escribe a mano la URL de furgones
+Tu rol (vendedor) no tiene permiso para acceder a este módulo.

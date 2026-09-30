@@ -1,0 +1,34 @@
+<%- include('../partials/header') %>
+
+<h1>Kardex — movimientos de stock</h1>
+
+<form class="filters" method="GET" action="/kardex">
+  <label>SKU <input type="text" name="sku" maxlength="40" value="<%= filtros.sku %>" /></label>
+  <label>Desde <input type="date" name="desde" value="<%= filtros.desde %>" /></label>
+  <label>Hasta <input type="date" name="hasta" value="<%= filtros.hasta %>" /></label>
+  <button class="btn btn-primary" type="submit">Filtrar</button>
+  <a class="btn-link" href="/kardex">Limpiar</a>
+</form>
+
+<p class="note" style="margin-top:0">Fuente: vista <code>vw_kardex</code> (últimos 300 movimientos). Los registros los crean los triggers y procedimientos, no la app.</p>
+
+<div class="table-wrap">
+<table class="table">
+  <thead><tr><th>#</th><th>Fecha</th><th>Tipo</th><th>SKU</th><th>Modelo</th><th>Talla</th><th>Color</th><th class="num">Efecto</th><th>Responsable</th></tr></thead>
+  <tbody>
+    <% if (movimientos.length === 0) { %><tr><td colspan="9">Sin movimientos para ese filtro.</td></tr><% } %>
+    <% movimientos.forEach(function(m) { %>
+      <tr>
+        <td><%= m.movimiento_id %></td>
+        <td><%= new Date(m.fecha_movimiento).toLocaleString('es-GT') %></td>
+        <td><span class="tag tag-<%= m.tipo_movimiento %>"><%= m.tipo_movimiento %></span></td>
+        <td><%= m.sku %></td><td><%= m.modelo %></td><td><%= m.talla %></td><td><%= m.color %></td>
+        <td class="num"><strong><%= m.efecto_stock > 0 ? '+' : '' %><%= m.efecto_stock %></strong></td>
+        <td><%= m.responsable %></td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>
+</div>
+
+<%- include('../partials/footer') %>

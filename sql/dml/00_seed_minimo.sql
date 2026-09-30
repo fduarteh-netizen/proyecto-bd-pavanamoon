@@ -15,6 +15,10 @@
 
 USE pavanamoon;
 
+-- Fuerza UTF-8 en la sesión del cliente para que los acentos se carguen bien
+-- (sin esto, algunos clientes cargan 'Salcajá' como 'SalcajÃ¡').
+SET NAMES utf8mb4;
+
 -- Roles de seguridad (RF19, mínimo 3 roles requerido por la guía Sección 5).
 INSERT INTO rol (nombre_rol, descripcion) VALUES
     ('administrador', 'Acceso total al sistema: usuarios, catálogos, reportes'),

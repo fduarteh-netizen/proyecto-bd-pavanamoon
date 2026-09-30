@@ -39,8 +39,8 @@ pavanamoon/
 | Entrega | Estado | Tag |
 |---|---|---|
 | Entrega 1 — Análisis y diseño conceptual | ✅ Completada | `entrega-1` |
-| Entrega 2 — Diseño lógico e implementación base | 🔶 Validado (DDL ejecutado y app probada contra MySQL real); pendiente que el equipo firme la certificación y haga el tag | `entrega-2` |
-| Entrega 3 — Implementación avanzada y seguridad | ⏳ Pendiente | `entrega-3` |
+| Entrega 2 — Diseño lógico e implementación base | ✅ Completada | `entrega-2` |
+| Entrega 3 — Implementación avanzada, seguridad y pruebas | ✅ Completada (vistas, triggers, procedimientos, 3 roles, 8/8 pruebas, web ≈70 %) | `entrega-3` |
 | Entrega 4 — Integración y defensa oral | ⏳ Pendiente | `entrega-4` |
 
 > **Nota de corrección (Entrega 2):** se detectó que el texto de
@@ -64,11 +64,13 @@ Ver [`INSTALL.md`](./INSTALL.md): scripts DDL ejecutables (`sql/ddl/`), datos se
 
 - Propuesta y diseño conceptual (Entrega 1): [`docs/entrega-1/ENTREGA1_PROPUESTA.md`](./docs/entrega-1/ENTREGA1_PROPUESTA.md)
 - Diseño lógico, 3FN y diccionario de datos (Entrega 2): [`docs/entrega-2/ENTREGA2_DISENO_LOGICO.md`](./docs/entrega-2/ENTREGA2_DISENO_LOGICO.md)
-- Avance de la aplicación web (Entrega 2): [`docs/entrega-2/AVANCE_WEB.md`](./docs/entrega-2/AVANCE_WEB.md)
+- Avance de la aplicación web (Entrega 2, 30 %): [`docs/entrega-2/AVANCE_WEB.md`](./docs/entrega-2/AVANCE_WEB.md)
 - Diagrama ER (Chen) y modelo relacional (MySQL Workbench), cada uno editable + PNG/PDF — **fuente de verdad del modelo de datos**: [`docs/diagramas/`](./docs/diagramas/)
 - Bitácora de uso de IA: [`docs/bitacora-ia/BITACORA_IA.md`](./docs/bitacora-ia/BITACORA_IA.md)
 - Certificaciones de calidad por entrega: [`docs/certificaciones/`](./docs/certificaciones/)
-- Casos de prueba y evidencia real de ejecución (SQL + app web): [`docs/casos-prueba/CASOS_PRUEBA.md`](./docs/casos-prueba/CASOS_PRUEBA.md)
+- Casos de prueba y evidencia real de ejecución (SQL + app web): [`docs/casos-prueba/CASOS_PRUEBA.md`](./docs/casos-prueba/CASOS_PRUEBA.md) (Entrega 2) y [`docs/casos-prueba/CASOS_PRUEBA_ENTREGA3.md`](./docs/casos-prueba/CASOS_PRUEBA_ENTREGA3.md) (Entrega 3, con matriz de trazabilidad)
+- Implementación avanzada y seguridad (Entrega 3): [`docs/entrega-3/ENTREGA3_IMPLEMENTACION.md`](./docs/entrega-3/ENTREGA3_IMPLEMENTACION.md)
+- Avance de la aplicación web (Entrega 3, ≈70 %): [`docs/entrega-3/AVANCE_WEB.md`](./docs/entrega-3/AVANCE_WEB.md)
 
 ## Enlaces
 

@@ -1,0 +1,27 @@
+<%- include('../partials/header') %>
+
+<div class="page-heading">
+  <h1>Ingreso #<%= ingreso.ingreso_id %></h1>
+  <a class="btn-link" href="/ingresos">← Volver</a>
+</div>
+
+<div class="resumen">
+  <div><span>Furgón</span><strong><%= ingreso.numero_furgon %></strong></div>
+  <div><span>Fecha</span><strong><%= new Date(ingreso.fecha_ingreso).toLocaleString('es-GT') %></strong></div>
+  <div><span>Bodega</span><strong><%= ingreso.bodega_destino %></strong></div>
+  <div><span>Responsable</span><strong><%= ingreso.responsable %></strong></div>
+  <div><span>Pares recibidos</span><strong><%= ingreso.pares_recibidos %></strong></div>
+  <div><span>Costo total</span><strong>Q <%= Number(ingreso.costo_total).toFixed(2) %></strong></div>
+</div>
+
+<table class="table">
+  <thead><tr><th>SKU</th><th>Modelo</th><th>Talla</th><th>Color</th><th class="num">Pares</th><th class="num">Costo unit.</th><th class="num">Subtotal</th></tr></thead>
+  <tbody>
+    <% ingreso.lineas.forEach(function(l) { %>
+      <tr><td><%= l.sku %></td><td><%= l.modelo %></td><td><%= l.talla %></td><td><%= l.color %></td>
+        <td class="num"><%= l.cantidad %></td><td class="num">Q <%= Number(l.costo_unitario).toFixed(2) %></td><td class="num">Q <%= Number(l.subtotal).toFixed(2) %></td></tr>
+    <% }); %>
+  </tbody>
+</table>
+
+<%- include('../partials/footer') %>

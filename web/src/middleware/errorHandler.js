@@ -22,7 +22,12 @@ function errorHandler(err, req, res, next) {
 
   // Traducimos algunos códigos de MySQL comunes a mensajes entendibles,
   // sin filtrar el detalle técnico del motor de base de datos.
-  if (err && err.code === 'ER_DUP_ENTRY') {
+  if (err && err.sqlState === '45000') {
+    // Mensaje de regla de negocio escrito por el equipo en un SIGNAL de un
+    // trigger/procedimiento (ej. "Stock insuficiente..."): es seguro
+    // mostrarlo porque no contiene detalle técnico del motor.
+    mensaje = err.sqlMessage;
+  } else if (err && err.code === 'ER_DUP_ENTRY') {
     mensaje = 'Ya existe un registro con ese valor único (NIT, SKU, username, etc.).';
   } else if (err && err.code === 'ER_ROW_IS_REFERENCED_2') {
     mensaje = 'No se puede eliminar: este registro está referenciado por otros datos.';

@@ -33,7 +33,7 @@ body {
 .navbar-links a:hover { opacity: 1; text-decoration: underline; }
 .navbar-user { display: flex; align-items: center; gap: 1rem; font-size: 0.9rem; }
 
-.container { max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
+.container { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
 
 .footer { text-align: center; padding: 1.5rem; color: #6b7a86; font-size: 0.8rem; }
 
@@ -75,3 +75,26 @@ body {
 .login-card .hint { font-size: 0.78rem; color: #6b7a86; margin-top: 1rem; }
 
 .note { font-size: 0.85rem; color: #6b7a86; margin-top: 2rem; }
+
+/* --- Entrega 3 --- */
+.filters { display: flex; gap: 0.5rem; align-items: end; flex-wrap: wrap; margin-bottom: 1rem; background: var(--color-card); padding: 0.75rem; border: 1px solid var(--color-border); border-radius: 8px; }
+.filters label { font-size: 0.8rem; font-weight: 600; display: flex; flex-direction: column; gap: 0.2rem; }
+.filters input, .filters select { padding: 0.4rem; border: 1px solid var(--color-border); border-radius: 4px; }
+.tag-alerta { background: #fdecea; color: var(--color-danger); font-weight: 700; }
+.tag-ok { background: #e9f7ef; color: #1e8449; }
+.tag-pendiente { background: #fef9e7; color: #9a7d0a; }
+.tag-completado { background: #e9f7ef; color: #1e8449; }
+.tag-cancelado { background: #f2f3f4; color: #626567; }
+.tag-entrada, .tag-devolucion_cliente { background: #e9f7ef; color: #1e8449; }
+.tag-salida { background: #fdecea; color: var(--color-danger); }
+.alert-ok { background: #e9f7ef; color: #1e8449; border: 1px solid #b7e1c6; }
+.form-wide { max-width: 100%; }
+.lineas { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+.lineas th { text-align: left; font-size: 0.8rem; padding: 0.3rem; }
+.lineas td { padding: 0.25rem; }
+.lineas select, .lineas input { width: 100%; }
+.num { text-align: right; }
+.resumen { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem; margin-bottom: 1rem; }
+.resumen div { background: var(--color-card); border: 1px solid var(--color-border); border-radius: 8px; padding: 0.75rem; }
+.resumen span { display: block; font-size: 0.75rem; color: #6b7a86; }
+.table-wrap { overflow-x: auto; }

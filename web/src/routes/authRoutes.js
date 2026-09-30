@@ -39,6 +39,7 @@ router.post('/login', async (req, res, next) => {
     // Solo guardamos en sesión lo necesario para la UI; nunca el hash.
     req.session.usuario = {
       usuario_id: usuario.usuario_id,
+      empleado_id: usuario.empleado_id, // responsable de pedidos/ingresos (Entrega 3)
       username: usuario.username,
       nombre_completo: usuario.nombres, // nombres_apellidos ya viene completo desde la BD
       rol: usuario.nombre_rol,

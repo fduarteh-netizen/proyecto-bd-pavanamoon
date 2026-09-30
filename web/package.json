@@ -1,7 +1,7 @@
 {
   "name": "pavanamoon-web",
-  "version": "0.3.0",
-  "description": "Aplicacion web (Entrega 2 - 30%) del sistema Pavanamoon: login + layout + CRUD de Producto y Cliente. Consume la base de datos MySQL definida en sql/ddl/.",
+  "version": "0.7.0",
+  "description": "Aplicacion web (Entrega 3 - 70%) del sistema Pavanamoon: login, control por rol, productos, inventario, furgones, ingresos, clientes, pedidos y kardex. Consume la base de datos MySQL definida en sql/ddl/.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

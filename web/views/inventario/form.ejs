@@ -1,0 +1,42 @@
+<%- include('../partials/header') %>
+
+<h1>Nueva variante</h1>
+
+<% if (errores && errores.length) { %>
+  <div class="alert alert-error"><ul><% errores.forEach(function(e) { %><li><%= e %></li><% }); %></ul></div>
+<% } %>
+
+<form action="/inventario" method="POST" class="form">
+  <label for="producto_id">Producto</label>
+  <select id="producto_id" name="producto_id" required>
+    <option value="">-- Selecciona --</option>
+    <% productos.forEach(function(p) { %>
+      <option value="<%= p.producto_id %>" <%= variante && Number(variante.producto_id) === p.producto_id ? 'selected' : '' %>><%= p.modelo %></option>
+    <% }); %>
+  </select>
+
+  <label for="talla_id">Talla</label>
+  <select id="talla_id" name="talla_id" required>
+    <option value="">-- Selecciona --</option>
+    <% tallas.forEach(function(t) { %>
+      <option value="<%= t.talla_id %>" <%= variante && Number(variante.talla_id) === t.talla_id ? 'selected' : '' %>><%= t.valor_talla %></option>
+    <% }); %>
+  </select>
+
+  <label for="color_id">Color</label>
+  <select id="color_id" name="color_id" required>
+    <option value="">-- Selecciona --</option>
+    <% colores.forEach(function(c) { %>
+      <option value="<%= c.color_id %>" <%= variante && Number(variante.color_id) === c.color_id ? 'selected' : '' %>><%= c.nombre_color %></option>
+    <% }); %>
+  </select>
+
+  <label for="stock_minimo">Stock mínimo (alerta)</label>
+  <input type="number" id="stock_minimo" name="stock_minimo" min="0" step="1" required value="<%= variante ? variante.stock_minimo : 5 %>" />
+
+  <p class="note" style="margin:0.5rem 0 0">El stock inicia en 0 y sube al registrar un ingreso de mercadería. El SKU se genera automáticamente.</p>
+  <button type="submit" class="btn btn-primary">Crear variante</button>
+  <a href="/inventario" class="btn-link">Cancelar</a>
+</form>
+
+<%- include('../partials/footer') %>

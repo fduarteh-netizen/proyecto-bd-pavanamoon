@@ -1,0 +1,53 @@
+<%- include('../partials/header') %>
+
+<h1>Nuevo pedido</h1>
+
+<% if (errores && errores.length) { %>
+  <div class="alert alert-error"><ul><% errores.forEach(function(e) { %><li><%= e %></li><% }); %></ul></div>
+<% } %>
+
+<form action="/pedidos" method="POST" class="form form-wide">
+  <label for="cliente_id">Cliente</label>
+  <select id="cliente_id" name="cliente_id" required>
+    <option value="">-- Selecciona --</option>
+    <% clientes.forEach(function(c) { %>
+      <option value="<%= c.cliente_id %>" <%= Number(datos.cliente_id) === c.cliente_id ? 'selected' : '' %>><%= c.nombre_cliente %> (<%= c.tipo_cliente %>)</option>
+    <% }); %>
+  </select>
+
+  <label>Productos (deja vacías las filas que no uses)</label>
+  <table class="lineas">
+    <thead><tr><th>Variante (stock disponible en pares)</th><th style="width:160px">Presentación</th><th style="width:110px">Cantidad</th></tr></thead>
+    <tbody>
+    <% for (let i = 0; i < filas; i++) { const l = (datos.lineas && datos.lineas[i]) || {}; %>
+      <tr>
+        <td>
+          <select name="lineas[<%= i %>][variante_id]">
+            <option value="">—</option>
+            <% variantes.forEach(function(v) { %>
+              <option value="<%= v.variante_id %>" <%= Number(l.variante_id) === v.variante_id ? 'selected' : '' %>><%= v.modelo %> · T<%= v.talla %> · <%= v.color %> · Q<%= Number(v.precio_venta).toFixed(2) %>/par (stock <%= v.stock_actual %>)</option>
+            <% }); %>
+          </select>
+        </td>
+        <td>
+          <select name="lineas[<%= i %>][presentacion_id]">
+            <% presentaciones.forEach(function(p) { %>
+              <option value="<%= p.presentacion_id %>" <%= Number(l.presentacion_id) === p.presentacion_id ? 'selected' : '' %>><%= p.nombre %> (<%= p.cantidad_pares %> par<%= p.cantidad_pares > 1 ? 'es' : '' %>)</option>
+            <% }); %>
+          </select>
+        </td>
+        <td><input type="number" min="1" step="1" name="lineas[<%= i %>][cantidad]" value="<%= l.cantidad || '' %>" /></td>
+      </tr>
+    <% } %>
+    </tbody>
+  </table>
+
+  <p class="note" style="margin:0.5rem 0 0">
+    El precio lo calcula la base de datos (<code>fn_calcular_precio_linea</code>): precio por par × pares de la presentación × descuento del tipo de cliente
+    (mayorista 15%). Si no hay stock suficiente, el trigger rechaza el pedido completo.
+  </p>
+  <button type="submit" class="btn btn-primary">Registrar pedido</button>
+  <a href="/pedidos" class="btn-link">Cancelar</a>
+</form>
+
+<%- include('../partials/footer') %>

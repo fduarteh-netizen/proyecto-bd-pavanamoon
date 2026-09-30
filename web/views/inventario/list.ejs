@@ -1,0 +1,47 @@
+<%- include('../partials/header') %>
+
+<div class="page-heading">
+  <h1>Inventario por variante</h1>
+  <% if (usuarioActual.rol !== 'vendedor') { %>
+    <a class="btn btn-primary" href="/inventario/nueva">+ Nueva variante</a>
+  <% } %>
+</div>
+
+<form class="filters" method="GET" action="/inventario">
+  <label>Buscar (SKU o modelo)
+    <input type="text" name="q" value="<%= busqueda %>" maxlength="50" />
+  </label>
+  <label style="flex-direction:row;align-items:center;gap:0.3rem">
+    <input type="checkbox" name="alertas" value="1" <%= soloAlertas ? 'checked' : '' %> /> Solo bajo stock mínimo
+  </label>
+  <button class="btn btn-primary" type="submit">Filtrar</button>
+  <a class="btn-link" href="/inventario">Limpiar</a>
+</form>
+
+<p class="note" style="margin-top:0">Fuente: vista <code>vw_stock_variantes</code>. El stock solo cambia por ingresos, pedidos y devoluciones (triggers/procedimientos).</p>
+
+<div class="table-wrap">
+<table class="table">
+  <thead>
+    <tr><th>SKU</th><th>Modelo</th><th>Categoría</th><th>Talla</th><th>Color</th><th class="num">Precio/par</th><th class="num">Stock</th><th class="num">Mínimo</th><th>Estado</th></tr>
+  </thead>
+  <tbody>
+    <% if (variantes.length === 0) { %><tr><td colspan="9">No hay variantes con ese filtro.</td></tr><% } %>
+    <% variantes.forEach(function(v) { %>
+      <tr>
+        <td><%= v.sku %></td>
+        <td><%= v.modelo %></td>
+        <td><%= v.categoria %></td>
+        <td><%= v.talla %></td>
+        <td><%= v.color %></td>
+        <td class="num">Q <%= Number(v.precio_venta).toFixed(2) %></td>
+        <td class="num"><strong><%= v.stock_actual %></strong></td>
+        <td class="num"><%= v.stock_minimo %></td>
+        <td><% if (v.alerta_stock_bajo) { %><span class="tag tag-alerta">Bajo mínimo</span><% } else { %><span class="tag tag-ok">OK</span><% } %></td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>
+</div>
+
+<%- include('../partials/footer') %>

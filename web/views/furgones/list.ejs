@@ -1,0 +1,33 @@
+<%- include('../partials/header') %>
+
+<div class="page-heading">
+  <h1>Furgones</h1>
+  <a class="btn btn-primary" href="/furgones/nuevo">+ Nuevo furgón</a>
+</div>
+
+<div class="table-wrap">
+<table class="table">
+  <thead><tr><th>Número</th><th>Llegada</th><th>Procedencia</th><th>Transportista</th><th>Estado</th><th class="num">Ingresos</th><th>Acciones</th></tr></thead>
+  <tbody>
+    <% if (furgones.length === 0) { %><tr><td colspan="7">No hay furgones registrados.</td></tr><% } %>
+    <% furgones.forEach(function(f) { %>
+      <tr>
+        <td><%= f.numero_furgon %></td>
+        <td><%= new Date(f.fecha_llegada).toISOString().slice(0, 10) %></td>
+        <td><%= f.procedencia || '—' %></td>
+        <td><%= f.transportista || '—' %></td>
+        <td><%= f.estado %></td>
+        <td class="num"><%= f.ingresos %></td>
+        <td class="actions">
+          <a href="/furgones/<%= f.furgon_id %>/editar">Editar</a>
+          <form action="/furgones/<%= f.furgon_id %>?_method=DELETE" method="POST" onsubmit="return confirm('¿Eliminar este furgón?');" style="display:inline">
+            <button type="submit" class="btn-link btn-danger">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>
+</div>
+
+<%- include('../partials/footer') %>

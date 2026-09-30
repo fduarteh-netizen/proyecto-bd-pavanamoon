@@ -133,7 +133,6 @@ Registro obligatorio de uso de agentes de inteligencia artificial durante el des
 | **Validación del grupo** | Pendiente que el equipo: confirme los nombres/carnés en la certificación firmada; revise las capturas de `docs/casos-prueba/evidencias/` y, si lo desea, las reemplace por capturas propias tomadas desde su navegador; y aplique el ajuste manual pendiente en el `.mwb` (Sección 1.3 de `ENTREGA2_DISENO_LOGICO.md`). |
 | **Estándares aplicados (post-IA)** | R6 (credenciales reales detectadas y eliminadas antes de subir a GitHub), S7 (eliminación de la redundancia de precio entre dos tablas), S8 (validación real contra MySQL, no solo sintáctica, antes de certificar la entrega), D3/D4 (diagramas exportados en los 3 formatos exigidos y sincronizados con la implementación; trazabilidad completa de cada corrección) |
 | **Responsable** | Cristian Otoniel Pérez Ríos |
-<<<<<<< HEAD
 
 ## Entrada 11
 
@@ -147,5 +146,17 @@ Registro obligatorio de uso de agentes de inteligencia artificial durante el des
 | **Validación del grupo** | Pendiente que el equipo: mueva o recree el tag `entrega-1` apuntando a un commit reciente; genere commits reales y sustantivos para el integrante señalado por el catedrático; y confirme que la Sección 7 actualizada de `ENTREGA1_PROPUESTA.md` sigue reflejando decisiones con las que todos están de acuerdo (especialmente el uso de `TIPO_CLIENTE` y `PRESENTACION_VENTA`). |
 | **Estándares aplicados (post-IA)** | R1 (estructura de carpetas obligatoria, ahora completa), R4 (participación visible — diagnóstico entregado, corrección pendiente en Git real), D4 (trazabilidad: texto, diagrama y DDL sincronizados), S8 (transparencia: la corrección posterior a la calificación queda fechada y documentada, no oculta) |
 | **Responsable** | José Alejandro Cabrera Gramajo |
-=======
->>>>>>> 7399d866bb8fa8177cff65f7e16ca968569ddf08
+
+## Entrada 12
+
+| Campo | Detalle |
+|---|---|
+| **Fecha** | 29/09/2026 |
+| **Herramienta** | Claude (Anthropic) |
+| **Objetivo** | Completar la Entrega 3: DML con ≥ 50 registros por tabla principal, vistas, triggers, procedimientos, seguridad con 3 roles en MySQL, 8 casos de prueba con matriz de trazabilidad, y avance web al ≈70 % con control de acceso por rol. |
+| **Prompt utilizado** | Resumen: "Revisa el repositorio del proyecto y genera todo lo relacionado con la Entrega 3 según la guía (productos y tabla de ponderación), respetando los estándares de la Sección 6, y una forma rápida de presentarlo al catedrático." |
+| **Resultado obtenido** | (1) Auditoría del repo: carpetas `sql/views`, `triggers`, `procedures`, `security` vacías; conflicto de merge sin resolver en esta bitácora (marcadores `<<<<<<<`/`>>>>>>>` alrededor de la Entrada 11), que se resolvió conservando la Entrada 11. (2) Se detectó que `tipo_cliente` no tenía la columna de descuento que su comentario prometía; se agregó con `ddl/06_ajustes_entrega3.sql`. (3) DML reproducible (semilla fija) con datos consistentes stock = kardex. (4) 4 vistas, 3 triggers, 1 función, 3 procedimientos y 3 roles de MySQL con privilegios diferenciados. (5) 5 módulos web nuevos (Inventario, Furgones, Ingresos, Pedidos, Kardex) y control por rol con una matriz única de permisos. (6) Se instaló MySQL 8.0 real, se ejecutó todo desde cero y se corrieron los 8 casos (8/8). (7) Durante las pruebas se encontró un bug: los acentos se cargaban corruptos ("SalcajÃ¡") porque los scripts DML no fijaban el charset de la sesión; se corrigió con `SET NAMES utf8mb4` en ambos DML. (8) Las evidencias se guardaron como `.txt` porque `.gitignore` excluye `*.log` (la evidencia `.log` de la Entrega 2 nunca se subió por esa razón). |
+| **Validación del grupo** | Pendiente que el equipo: ejecute `INSTALL.md` en su propia máquina, revise que puede explicar cada trigger/procedimiento (regla de negocio y por qué va en la BD), pruebe los 3 usuarios en el navegador y firme la certificación. Cada integrante debe poder defender al menos un objeto de BD en la revisión funcional. |
+| **Estándares aplicados (post-IA)** | S1–S4 (snake_case, un objeto por archivo, encabezados, FKs sin cambios), S6 (regla de negocio en cada trigger/procedimiento), S7 (alertas, totales y precios calculados, no duplicados), S8 (todo ejecutado contra MySQL 8 real antes de entregar), A1–A6 (capas, errores comprensibles, validación, consultas parametrizadas), R6 (solo contraseñas placeholder documentadas; `web/.env` no incluido), D4 (matriz de trazabilidad actualizada). |
+| **Responsable** | _(completar: integrante que validó)_ |
+
