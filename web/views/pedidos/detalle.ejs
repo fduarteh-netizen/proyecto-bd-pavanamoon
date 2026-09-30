@@ -1,55 +1,130 @@
 <%- include('../partials/header') %>
 
 <div class="page-heading">
-  <h1>Pedido #<%= pedido.pedido_id %> <span class="tag tag-<%= pedido.estado %>"><%= pedido.estado %></span></h1>
+  <h1>
+    Pedido #<%= pedido.pedido_id %>
+    <span class="tag tag-<%= pedido.estado %>"><%= pedido.estado %></span>
+  </h1>
   <a class="btn-link" href="/pedidos">← Volver</a>
 </div>
 
-<% if (mensaje) { %><div class="alert alert-ok"><%= mensaje %></div><% } %>
-<% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+<% if (mensaje) { %>
+  <div class="alert alert-ok"><%= mensaje %></div>
+<% } %>
+
+<% if (error) { %>
+  <div class="alert alert-error"><%= error %></div>
+<% } %>
 
 <div class="resumen">
-  <div><span>Cliente</span><strong><%= pedido.nombre_cliente %></strong></div>
-  <div><span>Tipo de cliente</span><strong><%= pedido.tipo_cliente %></strong></div>
-  <div><span>Vendedor</span><strong><%= pedido.vendedor %></strong></div>
-  <div><span>Fecha</span><strong><%= new Date(pedido.fecha_pedido).toLocaleString('es-GT') %></strong></div>
-  <div><span>Pares</span><strong><%= pedido.pares_totales %></strong></div>
-  <div><span>Total (trigger)</span><strong>Q <%= Number(pedido.total_pedido).toFixed(2) %></strong></div>
+  <div>
+    <span>Cliente</span>
+    <strong><%= pedido.nombre_cliente %></strong>
+  </div>
+
+  <div>
+    <span>Tipo de cliente</span>
+    <strong><%= pedido.tipo_cliente %></strong>
+  </div>
+
+  <div>
+    <span>Vendedor</span>
+    <strong><%= pedido.atendido_por %></strong>
+  </div>
+
+  <div>
+    <span>Fecha</span>
+    <strong><%= new Date(pedido.fecha_pedido).toLocaleString('es-GT') %></strong>
+  </div>
+
+  <div>
+    <span>Pares</span>
+    <strong><%= pedido.cantidad_lineas %></strong>
+  </div>
+
+  <div>
+    <span>Total (trigger)</span>
+    <strong>Q <%= Number(pedido.total_pedido).toFixed(2) %></strong>
+  </div>
 </div>
 
 <table class="table">
-  <thead><tr><th>SKU</th><th>Modelo</th><th>Talla</th><th>Color</th><th>Presentación</th><th class="num">Cant.</th><th class="num">Precio unit.</th><th class="num">Subtotal</th></tr></thead>
+  <thead>
+    <tr>
+      <th>SKU</th>
+      <th>Modelo</th>
+      <th>Talla</th>
+      <th>Color</th>
+      <th>Presentación</th>
+      <th class="num">Cant.</th>
+      <th class="num">Precio unit.</th>
+      <th class="num">Subtotal</th>
+    </tr>
+  </thead>
+
   <tbody>
     <% pedido.lineas.forEach(function(l) { %>
-      <tr><td><%= l.sku %></td><td><%= l.modelo %></td><td><%= l.talla %></td><td><%= l.color %></td>
-        <td><%= l.presentacion %> (<%= l.cantidad_pares %>)</td><td class="num"><%= l.cantidad %></td>
-        <td class="num">Q <%= Number(l.precio_unitario).toFixed(2) %></td><td class="num">Q <%= Number(l.subtotal).toFixed(2) %></td></tr>
-    <% }); %>
+      <tr>
+        <td><%= l.sku %></td>
+        <td><%= l.modelo %></td>
+        <td><%= l.talla %></td>
+        <td><%= l.color %></td>
+        <td><%= l.presentacion %> (<%= l.cantidad_pares %>)</td>
+        <td class="num"><%= l.cantidad %></td>
+        <td class="num">Q <%= Number(l.precio_unitario).toFixed(2) %></td>
+        <td class="num">Q <%= Number(l.subtotal).toFixed(2) %></td>
+      </tr>
+    <% }) %>
   </tbody>
 </table>
 
 <% if (pedido.estado === 'pendiente') { %>
   <form action="/pedidos/<%= pedido.pedido_id %>/completar" method="POST" style="margin-top:1rem">
-    <button class="btn btn-primary" type="submit">Marcar como completado</button>
+    <button class="btn btn-primary" type="submit">
+      Marcar como completado
+    </button>
   </form>
 <% } %>
 
 <% if (pedido.estado === 'completado' && pedido.lineas.length) { %>
+
   <h2 style="margin-top:2rem">Registrar devolución (RF17)</h2>
+
   <form action="/pedidos/<%= pedido.pedido_id %>/devolucion" method="POST" class="filters">
-    <label>Variante
+
+    <label>
+      Variante
       <select name="variante_id" required>
         <% pedido.lineas.forEach(function(l) { %>
-          <option value="<%= l.variante_id %>"><%= l.sku %> (vendidos: <%= l.cantidad * l.cantidad_pares %> pares)</option>
-        <% }); %>
+          <option value="<%= l.variante_id %>">
+            <%= l.sku %> (vendidos: <%= l.cantidad * l.cantidad_pares %> pares)
+          </option>
+        <% }) %>
       </select>
     </label>
-    <label>Pares a devolver
-      <input type="number" name="pares" min="1" step="1" required />
+
+    <label>
+      Pares a devolver
+      <input
+        type="number"
+        name="pares"
+        min="1"
+        step="1"
+        required
+      />
     </label>
-    <button class="btn btn-primary" type="submit">Registrar devolución</button>
+
+    <button class="btn btn-primary" type="submit">
+      Registrar devolución
+    </button>
+
   </form>
-  <p class="note" style="margin-top:0">Ejecuta <code>sp_registrar_devolucion</code>: valida contra lo vendido, regresa el stock y deja el movimiento en el kardex.</p>
+
+  <p class="note" style="margin-top:0">
+    Ejecuta <code>sp_registrar_devolucion</code>: valida contra lo vendido,
+    regresa el stock y deja el movimiento en el kardex.
+  </p>
+
 <% } %>
 
 <%- include('../partials/footer') %>
