@@ -15,6 +15,7 @@
 -- =============================================================================
 
 USE pavanamoon;
+SET NAMES utf8mb4;  -- mensajes de negocio con acentos correctos sin importar el cliente
 
 DROP FUNCTION IF EXISTS fn_calcular_precio_linea;
 

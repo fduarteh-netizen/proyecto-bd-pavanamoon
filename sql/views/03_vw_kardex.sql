@@ -13,6 +13,7 @@
 -- =============================================================================
 
 USE pavanamoon;
+SET NAMES utf8mb4;  -- mensajes de negocio con acentos correctos sin importar el cliente
 
 CREATE OR REPLACE VIEW vw_kardex AS
 SELECT

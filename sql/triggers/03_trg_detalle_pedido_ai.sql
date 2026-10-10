@@ -14,6 +14,7 @@
 -- =============================================================================
 
 USE pavanamoon;
+SET NAMES utf8mb4;  -- mensajes de negocio con acentos correctos sin importar el cliente
 
 DROP TRIGGER IF EXISTS trg_detalle_pedido_ai;
 
