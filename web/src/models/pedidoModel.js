@@ -1,16 +1,29 @@
 // =============================================================================
 // Archivo:      src/models/pedidoModel.js
+// Descripción:  Acceso a datos del módulo Pedidos (RF11-RF14, RF17). La app
+//               NO calcula precios ni toca el stock: invoca los
+//               procedimientos sp_crear_pedido y sp_agregar_linea_pedido
+//               (precio con descuento por fn_calcular_precio_linea) dentro de
+//               UNA transacción; los triggers validan stock, lo descuentan,
+//               registran el kardex y recalculan el total. Si cualquier línea
+//               falla (ej. stock insuficiente) se hace ROLLBACK de todo.
+//               listar() acepta clienteId para el historial por cliente (RF14).
+// Dependencias: src/config/db.js, vista vw_pedidos_resumen,
+//               sp_crear_pedido, sp_agregar_linea_pedido, sp_registrar_devolucion
 // =============================================================================
 
 const pool = require('../config/db');
 
-async function listar() {
-  const [rows] = await pool.query(`
-    SELECT *
-    FROM vw_pedidos_resumen
-    ORDER BY fecha_pedido DESC, pedido_id DESC
-    LIMIT 200
-  `);
+async function listar({ clienteId = null } = {}) {
+  const where = clienteId ? 'WHERE cliente_id = ?' : '';
+  const [rows] = await pool.query(
+    `SELECT *
+     FROM vw_pedidos_resumen
+     ${where}
+     ORDER BY fecha_pedido DESC, pedido_id DESC
+     LIMIT 200`,
+    clienteId ? [clienteId] : []
+  );
 
   return rows;
 }
@@ -63,7 +76,7 @@ async function crear({ cliente_id, empleado_id, lineas }) {
 
     for (const linea of lineas) {
       await conn.query(
-        'CALL sp_agregar_variante_pedido(?, ?, ?, ?)',
+        'CALL sp_agregar_linea_pedido(?, ?, ?, ?)',
         [
           pedidoId,
           linea.variante_id,
