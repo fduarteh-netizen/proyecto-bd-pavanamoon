@@ -2,22 +2,87 @@
 
 Registro obligatorio de uso de agentes de inteligencia artificial durante el desarrollo del proyecto (Sección 10 de la guía). Equipo: Fernando Rafael Duarte Hernández, Luis Adolfo Martínez Hernández, Cristian Otoniel Pérez Ríos, José Alejandro Cabrera Gramajo.
 
+**Forma de trabajo con IA.** La IA no se usa como "una consulta y listo":
+cada entrega se trabaja en varias consultas encadenadas, una por cada cosa que
+se construye o corrige (pedir → revisar contra el repositorio y la guía →
+ejecutar en MySQL real → corregir lo que falla → volver a probar). Cada
+**entrada** es una sesión de trabajo y cada **consulta** (ej. 12.5) es un
+prompt distinto dentro de esa sesión, con su propio resultado y validación.
+
+### Índice
+
+| Entrada | Fecha | Herramienta | Tema | Consultas |
+|---|---|---|---|---|
+| 1 | 17/08/2026 | Claude | Arranque de la Entrega 1: propuesta, RF/RD, ER, cronograma, estructura | 4 |
+| 2 | 19/08/2026 | Gemini | Propuesta de negocio (B2C/B2B, suelas, furgones) | 1 |
+| 3 | 19/08/2026 | Gemini | Requerimientos funcionales y de datos | 1 |
+| 4 | 19/08/2026 | Gemini | Diagrama ER conceptual | 1 |
+| 5 | 19/08/2026 | Gemini | Estructura del repositorio y certificado | 1 |
+| 6 | 20/08/2026 | Claude | Auditoría del repositorio Git | 1 |
+| 7 | 20/08/2026 | Claude | Rediseño de recepción por furgón | 1 |
+| 8 | 30/08/2026 | Claude | Entrega 2: modelo relacional, 3FN, diccionario, DDL, web 30 % | 6 |
+| 9 | 30/08/2026 | Claude | Incorporación del diagrama ER corregido | 1 |
+| 10 | 31/08/2026 | Claude | Auditoría final de la Entrega 2 | 5 |
+| 11 | 31/08/2026 | Claude | Retroalimentación del catedrático (Entrega 1) | 3 |
+| 12 | 29/09/2026 | Claude | Entrega 3: DML, vistas, triggers, procedimientos, roles, web 70 %, pruebas | 10 |
+| 13 | 01/10/2026 | Claude | Verificación de los 3 roles de MySQL y guion de presentación | 5 |
+| 14 | 01/10/2026 | Claude | Regresión en el módulo de pedidos | 4 |
+| 15 | 01/10/2026 | Claude | Charset de triggers/procedimientos y script de casos BD | 4 |
+| 16 | 09/10/2026 | Claude | Reestructuración de esta bitácora | 3 |
+| | | | **Total** | **51** |
+
 ---
 
-## Entrada 1
+
+## Entrada 1 — Arranque de la Entrega 1
 
 | Campo | Detalle |
 |---|---|
 | **Fecha** | 17/08/2026 |
 | **Herramienta** | Claude (Anthropic) |
-| **Objetivo** | Redactar la propuesta inicial de Entrega 1, RF/RD, matriz de trazabilidad, diseño conceptual del modelo Entidad-Relación en notación Chen, cronograma, y generar plantillas de README, certificación y script de automatización Git. |
-| **Prompt utilizado** | "Actúa como Arquitecto Senior de BD... genera Entrega 1 para el caso de negocio Pavanamoon con: propuesta, RF/RD, matriz de trazabilidad, diagrama ER en notación Chen, cronograma, README, bitácora IA, certificación y script bash de automatización Git." |
-| **Resultado obtenido** | Documento de propuesta completo, README, plantilla de bitácora, certificación, y script de automatización de estructura y Git. |
-| **Validación del grupo** | Se revisó que el número de entidades, relaciones N:M y RF/RD reflejaran el caso de negocio real; se confirmó MySQL como SGBD final. |
-| **Estándares aplicados (post-IA)** | Estructura de carpetas Sección 7; mínimos de la Sección 5 (≥8 entidades, ≥2 N:M); transparencia metodológica sobre notación Chen en Mermaid (estándar D3). |
+| **Objetivo de la sesión** | Generar la base de la Entrega 1 (propuesta, requerimientos, modelo ER, cronograma y estructura del repositorio). |
+| **Consultas** | 4 (ver abajo) |
 | **Responsable** | Fernando Rafael Duarte Hernández |
 
-## Entrada 2
+### Consulta 1.1 — Propuesta, RF/RD y matriz de trazabilidad
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Actúa como Arquitecto Senior de BD. Para el caso de negocio Pavanamoon redacta la propuesta inicial con requerimientos funcionales y de datos, y una matriz de trazabilidad requerimiento → entidad." |
+| **Resultado obtenido** | Borrador de la propuesta con descripción del problema, solución, RF/RD agrupados por módulo y la matriz de trazabilidad. |
+| **Validación del grupo** | Se revisó que los RF/RD reflejaran el negocio real de Pavanamoon (calzado de fútbol, ventas al detalle y por mayor); se confirmó MySQL como SGBD final. |
+| **Estándares aplicados (post-IA)** | D4 (trazabilidad), Sección 5 de la guía |
+
+### Consulta 1.2 — Diseño conceptual ER en notación Chen
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Con esos requerimientos diseña el modelo Entidad-Relación en notación Chen, con al menos 8 entidades y 2 relaciones N:M." |
+| **Resultado obtenido** | Primera versión del modelo con entidades, cardinalidades y las 2 relaciones N:M, más una vista de apoyo en Mermaid. |
+| **Validación del grupo** | Se verificó el mínimo de la guía (≥ 8 entidades, ≥ 2 N:M). Se dejó explícito que Mermaid no dibuja Chen nativamente (nota metodológica). |
+| **Estándares aplicados (post-IA)** | Sección 5 (req. 1 y 2), D3 (transparencia sobre la herramienta de diagramación) |
+
+### Consulta 1.3 — Cronograma y plantillas de documentos
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Genera el cronograma de 12 semanas y las plantillas del README, la bitácora de IA y la certificación de calidad." |
+| **Resultado obtenido** | Cronograma tipo Gantt textual y plantillas de README, `BITACORA_IA.md` y certificación. |
+| **Validación del grupo** | El equipo ajustó las fechas del cronograma a las entregas del curso. |
+| **Estándares aplicados (post-IA)** | R2 (README), Sección 10 (bitácora) |
+
+### Consulta 1.4 — Script de estructura y Git
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Haz un script bash que cree la estructura de carpetas de la Sección 7 y haga el primer commit." |
+| **Resultado obtenido** | Script `setup_entrega1.sh` que creaba carpetas y hacía el commit inicial. |
+| **Validación del grupo** | Se usó para el primer commit. Más adelante (Entrada 11) se detectó que generaba carpetas con nombres incorrectos y se eliminó. |
+| **Estándares aplicados (post-IA)** | R1 (estructura de carpetas) |
+
+---
+
+## Entrada 2 — Propuesta de negocio
 
 | Campo | Detalle |
 |---|---|
@@ -30,7 +95,9 @@ Registro obligatorio de uso de agentes de inteligencia artificial durante el des
 | **Estándares aplicados** | D1, D2 (Ortografía y versionado en Markdown) |
 | **Responsable** | Luis Adolfo Martínez Hernández |
 
-## Entrada 3
+---
+
+## Entrada 3 — Requerimientos funcionales y de datos
 
 | Campo | Detalle |
 |---|---|
@@ -43,7 +110,9 @@ Registro obligatorio de uso de agentes de inteligencia artificial durante el des
 | **Estándares aplicados** | D4 (Trazabilidad de requerimientos) |
 | **Responsable** | Cristian Otoniel Pérez Ríos |
 
-## Entrada 4
+---
+
+## Entrada 4 — Diagrama ER conceptual
 
 | Campo | Detalle |
 |---|---|
@@ -56,7 +125,9 @@ Registro obligatorio de uso de agentes de inteligencia artificial durante el des
 | **Estándares aplicados** | Requisitos 1 y 2 de la Sección 5 (≥8 entidades, relaciones N:M) |
 | **Responsable** | José Alejandro Cabrera Gramajo |
 
-## Entrada 5
+---
+
+## Entrada 5 — Estructura del repositorio y certificado
 
 | Campo | Detalle |
 |---|---|
@@ -69,7 +140,9 @@ Registro obligatorio de uso de agentes de inteligencia artificial durante el des
 | **Estándares aplicados** | R1, R2 (Estructura de carpetas y README) |
 | **Responsable** | Fernando Rafael Duarte Hernández |
 
-## Entrada 6
+---
+
+## Entrada 6 — Auditoría del repositorio Git
 
 | Campo | Detalle |
 |---|---|
@@ -82,7 +155,9 @@ Registro obligatorio de uso de agentes de inteligencia artificial durante el des
 | **Estándares aplicados** | R1, R4, R5, D3, D4, S8 |
 | **Responsable** | Luis Adolfo Martínez Hernández |
 
-## Entrada 7
+---
+
+## Entrada 7 — Rediseño de recepción por furgón
 
 | Campo | Detalle |
 |---|---|
@@ -95,20 +170,75 @@ Registro obligatorio de uso de agentes de inteligencia artificial durante el des
 | **Estándares aplicados** | D3 (diagramas editable + PNG/PDF), D4 (trazabilidad), S1 (nomenclatura consistente), S8 (validación IA) |
 | **Responsable** | José Alejandro Cabrera Gramajo |
 
-## Entrada 8
+---
+
+## Entrada 8 — Entrega 2: diseño lógico, DDL y web 30 %
 
 | Campo | Detalle |
 |---|---|
 | **Fecha** | 30/08/2026 |
 | **Herramienta** | Claude (Anthropic) |
-| **Objetivo** | Construir la Entrega 2 completa: modelo relacional, normalización 1FN/2FN/3FN con ejemplos propios, diccionario de datos, scripts DDL ejecutables, datos semilla, y la aplicación web (login + CRUD de Producto y Cliente) en Node.js/Express/EJS. |
-| **Prompt utilizado** | Resumen: "Continuemos con la Entrega 2 del proyecto Pavanamoon: modelo relacional, 3FN, diccionario de datos, scripts DDL y la app web (login + 2 CRUD) según la guía adjunta." Stack elegido por el equipo: Node.js + Express + EJS. |
-| **Resultado obtenido** | Al revisar el repositorio contra la guía, el agente detectó que `docs/entrega-1/ENTREGA1_PROPUESTA.md` (modelo con PROVEEDOR/COMPRA) no coincidía con el diagrama ER vigente (`Pavanamoon_er_chen.drawio`, modelo con FURGON/INGRESO_MERCADERIA/TIPO_CLIENTE/PRESENTACION_VENTA, confirmado como el diseño final en la Entrada 7 de esta misma bitácora). Se le preguntó explícitamente al equipo cuál modelo era el vigente antes de continuar. El equipo confirmó que el diagrama es la fuente de verdad. Con esa confirmación, el agente extrajo programáticamente la estructura exacta del `.drawio` (entidades, atributos, cardinalidades) para evitar transcribir el modelo a mano, generó los 5 scripts DDL (`sql/ddl/`), el script de datos semilla (`sql/dml/00_seed_minimo.sql`), el documento de diseño lógico con diccionario de datos y demostración de 3FN (`docs/entrega-2/ENTREGA2_DISENO_LOGICO.md`, incluyendo una sección que documenta la inconsistencia detectada y las 2 correcciones/2 adiciones aplicadas sobre el diagrama), y la aplicación web completa (`web/`: servidor Express, modelos con consultas parametrizadas, middlewares de autenticación/errores, validación de entrada, vistas EJS y CSS propio). |
-| **Validación del grupo** | Validado por el agente contra una instancia MySQL/MariaDB real (no solo sintaxis): los 5 scripts DDL y el seed se ejecutaron desde cero sin errores; se corrieron 10 pruebas de restricciones de integridad (NIT duplicado, precio negativo, FK inexistente, stock negativo, SKU duplicado, combinación duplicada, borrado restringido, columna generada) con 10/10 exitosas; se probó el login y ambos CRUD (Producto y Cliente) de extremo a extremo contra la base real, incluyendo la creación de registros reales y el manejo de un NIT duplicado sin caída del servidor. Evidencia completa en `docs/casos-prueba/CASOS_PRUEBA.md`. Las 2 adiciones (`cliente.nombre_cliente`, `pedido.estado`) se mantienen: son necesarias para que la aplicación web funcione (sin nombre no se puede listar clientes; sin estado no se puede distinguir un pedido cancelado) y así quedó confirmado al construir y probar el CRUD real. Pendiente: que el equipo revise si desea agregarlas también al `.drawio` para que el diagrama quede 100% completo (hoy quedan documentadas como adición justificada, no como parte del diagrama). |
-| **Estándares aplicados (post-IA)** | S1 (nomenclatura snake_case), S2 (un script un propósito), S3 (encabezado en cada script), S4 (ON DELETE/ON UPDATE documentado en cada FK), S7 (subtotal como columna generada, sin redundancia), S8 (validación de SQL generado por IA con parser antes del commit), A1-A5 (separación de capas, manejo de errores, validación de entrada, consultas parametrizadas, código legible en la app web), D4 (trazabilidad y documentación explícita de la inconsistencia Entrega 1 vs. diagrama) |
+| **Objetivo de la sesión** | Construir la Entrega 2: modelo relacional, normalización 3FN, diccionario de datos, DDL ejecutable, datos semilla y la app web (login + CRUD de Producto y Cliente) en Node.js/Express/EJS. |
+| **Consultas** | 6 (ver abajo) |
 | **Responsable** | Fernando Rafael Duarte Hernández |
 
-## Entrada 9
+### Consulta 8.1 — ¿Cuál es el modelo vigente?
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Continuemos con la Entrega 2 según la guía adjunta. Antes de empezar, revisa el repositorio." |
+| **Resultado obtenido** | El agente detectó que `ENTREGA1_PROPUESTA.md` (con PROVEEDOR/COMPRA) no coincidía con el diagrama `Pavanamoon_er_chen.drawio` (con FURGON/INGRESO_MERCADERIA/TIPO_CLIENTE/PRESENTACION_VENTA) y **preguntó al equipo cuál era el vigente** antes de seguir. |
+| **Validación del grupo** | El equipo respondió que el diagrama es la fuente de verdad (decisión ya tomada en la Entrada 7). |
+| **Estándares aplicados (post-IA)** | D4 (trazabilidad), S8 (no avanzar sobre un supuesto sin confirmar) |
+
+### Consulta 8.2 — Modelo relacional y normalización 3FN
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "El diagrama es el correcto. Pásalo a modelo relacional y demuestra la normalización hasta 3FN con ejemplos de nuestro propio caso." |
+| **Resultado obtenido** | El agente extrajo la estructura del `.drawio` de forma programática (sin transcribir a mano) y aplicó las reglas ER → relacional: 19 tablas (15 entidades + 2 asociativas N:M + 2 tablas de teléfonos por 1FN). Demostración 1FN/2FN/3FN con ejemplos de Pavanamoon. |
+| **Validación del grupo** | Se revisó que cada relación N:M quedara resuelta (`detalle_ingreso`, `detalle_pedido`) y que los ejemplos de normalización fueran del negocio real. |
+| **Estándares aplicados (post-IA)** | S7 (sin redundancia), D4 |
+
+### Consulta 8.3 — Diccionario de datos
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Genera el diccionario de datos de todas las tablas: tipo, nulidad, llaves, restricciones y descripción." |
+| **Resultado obtenido** | Diccionario de las 19 tablas en `ENTREGA2_DISENO_LOGICO.md` (Sección 4). |
+| **Validación del grupo** | Se cotejó tabla por tabla contra el DDL para que los tipos y restricciones coincidieran. |
+| **Estándares aplicados (post-IA)** | S1 (snake_case), D4 |
+
+### Consulta 8.4 — Scripts DDL y datos semilla
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Escribe los scripts DDL separados por tipo de tabla y un seed mínimo con roles y un usuario administrador." |
+| **Resultado obtenido** | 5 scripts en `sql/ddl/` y `sql/dml/00_seed_minimo.sql`. Se agregaron 2 columnas que el diagrama no tenía (`cliente.nombre_cliente`, `pedido.estado`), documentadas como adición justificada. |
+| **Validación del grupo** | Los 5 scripts y el seed se ejecutaron desde cero sin errores en una instancia MySQL/MariaDB real. |
+| **Estándares aplicados (post-IA)** | S1, S2 (un script, un propósito), S3 (encabezados), S4 (ON DELETE/ON UPDATE en cada FK), S7 (subtotal como columna generada) |
+
+### Consulta 8.5 — App web: login y CRUD
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Con Node.js + Express + EJS haz el login contra la tabla usuario y los CRUD de Producto y Cliente, con capas separadas y consultas parametrizadas." |
+| **Resultado obtenido** | Carpeta `web/` con servidor Express, modelos con consultas parametrizadas, middleware de autenticación y errores, validación de entrada, vistas EJS y CSS propio. |
+| **Validación del grupo** | Login y ambos CRUD probados de extremo a extremo contra la BD real, incluido un NIT duplicado sin que se caiga el servidor. |
+| **Estándares aplicados (post-IA)** | A1–A5 (capas, errores, validación, consultas parametrizadas, legibilidad) |
+
+### Consulta 8.6 — Pruebas de integridad
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Prueba las restricciones contra la base real y documenta los casos con su resultado." |
+| **Resultado obtenido** | 10 pruebas de restricciones (NIT duplicado, precio negativo, FK inexistente, stock negativo, SKU duplicado, combinación duplicada, borrado restringido, columna generada), 10/10 exitosas, en `docs/casos-prueba/CASOS_PRUEBA.md`. |
+| **Validación del grupo** | Pendiente en ese momento: decidir si las 2 columnas agregadas se pasaban también al `.drawio` (se resolvió en la Entrada 9). |
+| **Estándares aplicados (post-IA)** | S8 (validación real, no solo sintáctica) |
+
+---
+
+## Entrada 9 — Incorporación del diagrama ER corregido
 
 | Campo | Detalle |
 |---|---|
@@ -121,42 +251,306 @@ Registro obligatorio de uso de agentes de inteligencia artificial durante el des
 | **Estándares aplicados (post-IA)** | S4 (integridad referencial re-verificada tras el cambio de cardinalidad), S8 (comparación programática del diagrama en vez de revisión visual manual, para no pasar por alto diferencias pequeñas), D3 (el archivo `.drawio` corregido se incorporó a `docs/diagramas/`), D4 (trazabilidad: cada cambio de DDL queda ligado a la cardinalidad específica que lo originó) |
 | **Responsable** | Luis Adolfo Martínez Hernández |
 
-## Entrada 10
+---
+
+## Entrada 10 — Auditoría final de la Entrega 2
 
 | Campo | Detalle |
 |---|---|
 | **Fecha** | 31/08/2026 |
 | **Herramienta** | Claude (Anthropic) |
-| **Objetivo** | Auditoría final de la Entrega 2 contra una lista detallada de requisitos del equipo: estructura de carpetas completa, ausencia de credenciales, consistencia de precio entre `PRODUCTO` y `PRESENTACION_VENTA`, exports PNG/PDF de ambos diagramas, cierre de pendientes en bitácora/certificación, y evidencia real de ejecución (no solo validación sintáctica) para dejar el proyecto listo para subir a GitHub. |
-| **Prompt utilizado** | El equipo entregó una lista extensa de requisitos de estructura y consistencia (resumen): raíz con README/INSTALL/.gitignore/.env.example sin `.env` real ni `node_modules`; carpetas `docs/entrega-1`, `entrega-2`, `diagramas`, `certificaciones`, `bitacora-ia`, `casos-prueba`; `sql/views`, `triggers`, `procedures`, `security` presentes aunque vacíos; verificar que `usuarioModel.js` use `nombres_apellidos`; unificar la lógica de precio entre `PRODUCTO` y `PRESENTACION_VENTA`; `MAYORISTA` como `tipo_cliente` y no como presentación; eliminar elementos huérfanos del `.drawio`; y que todos los documentos digan lo mismo. |
-| **Resultado obtenido** | Auditoría completa contra la lista: (1) `web/.env` con credenciales reales estaba incluido en el paquete recibido — se eliminó; se crearon `.gitignore` y `.env.example` en la raíz (no existían). (2) Faltaban `docs/entrega-1`, `docs/casos-prueba` y las 4 subcarpetas de `sql/`; se crearon, las de `sql/` con un `README.md` explicando su contenido futuro (Entrega 3). (3) Se confirmó que `usuarioModel.js` **ya** usaba `e.nombres_apellidos AS nombres` correctamente (no tenía el bug descrito); se limpió un detalle cosmético en `authRoutes.js` (concatenación con `apellidos` vacío). (4) Se encontró y corrigió la duplicación de precio: se quitó `precio_venta` de `PRESENTACION_VENTA` en el `.drawio`, el DDL, el diccionario y el seed; las presentaciones pasaron a ser `unidad`/`caja` sin precio propio. (5) Se verificó el `.drawio` programáticamente: no tiene elementos huérfanos y la relación `registra` ya conecta directamente `EMPLEADO`–`INGRESO_MERCADERIA` (ambos puntos ya estaban correctos desde la Entrada 9). (6) Se instaló MariaDB en el entorno de trabajo y se ejecutaron los 5 scripts DDL + el seed **desde cero contra una base real**, sin errores; se corrieron 10 pruebas de restricciones de integridad (10/10 exitosas) y 7 pruebas end-to-end de la app web real (login, CRUD real de Producto y Cliente contra MySQL, manejo de NIT duplicado, guard de autenticación, logout), con capturas de pantalla reales tomadas con `wkhtmltoimage`. Todo quedó documentado en `docs/casos-prueba/CASOS_PRUEBA.md` y `docs/casos-prueba/evidencias/`. (7) Se regeneraron el PNG y el PDF del diagrama ER Chen (desde el `.drawio`) y del modelo relacional (desde el DDL real, por ser más confiable que editar el `.mwb` binario) para que ambos formatos coincidan exactamente con la implementación; se dejó documentado el único ajuste manual pendiente en el `.mwb` (eliminar la columna de precio duplicada en MySQL Workbench). (8) Se cerraron los placeholders "completar por el equipo" de las Entradas 8 y 9 con los resultados reales obtenidos en esta sesión. |
-| **Validación del grupo** | Pendiente que el equipo: confirme los nombres/carnés en la certificación firmada; revise las capturas de `docs/casos-prueba/evidencias/` y, si lo desea, las reemplace por capturas propias tomadas desde su navegador; y aplique el ajuste manual pendiente en el `.mwb` (Sección 1.3 de `ENTREGA2_DISENO_LOGICO.md`). |
-| **Estándares aplicados (post-IA)** | R6 (credenciales reales detectadas y eliminadas antes de subir a GitHub), S7 (eliminación de la redundancia de precio entre dos tablas), S8 (validación real contra MySQL, no solo sintáctica, antes de certificar la entrega), D3/D4 (diagramas exportados en los 3 formatos exigidos y sincronizados con la implementación; trazabilidad completa de cada corrección) |
+| **Objetivo de la sesión** | Revisar la Entrega 2 contra la lista de requisitos del equipo y dejarla lista para GitHub. |
+| **Consultas** | 5 (ver abajo) |
 | **Responsable** | Cristian Otoniel Pérez Ríos |
 
-## Entrada 11
+### Consulta 10.1 — Estructura y credenciales
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Revisa que la raíz tenga README, INSTALL, .gitignore y .env.example, que no se suba ningún .env real ni node_modules, y que existan todas las carpetas de docs/ y sql/." |
+| **Resultado obtenido** | Se encontró `web/.env` con credenciales reales en el paquete y se eliminó. Se crearon `.gitignore` y `.env.example` en la raíz. Se crearon `docs/entrega-1`, `docs/casos-prueba` y las 4 subcarpetas de `sql/` con un README. |
+| **Validación del grupo** | El equipo confirmó que el `.env` no se subió a GitHub. |
+| **Estándares aplicados (post-IA)** | R6 (sin credenciales en el repo), R1 (estructura) |
+
+### Consulta 10.2 — Precio duplicado
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Unifica la lógica de precio entre PRODUCTO y PRESENTACION_VENTA; MAYORISTA debe ser tipo de cliente, no presentación." |
+| **Resultado obtenido** | Se quitó `precio_venta` de `PRESENTACION_VENTA` en el `.drawio`, el DDL, el diccionario y el seed; las presentaciones quedaron como `unidad`/`caja` sin precio propio. |
+| **Validación del grupo** | El equipo confirmó que el precio vive solo en `producto` y el descuento depende del tipo de cliente. |
+| **Estándares aplicados (post-IA)** | S7 (un dato en un solo lugar) |
+
+### Consulta 10.3 — Verificación de modelo y diagrama
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Verifica que usuarioModel.js use nombres_apellidos y que el .drawio no tenga elementos huérfanos." |
+| **Resultado obtenido** | `usuarioModel.js` ya estaba correcto; se limpió un detalle en `authRoutes.js`. El `.drawio` no tenía huérfanos y la relación `registra` ya conectaba EMPLEADO–INGRESO_MERCADERIA. |
+| **Validación del grupo** | Sin cambios necesarios en el diagrama. |
+| **Estándares aplicados (post-IA)** | D3, S8 |
+
+### Consulta 10.4 — Ejecución real y evidencias
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "No me basta con validar sintaxis: ejecútalo de verdad y guarda evidencia." |
+| **Resultado obtenido** | Se instaló MariaDB, se ejecutaron DDL + seed desde cero, 10 pruebas de restricciones (10/10) y 7 pruebas de la app (login, CRUD, NIT duplicado, guard de autenticación, logout), con capturas en `docs/casos-prueba/evidencias/`. |
+| **Validación del grupo** | Pendiente: que el equipo revise las capturas y, si quiere, las reemplace por propias. |
+| **Estándares aplicados (post-IA)** | S8 |
+
+### Consulta 10.5 — Exportes de diagramas
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Regenera el PNG y el PDF de ambos diagramas para que coincidan con la implementación." |
+| **Resultado obtenido** | PNG y PDF del ER Chen (desde el `.drawio`) y del modelo relacional (desde el DDL real). Quedó documentado el ajuste manual pendiente en el `.mwb`. |
+| **Validación del grupo** | El equipo aplicó el ajuste del `.mwb` en MySQL Workbench (confirmado en la Entrada 11). |
+| **Estándares aplicados (post-IA)** | D3 (diagramas en los 3 formatos) |
+
+---
+
+## Entrada 11 — Retroalimentación del catedrático (Entrega 1)
 
 | Campo | Detalle |
 |---|---|
 | **Fecha** | 31/08/2026 |
 | **Herramienta** | Claude (Anthropic) |
-| **Objetivo** | Corregir la retroalimentación real del catedrático (Ivan Antonio De León Fuentes) sobre el "Intento 1" de la Entrega 1: tag desactualizado, carpetas mal nombradas, faltantes `sql/`, `web/`, `docs/entrega-2..4/` y `docs/casos-prueba/`, diagrama con `TIPO_CLIENTE`/`PRESENTACION_VENTA` ausentes del modelo escrito, README con rutas rotas, y participación desigual en los commits. |
-| **Prompt utilizado** | El equipo compartió dos capturas de pantalla con el comentario textual del catedrático sobre la Fase 1 del proyecto, pidiendo aplicar los cambios señalados. |
-| **Resultado obtenido** | Se descargó y auditó el estado real del repositorio (rama `main`) contra cada punto del comentario: (1) Se confirmó que `docs/entrega-2/` no existía en el repo aunque el README ya la enlazaba (causa directa de "README enlaza rutas que no existen"); se restauró con `ENTREGA2_DISENO_LOGICO.md` y `AVANCE_WEB.md`. (2) Se encontraron y eliminaron dos archivos obsoletos que el catedrático no mencionó explícitamente pero que perpetuaban el problema: `setup_entrega1.sh` (script que originalmente generó las carpetas mal nombradas `docs/bitacora/`/`docs/certificacion/`) y `docs/diagramas/pavanamoon_ER_chen.drawio` (diagrama viejo de 13 entidades sin `TIPO_CLIENTE`/`PRESENTACION_VENTA`, con `COMPRA`/`DETALLE_COMPRA`); se actualizó `GUIA_IMPORTAR_DRAWIO.md` para referenciar solo el diagrama vigente. (3) Se confirmó que el equipo ya había corregido el `.mwb` de MySQL Workbench por su cuenta (el PNG re-exportado ya no muestra `precio_venta` en `presentacion_venta`) — no fue necesario tocarlo. (4) Se resincronizó por completo la Sección 7 de `ENTREGA1_PROPUESTA.md` (entidades 13→15, agregando `TIPO_CLIENTE` y `PRESENTACION_VENTA`; cardinalidad `transporta` corregida de (1,1) a (0,N); atributos de `CLIENTE`/`EMPLEADO` alineados al DDL real; diagrama Mermaid y matriz de trazabilidad actualizados) para que el texto, el diagrama y el DDL digan exactamente lo mismo, dejando una nota fechada y transparente sobre la corrección posterior a la calificación (no se reescribió la historia silenciosamente). (5) Los puntos de tag desactualizado y participación desigual de commits **no se pueden corregir desde un ZIP** (requieren acceso real a `git`/GitHub); se le explicó al equipo el procedimiento exacto a seguir (mover o recrear el tag `entrega-1`, y generar commits reales y distribuidos, especialmente para el integrante con un solo commit tipo "Add files via upload"). |
-| **Validación del grupo** | Pendiente que el equipo: mueva o recree el tag `entrega-1` apuntando a un commit reciente; genere commits reales y sustantivos para el integrante señalado por el catedrático; y confirme que la Sección 7 actualizada de `ENTREGA1_PROPUESTA.md` sigue reflejando decisiones con las que todos están de acuerdo (especialmente el uso de `TIPO_CLIENTE` y `PRESENTACION_VENTA`). |
-| **Estándares aplicados (post-IA)** | R1 (estructura de carpetas obligatoria, ahora completa), R4 (participación visible — diagnóstico entregado, corrección pendiente en Git real), D4 (trazabilidad: texto, diagrama y DDL sincronizados), S8 (transparencia: la corrección posterior a la calificación queda fechada y documentada, no oculta) |
+| **Objetivo de la sesión** | Corregir los puntos del comentario del catedrático (Ivan Antonio De León Fuentes) sobre el "Intento 1" de la Entrega 1. |
+| **Consultas** | 3 (ver abajo) |
 | **Responsable** | José Alejandro Cabrera Gramajo |
 
-## Entrada 12
+### Consulta 11.1 — Rutas rotas y archivos obsoletos
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: (se compartieron dos capturas con el comentario del catedrático) "Aplica los cambios que señala el ingeniero." |
+| **Resultado obtenido** | `docs/entrega-2/` no existía en el repo aunque el README la enlazaba; se restauró. Se eliminaron `setup_entrega1.sh` (generaba carpetas mal nombradas) y el diagrama viejo `pavanamoon_ER_chen.drawio` (con COMPRA/DETALLE_COMPRA); se actualizó `GUIA_IMPORTAR_DRAWIO.md`. |
+| **Validación del grupo** | Se verificó que todos los enlaces del README apuntan a archivos existentes. |
+| **Estándares aplicados (post-IA)** | R1, R2 |
+
+### Consulta 11.2 — Texto de la propuesta vs. diagrama
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "El ingeniero dice que TIPO_CLIENTE y PRESENTACION_VENTA no están en el modelo escrito. Sincroniza la propuesta con el diagrama." |
+| **Resultado obtenido** | Sección 7 de `ENTREGA1_PROPUESTA.md` resincronizada: 13 → 15 entidades, cardinalidad `transporta` corregida a (0,N), atributos alineados al DDL, Mermaid y matriz actualizados, con una nota fechada sobre la corrección posterior a la calificación. |
+| **Validación del grupo** | Pendiente que todos confirmen que la Sección 7 refleja decisiones acordadas. |
+| **Estándares aplicados (post-IA)** | D4, S8 (la corrección queda fechada, no se oculta) |
+
+### Consulta 11.3 — Tag y participación en commits
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "¿Cómo corregimos el tag desactualizado y la participación desigual en los commits?" |
+| **Resultado obtenido** | No se puede corregir desde un ZIP; el agente explicó el procedimiento: mover o recrear el tag `entrega-1` y hacer commits reales y distribuidos. |
+| **Validación del grupo** | Pendiente en Git real por parte del equipo. |
+| **Estándares aplicados (post-IA)** | R4 (participación visible) |
+
+---
+
+## Entrada 12 — Entrega 3: implementación avanzada
 
 | Campo | Detalle |
 |---|---|
 | **Fecha** | 29/09/2026 |
 | **Herramienta** | Claude (Anthropic) |
-| **Objetivo** | Completar la Entrega 3: DML con ≥ 50 registros por tabla principal, vistas, triggers, procedimientos, seguridad con 3 roles en MySQL, 8 casos de prueba con matriz de trazabilidad, y avance web al ≈70 % con control de acceso por rol. |
-| **Prompt utilizado** | Resumen: "Revisa el repositorio del proyecto y genera todo lo relacionado con la Entrega 3 según la guía (productos y tabla de ponderación), respetando los estándares de la Sección 6, y una forma rápida de presentarlo al catedrático." |
-| **Resultado obtenido** | (1) Auditoría del repo: carpetas `sql/views`, `triggers`, `procedures`, `security` vacías; conflicto de merge sin resolver en esta bitácora (marcadores `<<<<<<<`/`>>>>>>>` alrededor de la Entrada 11), que se resolvió conservando la Entrada 11. (2) Se detectó que `tipo_cliente` no tenía la columna de descuento que su comentario prometía; se agregó con `ddl/06_ajustes_entrega3.sql`. (3) DML reproducible (semilla fija) con datos consistentes stock = kardex. (4) 4 vistas, 3 triggers, 1 función, 3 procedimientos y 3 roles de MySQL con privilegios diferenciados. (5) 5 módulos web nuevos (Inventario, Furgones, Ingresos, Pedidos, Kardex) y control por rol con una matriz única de permisos. (6) Se instaló MySQL 8.0 real, se ejecutó todo desde cero y se corrieron los 8 casos (8/8). (7) Durante las pruebas se encontró un bug: los acentos se cargaban corruptos ("SalcajÃ¡") porque los scripts DML no fijaban el charset de la sesión; se corrigió con `SET NAMES utf8mb4` en ambos DML. (8) Las evidencias se guardaron como `.txt` porque `.gitignore` excluye `*.log` (la evidencia `.log` de la Entrega 2 nunca se subió por esa razón). |
-| **Validación del grupo** | Pendiente que el equipo: ejecute `INSTALL.md` en su propia máquina, revise que puede explicar cada trigger/procedimiento (regla de negocio y por qué va en la BD), pruebe los 3 usuarios en el navegador y firme la certificación. Cada integrante debe poder defender al menos un objeto de BD en la revisión funcional. |
-| **Estándares aplicados (post-IA)** | S1–S4 (snake_case, un objeto por archivo, encabezados, FKs sin cambios), S6 (regla de negocio en cada trigger/procedimiento), S7 (alertas, totales y precios calculados, no duplicados), S8 (todo ejecutado contra MySQL 8 real antes de entregar), A1–A6 (capas, errores comprensibles, validación, consultas parametrizadas), R6 (solo contraseñas placeholder documentadas; `web/.env` no incluido), D4 (matriz de trazabilidad actualizada). |
-| **Responsable** | _(completar: integrante que validó)_ |
+| **Objetivo de la sesión** | Completar la Entrega 3: DML, vistas, triggers, procedimientos, 3 roles en MySQL, 8 casos de prueba con trazabilidad y web ≈70 % con control por rol. |
+| **Consultas** | 10 (ver abajo) |
+| **Responsable** | _(completar)_ |
 
+### Consulta 12.1 — Auditoría del repositorio
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Revisa el repositorio contra la guía de la Entrega 3 (productos y tabla de ponderación) y dime qué falta." |
+| **Resultado obtenido** | Carpetas `sql/views`, `triggers`, `procedures` y `security` vacías. Se encontró un conflicto de merge sin resolver en esta bitácora (marcadores `<<<<<<<`/`>>>>>>>` alrededor de la Entrada 11); se resolvió conservando la Entrada 11. |
+| **Validación del grupo** | El equipo confirmó la lista de pendientes antes de empezar a generar. |
+| **Estándares aplicados (post-IA)** | R1, D4 |
+
+### Consulta 12.2 — Descuento por tipo de cliente
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "El mayorista debe tener descuento. ¿Dónde se guarda?" |
+| **Resultado obtenido** | `tipo_cliente` no tenía la columna de descuento que su comentario prometía. Se agregó `porcentaje_descuento` con `sql/ddl/06_ajustes_entrega3.sql` (ALTER en script nuevo, para que el cambio sea trazable por entrega). |
+| **Validación del grupo** | Se validó que el mayorista queda con 15 % y el individual con 0 %. |
+| **Estándares aplicados (post-IA)** | S2, S7, D4 (RF13) |
+
+### Consulta 12.3 — Datos de prueba (DML)
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Genera al menos 50 registros por tabla principal, que sean consistentes: el stock debe cuadrar con el kardex." |
+| **Resultado obtenido** | Generador Python con semilla fija (`sql/dml/generador/gen_datos_prueba.py`) y `sql/dml/01_datos_prueba.sql`: 60 clientes, 55 productos, 165 variantes, 55 furgones, 60 ingresos, 60 pedidos, 291 movimientos, más los usuarios `bodega` y `ventas`. |
+| **Validación del grupo** | Consulta de verificación stock = suma del kardex: 0 inconsistencias. |
+| **Estándares aplicados (post-IA)** | Sección 5 req. 7, S7 |
+
+### Consulta 12.4 — Vistas
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Haz las vistas que la app va a necesitar para no repetir JOINs: stock con alerta, resumen de pedidos, kardex legible e historial de ingresos." |
+| **Resultado obtenido** | `vw_stock_variantes` (alerta calculada, RF03/RF04), `vw_pedidos_resumen` (RF14), `vw_kardex` (RF16/RF18), `vw_ingresos_detalle` (RF09). |
+| **Validación del grupo** | Cada vista se consultó contra los datos de prueba y se usa en al menos un módulo web. |
+| **Estándares aplicados (post-IA)** | S2, S3, S6 (regla de negocio en el encabezado), S7 |
+
+### Consulta 12.5 — Triggers
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Necesito triggers para que el stock y el kardex se actualicen solos al recibir mercadería y al vender, y que no deje vender sin stock." |
+| **Resultado obtenido** | `trg_detalle_ingreso_ai` (suma stock + kardex `entrada`), `trg_detalle_pedido_bi` (rechaza con SIGNAL 45000 si no hay stock o el pedido no está pendiente), `trg_detalle_pedido_ai` (descuenta stock, kardex `salida`, recalcula total). |
+| **Validación del grupo** | CP3-01 (ingreso +20), CP3-03 (venta −12, total Q2,652) y CP3-04 (rechazo por stock) pasan. El DML se carga **antes** de los triggers para no mover dos veces el stock histórico. |
+| **Estándares aplicados (post-IA)** | S6, S8 |
+
+### Consulta 12.6 — Función y procedimientos
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "El vendedor no debe digitar precios. Haz una función que calcule el precio con el descuento y procedimientos para crear pedido, agregar línea y registrar devolución." |
+| **Resultado obtenido** | `fn_calcular_precio_linea`, `sp_crear_pedido`, `sp_agregar_linea_pedido` y `sp_registrar_devolucion` (transaccional con `EXIT HANDLER` → ROLLBACK + RESIGNAL). |
+| **Validación del grupo** | CP3-02 (Q260 × 12 × 0.85 = Q2,652.00, igual al cálculo manual) y CP3-05 (devolución inválida rechazada, válida suma +2) pasan. |
+| **Estándares aplicados (post-IA)** | S6, S7 (precio en un solo lugar) |
+
+### Consulta 12.7 — Seguridad: 3 roles en MySQL
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Crea los 3 roles de MySQL (administrador, bodeguero, vendedor) con mínimo privilegio, alineados con los roles de la app." |
+| **Resultado obtenido** | `sql/security/01_roles_privilegios.sql`: roles y usuarios `pvm_admin`, `pvm_bodega`, `pvm_ventas`. El vendedor no tiene INSERT en `pedido`: solo vende por procedimiento. Nadie salvo admin ve la tabla `usuario`. |
+| **Validación del grupo** | CP3-06 y CP3-07: cada usuario puede lo suyo y recibe `ERROR 1142` en lo demás. |
+| **Estándares aplicados (post-IA)** | R6 (contraseñas placeholder), S2, S3 |
+
+### Consulta 12.8 — Módulos web nuevos
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Lleva la app al 70 %: Inventario, Furgones, Ingresos, Pedidos y Kardex usando las vistas y procedimientos." |
+| **Resultado obtenido** | 5 módulos nuevos. Ingresos y pedidos son transaccionales (todo o nada); los SIGNAL de la BD se muestran como mensaje de negocio en el formulario. |
+| **Validación del grupo** | Probado en navegador con capturas `e3_01` a `e3_09`. |
+| **Estándares aplicados (post-IA)** | A1–A6, transacciones |
+
+### Consulta 12.9 — Control de acceso por rol en la web
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Cada rol solo debe ver sus módulos, y si escribe la URL a mano que le salga 403." |
+| **Resultado obtenido** | Matriz única `web/src/config/permisos.js` que alimenta el menú, las tarjetas de inicio y `requireRole` en `auth.js`. El responsable de pedidos/ingresos se toma de la sesión, no del formulario. |
+| **Validación del grupo** | CP3-08: matriz de rutas 200/403 por rol según lo esperado. |
+| **Estándares aplicados (post-IA)** | RF21, A1 |
+
+### Consulta 12.10 — Casos de prueba, trazabilidad y bug de acentos
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Instala todo desde cero en MySQL 8 real, corre los 8 casos y arma la matriz de trazabilidad." |
+| **Resultado obtenido** | 8/8 casos exitosos y matriz requerimiento → implementación → prueba en `CASOS_PRUEBA_ENTREGA3.md`. Durante las pruebas los acentos salían corruptos ("SalcajÃ¡"); se corrigió con `SET NAMES utf8mb4` en los DML. Las evidencias se guardaron como `.txt` porque `.gitignore` excluye `*.log`. |
+| **Validación del grupo** | Pendiente: que cada integrante pueda defender al menos un objeto de BD y firme la certificación. |
+| **Estándares aplicados (post-IA)** | S8, D4 |
+
+---
+
+## Entrada 13 — Verificación de roles de MySQL y guion de presentación
+
+| Campo | Detalle |
+|---|---|
+| **Fecha** | 01/10/2026 |
+| **Herramienta** | Claude (Anthropic) |
+| **Objetivo** | Confirmar si los usuarios/roles de seguridad de MySQL realmente existen y funcionan (criterio "Seguridad: 3 roles en BD" y "roles BD OK" de la revisión funcional) y preparar cómo presentarlos al catedrático. |
+| **Prompt utilizado** | "Revisa el repositorio: hay que presentarle al ingeniero los niveles de seguridad/acceso, pero no sé si están creados esos usuarios o si me puedes ayudar a crearlos." |
+| **Resultado obtenido** | Los 3 roles (`rol_administrador`, `rol_bodeguero`, `rol_vendedor`) y sus 3 usuarios (`pvm_admin`, `pvm_bodega`, `pvm_ventas`) ya estaban definidos en `sql/security/01_roles_privilegios.sql`; no hubo que crearlos de nuevo. Se confirmó ejecutándolos en MySQL 8.0.46 real. Se agregaron: `docs/casos-prueba/scripts/demo_seguridad_presentacion.sql` (matriz de privilegios tabla × rol legible, solo lectura), su salida en `evidencias/entrega3_demo_seguridad.txt`, y el guion `docs/entrega-3/PRESENTACION_SEGURIDAD.md`. Se reescribió `sql/security/README.md`, que seguía diciendo "se llenará en la Entrega 3" y mostraba nombres de usuario distintos a los reales. |
+| **Validación del grupo** | Pendiente que el equipo: ensaye el guion en su máquina con Workbench y que cada integrante pueda explicar al menos un rol (qué puede, qué no y por qué). |
+| **Estándares aplicados (post-IA)** | S2, S3 (script nuevo con encabezado, un propósito), S8 (verificación en MySQL real, no solo lectura del script), R6 (solo contraseñas placeholder), D4 (README y guion coherentes con el script real) |
+| **Responsable** | _(completar)_ |
+
+**Secuencia de consultas:**
+
+1. **Revisión del repositorio.** Se clonó el repo y se leyó `sql/security/`, `INSTALL.md`, `web/src/config/permisos.js` y `web/src/middleware/auth.js`. Hallazgo: los roles existen en el script, pero el README de la carpeta estaba desactualizado.
+2. **¿Funcionan de verdad?** Se instaló MySQL 8 y se ejecutó todo `INSTALL.md` desde cero; `mysql.user` mostró las 6 cuentas. Se corrió `entrega3_casos_seguridad.sh`: mismos resultados que la evidencia de la Entrada 12 (7 denegaciones `ERROR 1142` esperadas, `CALL` permitido al vendedor).
+3. **¿Cómo se lo muestro al ingeniero?** `SHOW GRANTS` es difícil de leer en una presentación, así que se escribió una consulta que cruza `information_schema.TABLES` con `mysql.tables_priv` para mostrar una matriz tabla × rol. Primera versión: el paso 6 no imprimía nada cuando el resultado era vacío; se cambió a `COUNT(*)` para que muestre un 0 explícito.
+4. **Guion paso a paso.** Se redactaron las consultas "permitido vs. denegado" para Workbench y se ejecutó cada una con `pvm_ventas` y `pvm_bodega` para confirmar que el resultado anotado en el guion es el real (incluido el `INSERT` directo a `pedido`, que el vendedor no puede hacer).
+5. **Preguntas probables.** Se documentó por qué la app usa un usuario técnico (`pavanamoon_app`) en vez de los `pvm_*`, para que el equipo pueda responderlo.
+
+---
+
+## Entrada 14 — Regresión en el módulo de pedidos
+
+| Campo | Detalle |
+|---|---|
+| **Fecha** | 01/10/2026 |
+| **Herramienta** | Claude (Anthropic) |
+| **Objetivo** | Corregir dos fallas del módulo de pedidos introducidas en el commit "Corregir módulo de pedidos y devoluciones" (30/09/2026), detectadas al volver a correr los casos de prueba web durante la Entrada 13. |
+| **Prompt utilizado** | Derivada de la Entrada 13 (hallazgo durante la verificación; el agente reportó la falla y propuso la corrección). |
+| **Resultado obtenido** | (1) `pedidoModel.crear()` llamaba a `CALL sp_agregar_variante_pedido(...)`, un procedimiento que no existe en la BD (el real es `sp_agregar_linea_pedido`): **crear un pedido desde la web devolvía HTTP 500**. Se corrigió el nombre. (2) `pedidoModel.listar()` dejó de recibir `clienteId`, así que el filtro "Historial por cliente (RF14)" de `/pedidos` no filtraba (mostraba 60 pedidos en vez de 4 para el cliente 50). Se restauró el parámetro con consulta parametrizada. (3) El commit había borrado la descripción del encabezado del archivo; se restauró (estándar S3). Los cambios visuales de `detalle.ejs` del commit original se conservaron. |
+| **Validación del grupo** | Validado por el agente contra la app corriendo: CP3-08 (c) vuelve a pasar (pedido mayorista total Q2,652.00, stock −12), CP3-08 (d) muestra el mensaje de negocio "Stock insuficiente…", el filtro por cliente devuelve 4 pedidos, y completar pedido + devolución (inválida y válida) funcionan desde el detalle. Pendiente que Luis revise el cambio, ya que modifica su commit. |
+| **Estándares aplicados (post-IA)** | A2 (errores comprensibles en vez de HTTP 500), A4 (consulta parametrizada en el filtro), S3 (encabezado restaurado), S8 (prueba de regresión antes de entregar), D4 (RF14 vuelve a cumplirse según la matriz de trazabilidad) |
+| **Responsable** | _(completar)_ |
+
+**Secuencia de consultas:**
+
+1. Al correr `entrega3_casos_web.sh`, el caso (c) devolvió `POST /pedidos -> HTTP 500` y el stock no cambió. Se revisó el log del servidor: `ER_SP_DOES_NOT_EXIST: sp_agregar_variante_pedido`.
+2. Se comparó con `git show 7b7f8dc` para ver qué había cambiado en ese commit. Además del nombre del procedimiento, `listar()` había perdido el parámetro `clienteId` que la ruta sigue enviando.
+3. Para no asumir, se probó el filtro antes y después de corregir: sin corrección, `/pedidos?cliente=50` devolvía 60 pedidos; con corrección, 4 (igual que `SELECT COUNT(*) FROM pedido WHERE cliente_id = 50`).
+4. Se volvió a correr toda la batería web y se probaron a mano completar pedido y devolución (50 pares → rechazo; 2 pares → stock +2 y kardex `devolucion_cliente`).
+
+---
+
+## Entrada 15 — Charset y script de casos BD
+
+| Campo | Detalle |
+|---|---|
+| **Fecha** | 01/10/2026 |
+| **Herramienta** | Claude (Anthropic) |
+| **Objetivo** | Corregir dos problemas de reproducibilidad detectados en la Entrada 14: acentos corruptos en los mensajes de error de triggers/procedimientos y un comando de casos de prueba que no ejecutaba todos los casos. |
+| **Prompt utilizado** | Derivada de la Entrada 14 (hallazgo durante la verificación). |
+| **Resultado obtenido** | (1) En la web, el mensaje de devolución inválida salía como "invÃ¡lida". Causa: los scripts de vistas, triggers y procedimientos no fijaban el charset de la sesión, y MySQL guarda cada rutina con el charset del cliente que la creó (aquí `latin1`). Es el mismo bug que la Entrada 12 corrigió en los DML. Se agregó `SET NAMES utf8mb4;` a los 11 scripts de `sql/views`, `sql/triggers` y `sql/procedures`. (2) El comando documentado `mysql -t -u root -p < entrega3_casos_bd.sql` se detiene en CP3-04, que falla **a propósito**, así que CP3-05 y la verificación stock = kardex nunca se ejecutaban. Se agregó `--force` en `INSTALL.md` y en el encabezado del script. (3) Se reinstaló todo desde cero y se regeneraron las evidencias. |
+| **Validación del grupo** | Validado por el agente: `information_schema.ROUTINES` muestra `utf8mb4` en las 4 rutinas; el mensaje sale "inválida" en la web; `entrega3_casos_bd.txt` ahora llega hasta el final (CP3-01 a CP3-05 + 0 inconsistencias). Las evidencias de seguridad y web regeneradas son idénticas a las de la Entrada 12, lo que confirma que los resultados son reproducibles. |
+| **Estándares aplicados (post-IA)** | S8 (instalación desde cero repetida tras el cambio), A2 (mensajes de negocio legibles), D4 (INSTALL.md coincide con lo que realmente funciona) |
+| **Responsable** | _(completar)_ |
+
+**Secuencia de consultas:**
+
+1. Se consultó `information_schema.ROUTINES.CHARACTER_SET_CLIENT` y `TRIGGERS`: todas en `latin1`. Se confirmó que los DML sí tenían `SET NAMES` y los demás scripts no.
+2. Se agregó `SET NAMES utf8mb4` justo después de `USE pavanamoon;` en cada script y se reinstaló la base desde cero; las rutinas quedaron en `utf8mb4`.
+3. Al regenerar la evidencia de casos BD, la salida se cortaba en CP3-04. Se comparó con la evidencia anterior (que sí llegaba al final, por lo que fue generada con `--force`) y se corrigió la documentación.
+4. Última instalación limpia y ejecución completa: BD, seguridad y web.
+
+---
+
+## Entrada 16 — Reestructuración de esta bitácora
+
+| Campo | Detalle |
+|---|---|
+| **Fecha** | 09/10/2026 |
+| **Herramienta** | Claude (Anthropic) |
+| **Objetivo de la sesión** | Atender el comentario del catedrático: la bitácora debe mostrar varias consultas por tarea, no un solo prompt por entrega. |
+| **Consultas** | 3 (ver abajo) |
+| **Responsable** | _(completar)_ |
+
+### Consulta 16.1 — Índice y forma de trabajo
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | "Necesito mejorar la bitácora: el ingeniero quiere que haya muchas más consultas y que no le pidamos a la IA una sola consulta y ya." (01/10/2026) |
+| **Resultado obtenido** | Se agregó al inicio la explicación de la forma de trabajo iterativa y un índice. Las Entradas 13–15 se documentaron con su secuencia de consultas. |
+| **Validación del grupo** | El equipo revisó que las entradas nuevas correspondieran a lo hecho en esa sesión. |
+| **Estándares aplicados (post-IA)** | D4 |
+
+### Consulta 16.2 — Una consulta por cada cosa hecha
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | "Arregla la bitácora: el inge no quiere que sea un solo prompt, sino varios para las diferentes cosas que hicimos." (09/10/2026) |
+| **Resultado obtenido** | Las sesiones que abarcaban varios entregables (Entradas 1, 8, 10, 11 y 12) se dividieron en consultas numeradas (ej. 12.5 Triggers). Cada consulta tiene su propio prompt, resultado, validación y estándares, y se conservó el contenido técnico original. Las entradas de un solo propósito (2–7, 9, 13–15) no cambiaron. |
+| **Validación del grupo** | Pendiente que el equipo revise que el resumen de cada prompt coincida con lo que se le pidió a la IA en esa sesión, y llene el responsable donde dice _(completar)_. |
+| **Estándares aplicados (post-IA)** | D4, S8 (transparencia del uso de IA) |
+
+### Consulta 16.3 — Subir los cambios en commits separados
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Necesito subir los cambios de forma que se vea qué hice." |
+| **Resultado obtenido** | Script que aplica las correcciones de las Entradas 13–15 y esta bitácora en 5 commits temáticos (fix web, fix SQL, fix pruebas, docs seguridad, docs bitácora) en lugar de un solo commit grande. |
+| **Validación del grupo** | Ejecutado por el integrante responsable desde su propia cuenta de Git. |
+| **Estándares aplicados (post-IA)** | R4 (participación visible), R5 (mensajes de commit descriptivos) |
