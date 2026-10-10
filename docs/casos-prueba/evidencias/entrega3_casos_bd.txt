@@ -24,10 +24,10 @@
 +---------------------+
 | vista               |
 +---------------------+
-| vw_stock_variantes  |
-| vw_pedidos_resumen  |
-| vw_kardex           |
 | vw_ingresos_detalle |
+| vw_kardex           |
+| vw_pedidos_resumen  |
+| vw_stock_variantes  |
 +---------------------+
 +------------------------+--------------------+---------------+--------------------+
 | TRIGGER_NAME           | EVENT_MANIPULATION | ACTION_TIMING | EVENT_OBJECT_TABLE |
@@ -107,9 +107,9 @@
 +----------------------------------------------------------------------------------+
 |                                                                                  |
 +----------------------------------------------------------------------------------+
-| === CP3-04 trg_detalle_pedido_bi: vender más de lo disponible (debe fallar) === |
+| === CP3-04 trg_detalle_pedido_bi: vender más de lo disponible (debe fallar) ===  |
 +----------------------------------------------------------------------------------+
-ERROR 1644 (45000) at line 62: Stock insuficiente para la variante solicitada.
+ERROR 1644 (45000) at line 64: Stock insuficiente para la variante solicitada.
 +-------------+---------------------------+
 | stock_antes | stock_despues_sin_cambios |
 +-------------+---------------------------+
@@ -125,7 +125,7 @@ ERROR 1644 (45000) at line 62: Stock insuficiente para la variante solicitada.
 +----------------------------------------+
 | === CP3-05 sp_registrar_devolucion === |
 +----------------------------------------+
-ERROR 1644 (45000) at line 70: Cantidad a devolver inválida (mayor a lo vendido o <= 0).
+ERROR 1644 (45000) at line 72: Cantidad a devolver inválida (mayor a lo vendido o <= 0).
 +-------------+------------------------------+
 | stock_antes | stock_despues_esperado_mas_2 |
 +-------------+------------------------------+

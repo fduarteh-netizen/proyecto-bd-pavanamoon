@@ -73,3 +73,19 @@ Capturas: `evidencias/e3_05_home_vendedor.png`, `e3_06_vendedor_403.png`,
 | RF20, RD08 — Autenticación, username único | `usuario`, bcrypt | `/login` | E2 (casos web) |
 | RF21 — Operaciones según rol | `GRANT` diferenciados | `requireRole`, menú filtrado | CP3-06, CP3-07, CP3-08 |
 | Sección 5 req. 7 — ≥ 50 registros | `sql/dml/01_datos_prueba.sql` | — | conteo en `entrega3_casos_bd.txt` |
+
+---
+
+## Re-ejecución del 01/10/2026 (regresión)
+
+Se volvieron a correr los 8 casos tras el commit "Corregir módulo de pedidos y
+devoluciones". CP3-08 (c) fallaba con HTTP 500 porque la app llamaba a un
+procedimiento inexistente (`sp_agregar_variante_pedido`), y el filtro de
+historial por cliente (RF14) dejó de filtrar. Ambos se corrigieron en
+`web/src/models/pedidoModel.js` y los 8 casos vuelven a pasar (8/8). Detalle
+en la Entrada 14 de la bitácora IA. También se agregó `--force` al comando de
+`entrega3_casos_bd.sql` (sin él, el cliente se detenía en CP3-04, que falla a
+propósito) y `SET NAMES utf8mb4` a vistas, triggers y procedimientos (Entrada 15).
+
+Evidencia adicional: [`evidencias/entrega3_demo_seguridad.txt`](./evidencias/entrega3_demo_seguridad.txt)
+(matriz de privilegios por rol, ver `docs/entrega-3/PRESENTACION_SEGURIDAD.md`).

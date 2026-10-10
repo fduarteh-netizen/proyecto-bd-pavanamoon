@@ -4,7 +4,9 @@
 -- Descripción:  Casos de prueba CP3-01 a CP3-05 (vistas, triggers,
 --               procedimientos). Ejecutar DESPUÉS de instalar todo según
 --               INSTALL.md. Usa la variante 1, cliente mayorista e individual
---               de los datos de prueba. Se ejecuta con: mysql -t -u root -p < este_archivo
+--               de los datos de prueba. Se ejecuta con: mysql -t --force -u root -p < este_archivo
+--               (--force: CP3-04 y CP3-05a fallan A PROPÓSITO; sin --force el
+--               cliente se detiene en el primer error y no corre el resto)
 -- Dependencias: sql/ddl, sql/dml, sql/views, sql/triggers, sql/procedures
 -- =============================================================================
 USE pavanamoon;

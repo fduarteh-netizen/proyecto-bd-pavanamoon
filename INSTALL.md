@@ -89,7 +89,7 @@ rol ve solo sus módulos (ver `docs/entrega-3/AVANCE_WEB.md`).
 ## 4.1 Ejecutar los casos de prueba de la Entrega 3
 
 ```bash
-mysql -t -u root -p < docs/casos-prueba/scripts/entrega3_casos_bd.sql
+mysql -t --force -u root -p < docs/casos-prueba/scripts/entrega3_casos_bd.sql   # --force: CP3-04/05a fallan a propósito
 bash docs/casos-prueba/scripts/entrega3_casos_seguridad.sh
 bash docs/casos-prueba/scripts/entrega3_casos_web.sh   # con la app corriendo
 ```
