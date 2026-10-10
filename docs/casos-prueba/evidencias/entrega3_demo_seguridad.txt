@@ -1,0 +1,120 @@
++-------------------+------+---------+
+| cuenta            | host | tipo    |
++-------------------+------+---------+
+| rol_administrador | %    | ROL     |
+| rol_bodeguero     | %    | ROL     |
+| rol_vendedor      | %    | ROL     |
+| pvm_admin         | %    | USUARIO |
+| pvm_bodega        | %    | USUARIO |
+| pvm_ventas        | %    | USUARIO |
++-------------------+------+---------+
++---------------+-------------------+------------------------+
+| usuario_mysql | rol_asignado      | rol_activo_por_defecto |
++---------------+-------------------+------------------------+
+| pvm_admin     | rol_administrador | SÍ                     |
+| pvm_bodega    | rol_bodeguero     | SÍ                     |
+| pvm_ventas    | rol_vendedor      | SÍ                     |
++---------------+-------------------+------------------------+
++---------------------+-------+-------------------+------------------------+------------------------+
+| objeto              | tipo  | rol_administrador | rol_bodeguero          | rol_vendedor           |
++---------------------+-------+-------------------+------------------------+------------------------+
+| categoria           | tabla | ALL (esquema)     | Select                 | Select                 |
+| cliente             | tabla | ALL (esquema)     | —                      | Select, Insert, Update |
+| cliente_telefono    | tabla | ALL (esquema)     | —                      | Select, Insert, Update |
+| color               | tabla | ALL (esquema)     | Select                 | —                      |
+| detalle_ingreso     | tabla | ALL (esquema)     | Select, Insert         | —                      |
+| detalle_pedido      | tabla | ALL (esquema)     | —                      | Select                 |
+| empleado            | tabla | ALL (esquema)     | Select                 | —                      |
+| empleado_telefono   | tabla | ALL (esquema)     | —                      | —                      |
+| furgon              | tabla | ALL (esquema)     | Select, Insert, Update | —                      |
+| ingreso_mercaderia  | tabla | ALL (esquema)     | Select, Insert, Update | —                      |
+| movimiento_stock    | tabla | ALL (esquema)     | Select                 | —                      |
+| pedido              | tabla | ALL (esquema)     | —                      | Select                 |
+| presentacion_venta  | tabla | ALL (esquema)     | —                      | Select                 |
+| producto            | tabla | ALL (esquema)     | Select                 | Select                 |
+| rol                 | tabla | ALL (esquema)     | —                      | —                      |
+| talla               | tabla | ALL (esquema)     | Select                 | —                      |
+| tipo_cliente        | tabla | ALL (esquema)     | —                      | Select                 |
+| usuario             | tabla | ALL (esquema)     | —                      | —                      |
+| variante_producto   | tabla | ALL (esquema)     | Select, Insert, Update | —                      |
+| vw_ingresos_detalle | vista | ALL (esquema)     | Select                 | —                      |
+| vw_kardex           | vista | ALL (esquema)     | Select                 | —                      |
+| vw_pedidos_resumen  | vista | ALL (esquema)     | —                      | Select                 |
+| vw_stock_variantes  | vista | ALL (esquema)     | Select                 | Select                 |
++---------------------+-------+-------------------+------------------------+------------------------+
++--------------+-----------+--------------------------+------------+
+| rol          | tipo      | rutina                   | privilegio |
++--------------+-----------+--------------------------+------------+
+| rol_vendedor | FUNCTION  | fn_calcular_precio_linea | Execute    |
+| rol_vendedor | PROCEDURE | sp_agregar_linea_pedido  | Execute    |
+| rol_vendedor | PROCEDURE | sp_crear_pedido          | Execute    |
+| rol_vendedor | PROCEDURE | sp_registrar_devolucion  | Execute    |
++--------------+-----------+--------------------------+------------+
++-------------------------------------------------------------------+
+| Grants for rol_administrador@%                                    |
++-------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `rol_administrador`@`%`                     |
+| GRANT ALL PRIVILEGES ON `pavanamoon`.* TO `rol_administrador`@`%` |
++-------------------------------------------------------------------+
++------------------------------------------------------------------------------------------+
+| Grants for rol_bodeguero@%                                                               |
++------------------------------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `rol_bodeguero`@`%`                                                |
+| GRANT SELECT ON `pavanamoon`.`categoria` TO `rol_bodeguero`@`%`                          |
+| GRANT SELECT ON `pavanamoon`.`color` TO `rol_bodeguero`@`%`                              |
+| GRANT SELECT, INSERT ON `pavanamoon`.`detalle_ingreso` TO `rol_bodeguero`@`%`            |
+| GRANT SELECT ON `pavanamoon`.`empleado` TO `rol_bodeguero`@`%`                           |
+| GRANT SELECT, INSERT, UPDATE ON `pavanamoon`.`furgon` TO `rol_bodeguero`@`%`             |
+| GRANT SELECT, INSERT, UPDATE ON `pavanamoon`.`ingreso_mercaderia` TO `rol_bodeguero`@`%` |
+| GRANT SELECT ON `pavanamoon`.`movimiento_stock` TO `rol_bodeguero`@`%`                   |
+| GRANT SELECT ON `pavanamoon`.`producto` TO `rol_bodeguero`@`%`                           |
+| GRANT SELECT ON `pavanamoon`.`talla` TO `rol_bodeguero`@`%`                              |
+| GRANT SELECT, INSERT, UPDATE ON `pavanamoon`.`variante_producto` TO `rol_bodeguero`@`%`  |
+| GRANT SELECT ON `pavanamoon`.`vw_ingresos_detalle` TO `rol_bodeguero`@`%`                |
+| GRANT SELECT ON `pavanamoon`.`vw_kardex` TO `rol_bodeguero`@`%`                          |
+| GRANT SELECT ON `pavanamoon`.`vw_stock_variantes` TO `rol_bodeguero`@`%`                 |
++------------------------------------------------------------------------------------------+
++-----------------------------------------------------------------------------------------+
+| Grants for rol_vendedor@%                                                               |
++-----------------------------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `rol_vendedor`@`%`                                                |
+| GRANT SELECT ON `pavanamoon`.`categoria` TO `rol_vendedor`@`%`                          |
+| GRANT SELECT, INSERT, UPDATE ON `pavanamoon`.`cliente_telefono` TO `rol_vendedor`@`%`   |
+| GRANT SELECT, INSERT, UPDATE ON `pavanamoon`.`cliente` TO `rol_vendedor`@`%`            |
+| GRANT SELECT ON `pavanamoon`.`detalle_pedido` TO `rol_vendedor`@`%`                     |
+| GRANT SELECT ON `pavanamoon`.`pedido` TO `rol_vendedor`@`%`                             |
+| GRANT SELECT ON `pavanamoon`.`presentacion_venta` TO `rol_vendedor`@`%`                 |
+| GRANT SELECT ON `pavanamoon`.`producto` TO `rol_vendedor`@`%`                           |
+| GRANT SELECT ON `pavanamoon`.`tipo_cliente` TO `rol_vendedor`@`%`                       |
+| GRANT SELECT ON `pavanamoon`.`vw_pedidos_resumen` TO `rol_vendedor`@`%`                 |
+| GRANT SELECT ON `pavanamoon`.`vw_stock_variantes` TO `rol_vendedor`@`%`                 |
+| GRANT EXECUTE ON PROCEDURE `pavanamoon`.`sp_agregar_linea_pedido` TO `rol_vendedor`@`%` |
+| GRANT EXECUTE ON PROCEDURE `pavanamoon`.`sp_crear_pedido` TO `rol_vendedor`@`%`         |
+| GRANT EXECUTE ON PROCEDURE `pavanamoon`.`sp_registrar_devolucion` TO `rol_vendedor`@`%` |
+| GRANT EXECUTE ON FUNCTION `pavanamoon`.`fn_calcular_precio_linea` TO `rol_vendedor`@`%` |
++-----------------------------------------------------------------------------------------+
++---------------------------------------------------------------------------------------+
+| Grants for pvm_ventas@%                                                               |
++---------------------------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `pvm_ventas`@`%`                                                |
+| GRANT SELECT ON `pavanamoon`.`categoria` TO `pvm_ventas`@`%`                          |
+| GRANT SELECT, INSERT, UPDATE ON `pavanamoon`.`cliente_telefono` TO `pvm_ventas`@`%`   |
+| GRANT SELECT, INSERT, UPDATE ON `pavanamoon`.`cliente` TO `pvm_ventas`@`%`            |
+| GRANT SELECT ON `pavanamoon`.`detalle_pedido` TO `pvm_ventas`@`%`                     |
+| GRANT SELECT ON `pavanamoon`.`pedido` TO `pvm_ventas`@`%`                             |
+| GRANT SELECT ON `pavanamoon`.`presentacion_venta` TO `pvm_ventas`@`%`                 |
+| GRANT SELECT ON `pavanamoon`.`producto` TO `pvm_ventas`@`%`                           |
+| GRANT SELECT ON `pavanamoon`.`tipo_cliente` TO `pvm_ventas`@`%`                       |
+| GRANT SELECT ON `pavanamoon`.`vw_pedidos_resumen` TO `pvm_ventas`@`%`                 |
+| GRANT SELECT ON `pavanamoon`.`vw_stock_variantes` TO `pvm_ventas`@`%`                 |
+| GRANT EXECUTE ON PROCEDURE `pavanamoon`.`sp_agregar_linea_pedido` TO `pvm_ventas`@`%` |
+| GRANT EXECUTE ON PROCEDURE `pavanamoon`.`sp_crear_pedido` TO `pvm_ventas`@`%`         |
+| GRANT EXECUTE ON PROCEDURE `pavanamoon`.`sp_registrar_devolucion` TO `pvm_ventas`@`%` |
+| GRANT EXECUTE ON FUNCTION `pavanamoon`.`fn_calcular_precio_linea` TO `pvm_ventas`@`%` |
+| GRANT `rol_vendedor`@`%` TO `pvm_ventas`@`%`                                          |
++---------------------------------------------------------------------------------------+
++-------------------------------------+
+| roles_no_admin_con_acceso_a_usuario |
++-------------------------------------+
+|                                   0 |
++-------------------------------------+
