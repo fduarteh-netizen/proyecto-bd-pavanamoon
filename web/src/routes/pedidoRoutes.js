@@ -82,6 +82,20 @@ router.post('/:id/completar', async (req, res, next) => {
   }
 });
 
+router.post('/:id/cancelar', async (req, res, next) => {
+  try {
+    await pedidoModel.cancelar(req.params.id, req.session.usuario.empleado_id);
+    res.redirect(`/pedidos/${req.params.id}?ok=Pedido+cancelado:+el+stock+fue+reintegrado`);
+  } catch (err) {
+    if (err && err.sqlState === '45000') {
+      const pedido = await pedidoModel.buscarDetalle(req.params.id);
+      if (!pedido) return next(err);
+      return res.status(400).render('pedidos/detalle', { pedido, mensaje: null, error: err.sqlMessage });
+    }
+    next(err);
+  }
+});
+
 router.post('/:id/devolucion', async (req, res, next) => {
   try {
     await pedidoModel.registrarDevolucion({

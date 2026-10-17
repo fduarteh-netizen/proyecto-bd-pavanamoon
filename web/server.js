@@ -1,8 +1,8 @@
 // =============================================================================
 // Archivo:      server.js
-// Descripción:  Punto de entrada de la aplicación web Pavanamoon (Entrega 3,
-//               ~70%). Configura Express, sesiones, EJS, y monta las rutas de
-//               autenticación y de los 7 módulos, cada uno protegido por rol.
+// Descripción:  Punto de entrada de la aplicación web Pavanamoon (Entrega 4,
+//               100%). Configura Express, sesiones, EJS, y monta las rutas de
+//               autenticación y de todos los módulos, cada uno protegido por rol.
 // Dependencias: express, express-session, ejs, method-override, dotenv,
 //               src/config/db.js, src/routes/*, src/middleware/*
 // =============================================================================
@@ -24,6 +24,9 @@ const furgonRoutes = require('./src/routes/furgonRoutes');
 const ingresoRoutes = require('./src/routes/ingresoRoutes');
 const pedidoRoutes = require('./src/routes/pedidoRoutes');
 const kardexRoutes = require('./src/routes/kardexRoutes');
+const reporteRoutes = require('./src/routes/reporteRoutes');
+const empleadoRoutes = require('./src/routes/empleadoRoutes');
+const usuarioRoutes = require('./src/routes/usuarioRoutes');
 
 const app = express();
 
@@ -57,6 +60,9 @@ app.use('/furgones', furgonRoutes);
 app.use('/ingresos', ingresoRoutes);
 app.use('/pedidos', pedidoRoutes);
 app.use('/kardex', kardexRoutes);
+app.use('/reportes', reporteRoutes);
+app.use('/empleados', empleadoRoutes);
+app.use('/usuarios', usuarioRoutes);
 
 app.get('/', requireAuth, (req, res) => {
   res.render('home');

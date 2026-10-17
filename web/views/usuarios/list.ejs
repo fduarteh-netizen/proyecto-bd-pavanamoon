@@ -1,0 +1,39 @@
+<%- include('../partials/header') %>
+
+<div class="page-heading">
+  <h1>Usuarios del sistema</h1>
+  <a class="btn btn-primary" href="/usuarios/nuevo">+ Nuevo usuario</a>
+</div>
+
+<% if (mensaje) { %><div class="alert alert-ok"><%= mensaje %></div><% } %>
+<% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+<p class="muted">Un usuario pertenece a exactamente un empleado y tiene exactamente un rol (RD08, RD09).
+  Para que alguien deje de entrar al sistema sin perder su historial, cámbialo a <em>inactivo</em>.</p>
+
+<div class="table-wrap">
+<table class="table">
+  <thead><tr><th>Usuario</th><th>Empleado</th><th>Rol</th><th>Estado</th><th>Creado</th><th>Acciones</th></tr></thead>
+  <tbody>
+    <% usuarios.forEach(function (u) { %>
+      <tr>
+        <td><strong><%= u.username %></strong><% if (usuarioActual && u.usuario_id === usuarioActual.usuario_id) { %> <span class="muted">(tú)</span><% } %></td>
+        <td><%= u.nombres_apellidos %></td>
+        <td><%= u.nombre_rol %></td>
+        <td><span class="tag tag-<%= u.estado %>"><%= u.estado %></span></td>
+        <td><%= new Date(u.fecha_creacion).toLocaleDateString('es-GT') %></td>
+        <td class="actions">
+          <a href="/usuarios/<%= u.usuario_id %>/editar">Editar</a>
+          <% if (!usuarioActual || u.usuario_id !== usuarioActual.usuario_id) { %>
+          <form action="/usuarios/<%= u.usuario_id %>?_method=DELETE" method="POST" onsubmit="return confirm('¿Eliminar el usuario <%= u.username %>?');" style="display:inline">
+            <button type="submit" class="btn-link btn-danger">Eliminar</button>
+          </form>
+          <% } %>
+        </td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>
+</div>
+
+<%- include('../partials/footer') %>

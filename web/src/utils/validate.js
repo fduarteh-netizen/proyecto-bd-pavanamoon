@@ -102,6 +102,59 @@ function validarPedido(body, lineas) {
   return errores;
 }
 
+// --- Entrega 4: empleados y usuarios ---------------------------------------
+
+/**
+ * Convierte el textarea de teléfonos (uno por línea o separados por coma)
+ * en un arreglo limpio y sin duplicados. EMPLEADO.telefono es multivaluado
+ * y se guarda en empleado_telefono (1FN), una fila por número.
+ */
+function extraerTelefonos(texto) {
+  if (typeof texto !== 'string') return [];
+  const lista = texto.split(/[\n,;]+/).map((t) => t.trim()).filter(Boolean);
+  return [...new Set(lista)];
+}
+
+function validarEmpleado(body) {
+  const errores = [];
+  if (!esTextoNoVacio(body.nombres_apellidos, 150) || body.nombres_apellidos.trim().length < 3) {
+    errores.push('El nombre completo es obligatorio (3 a 150 caracteres).');
+  }
+  if (!/^\d{13}$/.test((body.dpi || '').trim())) errores.push('El DPI debe tener exactamente 13 dígitos.');
+  const telefonos = extraerTelefonos(body.telefonos);
+  if (telefonos.length > 5) errores.push('Se permiten como máximo 5 teléfonos.');
+  telefonos.forEach((t) => {
+    if (!/^\+?[0-9 -]{8,20}$/.test(t)) errores.push(`El teléfono "${t}" no es válido (8 a 20 dígitos).`);
+  });
+  return errores;
+}
+
+const ESTADOS_USUARIO = ['activo', 'inactivo'];
+
+/**
+ * Valida el formulario de usuario. En alta la contraseña y el empleado son
+ * obligatorios; en edición la contraseña es opcional (vacía = no cambiarla).
+ * Límite de 72 caracteres: bcrypt ignora lo que pase de 72 bytes.
+ */
+function validarUsuario(body, { esNuevo }) {
+  const errores = [];
+  if (esNuevo && !/^[a-zA-Z0-9._-]{3,40}$/.test((body.username || '').trim())) {
+    errores.push('El usuario debe tener de 3 a 40 caracteres (letras, números, punto, guion o guion bajo).');
+  }
+  if (esNuevo && !esEnteroPositivo(body.empleado_id)) errores.push('Debes seleccionar el empleado dueño del usuario.');
+  if (!esEnteroPositivo(body.rol_id)) errores.push('Debes seleccionar un rol.');
+  if (!ESTADOS_USUARIO.includes(body.estado)) errores.push('El estado debe ser activo o inactivo.');
+
+  const password = body.password || '';
+  if (esNuevo || password) {
+    if (password.length < 8 || password.length > 72 || !/[A-Za-z]/.test(password) || !/\d/.test(password)) {
+      errores.push('La contraseña debe tener de 8 a 72 caracteres e incluir letras y números.');
+    }
+    if (password !== (body.password_confirmacion || '')) errores.push('La confirmación de contraseña no coincide.');
+  }
+  return errores;
+}
+
 module.exports = {
   validarProducto,
   validarCliente,
@@ -111,4 +164,7 @@ module.exports = {
   validarPedido,
   extraerLineas,
   esEnteroPositivo,
+  extraerTelefonos,
+  validarEmpleado,
+  validarUsuario,
 };

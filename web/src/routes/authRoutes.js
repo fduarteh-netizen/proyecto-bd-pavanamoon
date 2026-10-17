@@ -14,7 +14,10 @@ const router = express.Router();
 
 router.get('/login', (req, res) => {
   if (req.session.usuario) return res.redirect('/');
-  res.render('login', { error: null });
+  const error = req.query.motivo === 'inactivo'
+    ? 'Tu usuario fue desactivado por un administrador. Comunícate con él para recuperar el acceso.'
+    : null;
+  res.render('login', { error });
 });
 
 router.post('/login', async (req, res, next) => {

@@ -29,7 +29,7 @@
 
   <div>
     <span>Vendedor</span>
-    <strong><%= pedido.atendido_por %></strong>
+    <strong><%= pedido.vendedor %></strong>
   </div>
 
   <div>
@@ -39,7 +39,7 @@
 
   <div>
     <span>Pares</span>
-    <strong><%= pedido.cantidad_lineas %></strong>
+    <strong><%= pedido.pares_totales %></strong>
   </div>
 
   <div>
@@ -79,11 +79,23 @@
 </table>
 
 <% if (pedido.estado === 'pendiente') { %>
-  <form action="/pedidos/<%= pedido.pedido_id %>/completar" method="POST" style="margin-top:1rem">
-    <button class="btn btn-primary" type="submit">
-      Marcar como completado
-    </button>
-  </form>
+  <div class="actions" style="margin-top:1rem">
+    <form action="/pedidos/<%= pedido.pedido_id %>/completar" method="POST" style="display:inline">
+      <button class="btn btn-primary" type="submit">Marcar como completado</button>
+    </form>
+    <form action="/pedidos/<%= pedido.pedido_id %>/cancelar" method="POST" style="display:inline"
+          onsubmit="return confirm('¿Cancelar el pedido #<%= pedido.pedido_id %>? Los pares regresarán al inventario.');">
+      <button class="btn btn-danger" type="submit">Cancelar pedido</button>
+    </form>
+  </div>
+  <p class="note">Cancelar ejecuta <code>sp_cancelar_pedido</code>: regresa los pares al stock,
+    deja cada reintegro en el kardex y conserva el detalle como evidencia.</p>
+<% } %>
+
+<% if (pedido.estado === 'cancelado') { %>
+  <div class="alert alert-error" style="margin-top:1rem">
+    Pedido cancelado: sus pares ya fueron reintegrados al inventario (ver Kardex).
+  </div>
 <% } %>
 
 <% if (pedido.estado === 'completado' && pedido.lineas.length) { %>
@@ -95,9 +107,11 @@
     <label>
       Variante
       <select name="variante_id" required>
-        <% pedido.lineas.forEach(function(l) { %>
-          <option value="<%= l.variante_id %>">
-            <%= l.sku %> (vendidos: <%= l.cantidad * l.cantidad_pares %> pares)
+        <% pedido.lineas.forEach(function(l) {
+             var vendidos = l.cantidad * l.cantidad_pares;
+             var pendientes = vendidos - Number(l.pares_devueltos); %>
+          <option value="<%= l.variante_id %>" <%= pendientes <= 0 ? 'disabled' : '' %>>
+            <%= l.sku %> (vendidos: <%= vendidos %>, devueltos: <%= l.pares_devueltos %>, puede devolver: <%= pendientes %>)
           </option>
         <% }) %>
       </select>
@@ -121,8 +135,8 @@
   </form>
 
   <p class="note" style="margin-top:0">
-    Ejecuta <code>sp_registrar_devolucion</code>: valida contra lo vendido,
-    regresa el stock y deja el movimiento en el kardex.
+    Ejecuta <code>sp_registrar_devolucion</code>: valida contra lo vendido menos
+    lo ya devuelto, regresa el stock y deja el movimiento en el kardex.
   </p>
 
 <% } %>

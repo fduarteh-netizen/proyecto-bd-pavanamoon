@@ -10,6 +10,9 @@
 --   del detalle (RF12: cálculo automático del total).
 -- Dependencias: detalle_pedido, pedido, presentacion_venta, variante_producto,
 --               movimiento_stock, trg_detalle_pedido_bi (valida antes)
+-- Cambio E4:   la salida en el kardex guarda pedido_id (ver
+--               sql/ddl/07_ajustes_entrega4.sql) para poder calcular
+--               devoluciones y cancelaciones contra el pedido de origen.
 -- Estándar:     S2, S3, S6, S7
 -- =============================================================================
 
@@ -38,8 +41,8 @@ BEGIN
      WHERE variante_id = NEW.variante_id;
 
     -- 2) Registrar la salida en el kardex.
-    INSERT INTO movimiento_stock (variante_id, empleado_id, tipo_movimiento, cantidad)
-    VALUES (NEW.variante_id, v_empleado_id, 'salida', v_pares);
+    INSERT INTO movimiento_stock (variante_id, empleado_id, tipo_movimiento, cantidad, pedido_id)
+    VALUES (NEW.variante_id, v_empleado_id, 'salida', v_pares, NEW.pedido_id);
 
     -- 3) Recalcular el total del pedido.
     UPDATE pedido

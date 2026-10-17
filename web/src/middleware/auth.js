@@ -6,10 +6,16 @@
 //               en sesión no tiene acceso al módulo. exposeCurrentUser deja
 //               el usuario y sus módulos permitidos disponibles en las vistas
 //               (menú y tarjetas filtrados por rol).
-// Dependencias: express-session (server.js), src/config/permisos.js
+//               Entrega 4: exposeCurrentUser vuelve a leer de la BD el estado
+//               y el rol del usuario en cada petición. Si un administrador lo
+//               desactiva, su sesión se cierra en la siguiente petición; si
+//               le cambia el rol, los permisos nuevos aplican de inmediato.
+// Dependencias: express-session (server.js), src/config/permisos.js,
+//               src/models/usuarioModel.js
 // =============================================================================
 
 const { rolesDe, modulosPermitidos } = require('../config/permisos');
+const usuarioModel = require('../models/usuarioModel');
 
 function requireAuth(req, res, next) {
   if (req.session && req.session.usuario) {
@@ -31,11 +37,23 @@ function requireRole(claveModulo) {
   };
 }
 
-function exposeCurrentUser(req, res, next) {
-  const usuario = (req.session && req.session.usuario) || null;
-  res.locals.usuarioActual = usuario;
-  res.locals.modulosMenu = usuario ? modulosPermitidos(usuario.rol) : [];
-  next();
+async function exposeCurrentUser(req, res, next) {
+  try {
+    const usuario = (req.session && req.session.usuario) || null;
+    if (usuario) {
+      const vigente = await usuarioModel.estadoActual(usuario.usuario_id);
+      if (!vigente || vigente.estado !== 'activo') {
+        // Desactivado o eliminado mientras tenía la sesión abierta.
+        return req.session.destroy(() => res.redirect('/login?motivo=inactivo'));
+      }
+      usuario.rol = vigente.nombre_rol; // el rol pudo cambiar desde el login
+    }
+    res.locals.usuarioActual = usuario;
+    res.locals.modulosMenu = usuario ? modulosPermitidos(usuario.rol) : [];
+    next();
+  } catch (err) {
+    next(err);
+  }
 }
 
 module.exports = { requireAuth, requireRole, exposeCurrentUser };

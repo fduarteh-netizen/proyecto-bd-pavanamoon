@@ -17,6 +17,10 @@ const MODULOS = [
   { clave: 'clientes',   ruta: '/clientes',   titulo: 'Clientes',    descripcion: 'Clientes individuales y mayoristas.',                  roles: ['administrador', 'vendedor'] },
   { clave: 'pedidos',    ruta: '/pedidos',    titulo: 'Pedidos',     descripcion: 'Ventas con precio y descuento calculados en la BD.',   roles: ['administrador', 'vendedor'] },
   { clave: 'kardex',     ruta: '/kardex',     titulo: 'Kardex',      descripcion: 'Historial auditable de movimientos de stock.',         roles: ['administrador', 'bodeguero'] },
+  // --- Entrega 4 ---
+  { clave: 'reportes',   ruta: '/reportes',   titulo: 'Reportes',    descripcion: 'Ventas por periodo y modelos más/menos vendidos.',      roles: ['administrador'] },
+  { clave: 'empleados',  ruta: '/empleados',  titulo: 'Empleados',   descripcion: 'Personal de la empresa y sus teléfonos.',              roles: ['administrador'] },
+  { clave: 'usuarios',   ruta: '/usuarios',   titulo: 'Usuarios',    descripcion: 'Cuentas de acceso, roles y activación (RF19).',        roles: ['administrador'] },
 ];
 
 function rolesDe(clave) {

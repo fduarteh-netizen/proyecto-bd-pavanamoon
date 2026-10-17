@@ -14,9 +14,9 @@
 
 <div class="table-wrap">
 <table class="table">
-  <thead><tr><th>#</th><th>Fecha</th><th>Tipo</th><th>SKU</th><th>Modelo</th><th>Talla</th><th>Color</th><th class="num">Efecto</th><th>Responsable</th></tr></thead>
+  <thead><tr><th>#</th><th>Fecha</th><th>Tipo</th><th>SKU</th><th>Modelo</th><th>Talla</th><th>Color</th><th class="num">Efecto</th><th>Pedido</th><th>Responsable</th></tr></thead>
   <tbody>
-    <% if (movimientos.length === 0) { %><tr><td colspan="9">Sin movimientos para ese filtro.</td></tr><% } %>
+    <% if (movimientos.length === 0) { %><tr><td colspan="10">Sin movimientos para ese filtro.</td></tr><% } %>
     <% movimientos.forEach(function(m) { %>
       <tr>
         <td><%= m.movimiento_id %></td>
@@ -24,6 +24,7 @@
         <td><span class="tag tag-<%= m.tipo_movimiento %>"><%= m.tipo_movimiento %></span></td>
         <td><%= m.sku %></td><td><%= m.modelo %></td><td><%= m.talla %></td><td><%= m.color %></td>
         <td class="num"><strong><%= m.efecto_stock > 0 ? '+' : '' %><%= m.efecto_stock %></strong></td>
+        <td><%= m.pedido_id ? '#' + m.pedido_id : '—' %></td>
         <td><%= m.responsable %></td>
       </tr>
     <% }); %>
