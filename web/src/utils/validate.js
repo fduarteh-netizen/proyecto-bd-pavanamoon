@@ -34,6 +34,19 @@ function validarCliente(body) {
   if (!body.tipo_cliente_id) errores.push('Debes seleccionar un tipo de cliente.');
   if (!esTextoNoVacio(body.nombre_cliente, 150)) errores.push('El nombre del cliente es obligatorio.');
   if (!esNIT(body.nit)) errores.push('El NIT no tiene un formato válido.');
+  const entrada = body.telefonos ?? body.telefono;
+  if (entrada !== undefined && typeof entrada !== 'string') {
+    errores.push('El campo teléfonos tiene un formato inválido.');
+  } else {
+    const telefonos = extraerTelefonos(entrada);
+    if (telefonos.length > 5) errores.push('Se permiten como máximo 5 teléfonos por cliente.');
+    telefonos.forEach((telefono) => {
+      const digitos = telefono.replace(/\D/g, '');
+      if (!/^\+?[0-9 -]+$/.test(telefono) || telefono.length > 20 || digitos.length < 8 || digitos.length > 15) {
+        errores.push(`El teléfono \"${telefono}\" no es válido (8 a 15 dígitos, máximo 20 caracteres).`);
+      }
+    });
+  }
   return errores;
 }
 
@@ -57,11 +70,14 @@ function extraerLineas(body, campoClave) {
 
 function validarVariante(body) {
   const errores = [];
-  if (!esEnteroPositivo(body.producto_id)) errores.push('Debes seleccionar un producto.');
-  if (!esEnteroPositivo(body.talla_id)) errores.push('Debes seleccionar una talla.');
-  if (!esEnteroPositivo(body.color_id)) errores.push('Debes seleccionar un color.');
-  const minimo = Number(body.stock_minimo);
-  if (!Number.isInteger(minimo) || minimo < 0) errores.push('El stock mínimo debe ser un entero mayor o igual a 0.');
+  const idEstricto = (v) => /^(?:[1-9]\d*)$/.test(String(v ?? '')) && Number.isSafeInteger(Number(v));
+  if (!idEstricto(body.producto_id)) errores.push('Debes seleccionar un producto.');
+  if (!idEstricto(body.talla_id)) errores.push('Debes seleccionar una talla.');
+  if (!idEstricto(body.color_id)) errores.push('Debes seleccionar un color.');
+  const minimo = String(body.stock_minimo ?? '');
+  if (!/^\d+$/.test(minimo) || !Number.isSafeInteger(Number(minimo))) {
+    errores.push('El stock mínimo debe ser un entero mayor o igual a 0.');
+  }
   return errores;
 }
 

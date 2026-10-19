@@ -1,41 +1,49 @@
 <%- include('../partials/header') %>
 
-<h1>Nueva variante</h1>
+<% const editando = variante && variante.variante_id; %>
+<% const identidadBloqueada = editando && variante.identidadBloqueada; %>
+<h1><%= editando ? 'Editar variante' : 'Nueva variante' %></h1>
 
 <% if (errores && errores.length) { %>
   <div class="alert alert-error"><ul><% errores.forEach(function(e) { %><li><%= e %></li><% }); %></ul></div>
 <% } %>
 
-<form action="/inventario" method="POST" class="form">
+<form action="<%= editando ? '/inventario/' + variante.variante_id + '?_method=PUT' : '/inventario' %>" method="POST" class="form">
+  <% if (identidadBloqueada) { %>
+    <p class="note">Esta variante tiene stock o historial de movimientos. Para conservar la trazabilidad solo puedes cambiar el stock mínimo.</p>
+  <% } %>
   <label for="producto_id">Producto</label>
-  <select id="producto_id" name="producto_id" required>
+  <select id="producto_id" name="producto_id" required <%= identidadBloqueada ? 'disabled' : '' %>>
     <option value="">-- Selecciona --</option>
     <% productos.forEach(function(p) { %>
       <option value="<%= p.producto_id %>" <%= variante && Number(variante.producto_id) === p.producto_id ? 'selected' : '' %>><%= p.modelo %></option>
     <% }); %>
   </select>
+  <% if (identidadBloqueada) { %><input type="hidden" name="producto_id" value="<%= variante.producto_id %>" /><% } %>
 
   <label for="talla_id">Talla</label>
-  <select id="talla_id" name="talla_id" required>
+  <select id="talla_id" name="talla_id" required <%= identidadBloqueada ? 'disabled' : '' %>>
     <option value="">-- Selecciona --</option>
     <% tallas.forEach(function(t) { %>
       <option value="<%= t.talla_id %>" <%= variante && Number(variante.talla_id) === t.talla_id ? 'selected' : '' %>><%= t.valor_talla %></option>
     <% }); %>
   </select>
+  <% if (identidadBloqueada) { %><input type="hidden" name="talla_id" value="<%= variante.talla_id %>" /><% } %>
 
   <label for="color_id">Color</label>
-  <select id="color_id" name="color_id" required>
+  <select id="color_id" name="color_id" required <%= identidadBloqueada ? 'disabled' : '' %>>
     <option value="">-- Selecciona --</option>
     <% colores.forEach(function(c) { %>
       <option value="<%= c.color_id %>" <%= variante && Number(variante.color_id) === c.color_id ? 'selected' : '' %>><%= c.nombre_color %></option>
     <% }); %>
   </select>
+  <% if (identidadBloqueada) { %><input type="hidden" name="color_id" value="<%= variante.color_id %>" /><% } %>
 
   <label for="stock_minimo">Stock mínimo (alerta)</label>
   <input type="number" id="stock_minimo" name="stock_minimo" min="0" step="1" required value="<%= variante ? variante.stock_minimo : 5 %>" />
 
-  <p class="note" style="margin:0.5rem 0 0">El stock inicia en 0 y sube al registrar un ingreso de mercadería. El SKU se genera automáticamente.</p>
-  <button type="submit" class="btn btn-primary">Crear variante</button>
+  <p class="note" style="margin:0.5rem 0 0">El stock real no se modifica desde este formulario. Al crear, inicia en 0; el SKU se genera automáticamente.</p>
+  <button type="submit" class="btn btn-primary"><%= editando ? 'Guardar cambios' : 'Crear variante' %></button>
   <a href="/inventario" class="btn-link">Cancelar</a>
 </form>
 

@@ -27,6 +27,7 @@ const kardexRoutes = require('./src/routes/kardexRoutes');
 const reporteRoutes = require('./src/routes/reporteRoutes');
 const empleadoRoutes = require('./src/routes/empleadoRoutes');
 const usuarioRoutes = require('./src/routes/usuarioRoutes');
+const catalogoRoutes = require('./src/routes/catalogoRoutes');
 
 const app = express();
 
@@ -63,6 +64,7 @@ app.use('/kardex', kardexRoutes);
 app.use('/reportes', reporteRoutes);
 app.use('/empleados', empleadoRoutes);
 app.use('/usuarios', usuarioRoutes);
+app.use('/catalogos', catalogoRoutes);
 
 app.get('/', requireAuth, (req, res) => {
   res.render('home');

@@ -1,0 +1,73 @@
+<%- include('../partials/header') %>
+
+<% const editando = registro && registro[def.pk];
+   const r = registro || {};
+   const usada = editando && Number(r.uso) > 0; %>
+<h1><%= editando ? 'Editar' : 'Nueva' %> <%= def.singular %></h1>
+
+<%- include('_tabs') %>
+
+<% if (errores && errores.length) { %>
+  <div class="alert alert-error"><ul><% errores.forEach(function (e) { %><li><%= e %></li><% }); %></ul></div>
+<% } %>
+
+<form action="<%= editando ? '/catalogos/' + clave + '/' + registro[def.pk] + '?_method=PUT' : '/catalogos/' + clave %>" method="POST" class="form">
+
+  <% if (clave === 'categorias') { %>
+    <label for="nombre_categoria">Categoría</label>
+    <select id="nombre_categoria" name="nombre_categoria" required>
+      <% categoriasDisponibles.forEach(function (c) { %>
+        <option value="<%= c %>" <%= r.nombre_categoria === c ? 'selected' : '' %>><%= c %></option>
+      <% }); %>
+    </select>
+    <% if (categoriasDisponibles.length === 0) { %>
+      <p class="muted">Ya existen las tres categorías permitidas.</p>
+    <% } %>
+
+  <% } else if (clave === 'tallas') { %>
+    <label for="valor_talla">Talla</label>
+    <input type="text" id="valor_talla" name="valor_talla" maxlength="4" pattern="\d{2}([.,]5)?" required
+           placeholder="Ej. 38 o 38.5" value="<%= r.valor_talla || '' %>" />
+
+  <% } else if (clave === 'colores') { %>
+    <label for="nombre_color">Color</label>
+    <input type="text" id="nombre_color" name="nombre_color" minlength="3" maxlength="40" required
+           value="<%= r.nombre_color || '' %>" />
+
+  <% } else if (clave === 'tipos-cliente') { %>
+    <label for="nombre">Nombre</label>
+    <input type="text" id="nombre" name="nombre" minlength="3" maxlength="50" required value="<%= r.nombre || '' %>" />
+
+    <label for="descripcion">Descripción (opcional)</label>
+    <input type="text" id="descripcion" name="descripcion" maxlength="255" value="<%= r.descripcion || '' %>" />
+
+    <label for="porcentaje_descuento">Descuento (%)</label>
+    <input type="number" id="porcentaje_descuento" name="porcentaje_descuento" min="0" max="50" step="0.01" required
+           value="<%= r.porcentaje_descuento !== undefined && r.porcentaje_descuento !== null ? r.porcentaje_descuento : '0' %>" />
+    <p class="muted">Entre 0 y 50 (<code>ck_tipo_cliente_descuento</code>). Solo afecta pedidos nuevos.</p>
+
+  <% } else { %>
+    <label for="nombre">Nombre</label>
+    <input type="text" id="nombre" name="nombre" minlength="2" maxlength="50" required value="<%= r.nombre || '' %>" />
+
+    <label for="cantidad_pares">Pares por presentación</label>
+    <input type="number" id="cantidad_pares" name="cantidad_pares" min="1" max="1000" step="1" required
+           value="<%= r.cantidad_pares || '' %>" <%= usada ? 'readonly' : '' %> />
+    <% if (usada) { %>
+      <p class="muted">Usada en <%= r.uso %> línea(s) de pedido: la cantidad de pares ya no se puede cambiar.</p>
+    <% } %>
+
+    <label for="estado">Estado</label>
+    <select id="estado" name="estado" required>
+      <% ['activo', 'inactivo'].forEach(function (e) { %>
+        <option value="<%= e %>" <%= r.estado === e ? 'selected' : '' %>><%= e %></option>
+      <% }); %>
+    </select>
+    <p class="muted">Una presentación inactiva deja de ofrecerse en pedidos nuevos; los pedidos anteriores la conservan.</p>
+  <% } %>
+
+  <button type="submit" class="btn btn-primary"><%= editando ? 'Guardar cambios' : 'Crear' %></button>
+  <a href="/catalogos/<%= clave %>" class="btn-link">Cancelar</a>
+</form>
+
+<%- include('../partials/footer') %>

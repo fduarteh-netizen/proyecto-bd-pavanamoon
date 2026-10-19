@@ -1,16 +1,20 @@
 // =============================================================================
-// Archivo:      src/models/varianteModel.js
-// Descripción:  Acceso a datos del módulo Inventario (RF02, RF03, RF04).
-//               La lectura se hace sobre la vista vw_stock_variantes (no se
-//               repite el JOIN de 5 tablas en la app). El stock de una
-//               variante nueva inicia en 0: solo cambia por ingresos,
-//               pedidos o devoluciones (triggers/procedimientos), nunca a mano.
-// Dependencias: src/config/db.js, vista vw_stock_variantes
+// Archivo: src/models/varianteModel.js
+// Inventario: lectura, alta, edición y baja de variantes.
+// El stock se modifica SOLO mediante ingresos, pedidos y devoluciones.
 // =============================================================================
-
 const pool = require('../config/db');
 
-/** Lista variantes; si soloAlertas es true, solo las que están bajo el mínimo. */
+function skuDe({ producto_id, talla_id, color_id }) {
+  return `PVM-${String(producto_id).padStart(3, '0')}-T${String(talla_id).padStart(2, '0')}-C${String(color_id).padStart(2, '0')}`;
+}
+
+function errorNegocio(mensaje) {
+  const err = new Error(mensaje);
+  err.code = 'VARIANTE_BLOQUEADA';
+  return err;
+}
+
 async function listar({ soloAlertas = false, busqueda = '' } = {}) {
   const condiciones = [];
   const params = [];
@@ -27,7 +31,6 @@ async function listar({ soloAlertas = false, busqueda = '' } = {}) {
   return rows;
 }
 
-/** Variantes con stock > 0, para el formulario de pedidos. */
 async function listarDisponibles() {
   const [rows] = await pool.query(
     'SELECT variante_id, sku, modelo, talla, color, precio_venta, stock_actual FROM vw_stock_variantes WHERE stock_actual > 0 ORDER BY modelo, talla'
@@ -35,7 +38,6 @@ async function listarDisponibles() {
   return rows;
 }
 
-/** Todas las variantes, para el formulario de ingresos de mercadería. */
 async function listarTodasSimple() {
   const [rows] = await pool.query(
     'SELECT variante_id, sku, modelo, talla, color, stock_actual FROM vw_stock_variantes ORDER BY modelo, talla'
@@ -43,9 +45,8 @@ async function listarTodasSimple() {
   return rows;
 }
 
-/** Crea una variante con stock 0. El SKU se deriva de producto+talla+color. */
 async function crear({ producto_id, talla_id, color_id, stock_minimo }) {
-  const sku = `PVM-${String(producto_id).padStart(3, '0')}-T${String(talla_id).padStart(2, '0')}-C${String(color_id).padStart(2, '0')}`;
+  const sku = skuDe({ producto_id, talla_id, color_id });
   const [result] = await pool.query(
     `INSERT INTO variante_producto (producto_id, talla_id, color_id, sku, stock_actual, stock_minimo)
      VALUES (?, ?, ?, ?, 0, ?)`,
@@ -54,4 +55,91 @@ async function crear({ producto_id, talla_id, color_id, stock_minimo }) {
   return result.insertId;
 }
 
-module.exports = { listar, listarDisponibles, listarTodasSimple, crear };
+// No se puede cambiar producto/talla/color después de vender, ingresar o mover
+// unidades: distorsionaría el historial del Kardex y el detalle de pedidos.
+async function tieneHistorial(conn, id) {
+  const [rows] = await conn.query(
+    `SELECT
+       EXISTS(SELECT 1 FROM detalle_pedido WHERE variante_id = ? LIMIT 1) AS pedidos,
+       EXISTS(SELECT 1 FROM detalle_ingreso WHERE variante_id = ? LIMIT 1) AS ingresos,
+       EXISTS(SELECT 1 FROM movimiento_stock WHERE variante_id = ? LIMIT 1) AS movimientos`,
+    [id, id, id]
+  );
+  return Boolean(rows[0].pedidos || rows[0].ingresos || rows[0].movimientos);
+}
+
+async function buscarPorId(id) {
+  const [rows] = await pool.query(
+    `SELECT variante_id, producto_id, talla_id, color_id, sku, stock_actual, stock_minimo
+       FROM variante_producto WHERE variante_id = ?`, [id]
+  );
+  if (!rows.length) return null;
+  const historial = await tieneHistorial(pool, id);
+  return { ...rows[0], identidadBloqueada: historial || Number(rows[0].stock_actual) !== 0 };
+}
+
+async function actualizar(id, { producto_id, talla_id, color_id, stock_minimo }) {
+  const conn = await pool.getConnection();
+  try {
+    await conn.beginTransaction();
+    const [rows] = await conn.query(
+      `SELECT producto_id, talla_id, color_id, stock_actual
+         FROM variante_producto WHERE variante_id = ? FOR UPDATE`, [id]
+    );
+    if (!rows.length) {
+      await conn.rollback();
+      return false;
+    }
+    const actual = rows[0];
+    const cambiaIdentidad = Number(actual.producto_id) !== Number(producto_id)
+      || Number(actual.talla_id) !== Number(talla_id)
+      || Number(actual.color_id) !== Number(color_id);
+    if (cambiaIdentidad && (Number(actual.stock_actual) !== 0 || await tieneHistorial(conn, id))) {
+      throw errorNegocio('No puedes cambiar producto, talla o color: la variante tiene stock o historial. Solo puedes modificar el stock mínimo.');
+    }
+    if (cambiaIdentidad) {
+      await conn.query(
+        `UPDATE variante_producto
+            SET producto_id = ?, talla_id = ?, color_id = ?, sku = ?, stock_minimo = ?
+          WHERE variante_id = ?`,
+        [producto_id, talla_id, color_id, skuDe({ producto_id, talla_id, color_id }), stock_minimo, id]
+      );
+    } else {
+      await conn.query('UPDATE variante_producto SET stock_minimo = ? WHERE variante_id = ?', [stock_minimo, id]);
+    }
+    await conn.commit();
+    return true;
+  } catch (err) {
+    await conn.rollback();
+    throw err;
+  } finally {
+    conn.release();
+  }
+}
+
+async function eliminar(id) {
+  const conn = await pool.getConnection();
+  try {
+    await conn.beginTransaction();
+    const [rows] = await conn.query(
+      'SELECT stock_actual FROM variante_producto WHERE variante_id = ? FOR UPDATE', [id]
+    );
+    if (!rows.length) {
+      await conn.rollback();
+      return false;
+    }
+    if (Number(rows[0].stock_actual) !== 0 || await tieneHistorial(conn, id)) {
+      throw errorNegocio('No se puede eliminar esta variante porque tiene stock o movimientos, pedidos o ingresos relacionados. El historial debe conservarse.');
+    }
+    await conn.query('DELETE FROM variante_producto WHERE variante_id = ?', [id]);
+    await conn.commit();
+    return true;
+  } catch (err) {
+    await conn.rollback();
+    throw err;
+  } finally {
+    conn.release();
+  }
+}
+
+module.exports = { listar, listarDisponibles, listarTodasSimple, crear, buscarPorId, actualizar, eliminar };

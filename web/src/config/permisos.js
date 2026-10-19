@@ -21,6 +21,7 @@ const MODULOS = [
   { clave: 'reportes',   ruta: '/reportes',   titulo: 'Reportes',    descripcion: 'Ventas por periodo y modelos más/menos vendidos.',      roles: ['administrador'] },
   { clave: 'empleados',  ruta: '/empleados',  titulo: 'Empleados',   descripcion: 'Personal de la empresa y sus teléfonos.',              roles: ['administrador'] },
   { clave: 'usuarios',   ruta: '/usuarios',   titulo: 'Usuarios',    descripcion: 'Cuentas de acceso, roles y activación (RF19).',        roles: ['administrador'] },
+  { clave: 'catalogos',  ruta: '/catalogos',  titulo: 'Catálogos',   descripcion: 'Categorías, tallas, colores, tipos de cliente y presentaciones.', roles: ['administrador'] },
 ];
 
 function rolesDe(clave) {
