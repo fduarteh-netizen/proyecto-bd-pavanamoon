@@ -84,7 +84,14 @@ async function crear({ cliente_id, empleado_id, lineas }) {
       'SELECT @nuevo_pedido_id AS pedidoId'
     );
 
-    for (const linea of lineas) {
+    // Concurrencia (Entrega 4): las líneas se insertan siempre en orden de
+    // variante_id. Cada línea bloquea su variante (sp_agregar_linea_pedido,
+    // FOR UPDATE); si dos pedidos con las mismas variantes las bloquearan en
+    // orden distinto (A,B contra B,A) podrían esperarse mutuamente. Con un
+    // orden único, uno simplemente espera al otro.
+    const lineasOrdenadas = [...lineas].sort((a, b) => Number(a.variante_id) - Number(b.variante_id));
+
+    for (const linea of lineasOrdenadas) {
       await conn.query(
         'CALL sp_agregar_linea_pedido(?, ?, ?, ?)',
         [

@@ -105,6 +105,29 @@ bash docs/casos-prueba/scripts/entrega4_casos_web.sh   # con la app corriendo; i
 Si `root` tiene contraseña, el script web la toma de la variable `MYSQL`:
 `MYSQL="mysql -uroot -pTU_CLAVE" bash docs/casos-prueba/scripts/entrega4_casos_web.sh`
 
+## 4.3 Pruebas del Lote 5 (Node, funcionan en PowerShell)
+
+```powershell
+# Seguridad (solo lee datos). Con la app corriendo en otra terminal:
+node --test docs/casos-prueba/scripts/entrega4_seguridad.test.cjs
+
+# Integración de stock y concurrencia: ESCRIBE datos, por eso usa una base
+# INDEPENDIENTE (pavanamoon_prueba) que se crea con los mismos scripts de sql/.
+# Nunca corre contra la base de la app (exige nombre *_prueba + tabla marcadora).
+$env:PVM_ADMIN_USER = "root"; $env:PVM_ADMIN_PASSWORD = "clave_de_root"
+node docs/casos-prueba/scripts/instalar_bd_prueba.cjs --recrear
+Remove-Item Env:PVM_ADMIN_PASSWORD
+$env:PVM_BD_PRUEBA = "pavanamoon_prueba"
+node --test docs/casos-prueba/scripts/entrega4_integracion_stock.test.cjs
+Remove-Item Env:PVM_BD_PRUEBA
+```
+
+> **Re-ejecutar scripts de `sql/procedures/` sobre una base existente borra
+> permisos.** `DROP PROCEDURE` elimina los `GRANT EXECUTE ON PROCEDURE ...`
+> de ese procedimiento (comprobado en MySQL 8.0). En una instalación desde
+> cero no pasa nada, porque `sql/security/` se ejecuta después. En una base ya
+> en uso, vuelva a ejecutar `sql/security/` o restaure los permisos que tenía.
+
 ## 5. Variables de entorno
 
 Ver [`.env.example`](./.env.example) (raíz, para referencia de conexión a MySQL) y
