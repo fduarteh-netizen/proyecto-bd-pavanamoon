@@ -8,8 +8,13 @@
 //               registran el kardex y recalculan el total. Si cualquier línea
 //               falla (ej. stock insuficiente) se hace ROLLBACK de todo.
 //               listar() acepta clienteId para el historial por cliente (RF14).
+//               Entrega 4: cancelar() invoca sp_cancelar_pedido (reintegra
+//               stock y deja kardex) y buscarDetalle() trae, por línea, los
+//               pares ya devueltos (calculados desde el kardex) para que la
+//               pantalla solo ofrezca devolver lo pendiente.
 // Dependencias: src/config/db.js, vista vw_pedidos_resumen,
-//               sp_crear_pedido, sp_agregar_linea_pedido, sp_registrar_devolucion
+//               sp_crear_pedido, sp_agregar_linea_pedido, sp_registrar_devolucion,
+//               sp_cancelar_pedido
 // =============================================================================
 
 const pool = require('../config/db');
@@ -46,7 +51,12 @@ async function buscarDetalle(id) {
             pv.cantidad_pares,
             dp.cantidad,
             dp.precio_unitario,
-            dp.subtotal
+            dp.subtotal,
+            (SELECT COALESCE(SUM(ms.cantidad), 0)
+               FROM movimiento_stock ms
+              WHERE ms.pedido_id = dp.pedido_id
+                AND ms.variante_id = dp.variante_id
+                AND ms.tipo_movimiento = 'devolucion_cliente') AS pares_devueltos
        FROM detalle_pedido dp
        JOIN vw_stock_variantes v
          ON v.variante_id = dp.variante_id
@@ -74,7 +84,14 @@ async function crear({ cliente_id, empleado_id, lineas }) {
       'SELECT @nuevo_pedido_id AS pedidoId'
     );
 
-    for (const linea of lineas) {
+    // Concurrencia (Entrega 4): las líneas se insertan siempre en orden de
+    // variante_id. Cada línea bloquea su variante (sp_agregar_linea_pedido,
+    // FOR UPDATE); si dos pedidos con las mismas variantes las bloquearan en
+    // orden distinto (A,B contra B,A) podrían esperarse mutuamente. Con un
+    // orden único, uno simplemente espera al otro.
+    const lineasOrdenadas = [...lineas].sort((a, b) => Number(a.variante_id) - Number(b.variante_id));
+
+    for (const linea of lineasOrdenadas) {
       await conn.query(
         'CALL sp_agregar_linea_pedido(?, ?, ?, ?)',
         [
@@ -119,10 +136,21 @@ async function registrarDevolucion({
   );
 }
 
+/**
+ * Cancela un pedido pendiente mediante sp_cancelar_pedido: el procedimiento
+ * valida el estado, regresa los pares al stock, registra cada reintegro en
+ * el kardex ('cancelacion') y cambia el estado, todo en una transacción.
+ * empleado_id viene de la sesión (quién canceló), nunca del formulario.
+ */
+async function cancelar(id, empleado_id) {
+  await pool.query('CALL sp_cancelar_pedido(?, ?)', [id, empleado_id]);
+}
+
 module.exports = {
   listar,
   buscarDetalle,
   crear,
   completar,
+  cancelar,
   registrarDevolucion
 };

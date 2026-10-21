@@ -1,0 +1,27 @@
+<%- include('../partials/header') %>
+
+<% const editando = empleado && empleado.empleado_id; %>
+<h1><%= editando ? 'Editar empleado' : 'Nuevo empleado' %></h1>
+
+<% if (errores && errores.length) { %>
+  <div class="alert alert-error"><ul><% errores.forEach(function (e) { %><li><%= e %></li><% }); %></ul></div>
+<% } %>
+
+<form action="<%= editando ? '/empleados/' + empleado.empleado_id + '?_method=PUT' : '/empleados' %>" method="POST" class="form">
+  <label for="nombres_apellidos">Nombres y apellidos</label>
+  <input type="text" id="nombres_apellidos" name="nombres_apellidos" minlength="3" maxlength="150" required
+         value="<%= empleado ? empleado.nombres_apellidos : '' %>" />
+
+  <label for="dpi">DPI (13 dígitos)</label>
+  <input type="text" id="dpi" name="dpi" inputmode="numeric" pattern="\d{13}" maxlength="13" required
+         value="<%= empleado ? empleado.dpi : '' %>" />
+
+  <label for="telefonos">Teléfonos (uno por línea, máximo 5)</label>
+  <textarea id="telefonos" name="telefonos" rows="3" placeholder="55551234"><%= empleado ? (empleado.telefonos || '') : '' %></textarea>
+  <p class="muted">Cada número se guarda como una fila en <code>empleado_telefono</code> (atributo multivaluado resuelto en 1FN).</p>
+
+  <button type="submit" class="btn btn-primary"><%= editando ? 'Guardar cambios' : 'Registrar empleado' %></button>
+  <a href="/empleados" class="btn-link">Cancelar</a>
+</form>
+
+<%- include('../partials/footer') %>

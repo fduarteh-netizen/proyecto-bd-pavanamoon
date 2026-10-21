@@ -1,0 +1,5 @@
+<nav class="tabs" aria-label="Catálogos">
+  <% Object.keys(catalogos).forEach(function (k) { %>
+    <a href="/catalogos/<%= k %>" class="<%= k === clave ? 'active' : '' %>"><%= catalogos[k].titulo %></a>
+  <% }); %>
+</nav>

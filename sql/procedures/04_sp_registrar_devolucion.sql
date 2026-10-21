@@ -5,13 +5,21 @@
 --               empleado)
 -- Regla de negocio (RF17, RF15):
 --   Un cliente solo puede devolver pares de una variante que efectivamente
---   compró en un pedido COMPLETADO, y nunca más pares de los vendidos en esa
---   línea. La devolución regresa los pares al stock y queda en el kardex
---   como 'devolucion_cliente'. Es transaccional: si algo falla, no se toca
---   ni el stock ni el kardex (ROLLBACK + RESIGNAL del error original).
+--   compró en un pedido COMPLETADO, y nunca más pares de los que le quedan
+--   por devolver en esa línea:
+--       disponibles = pares vendidos en la línea
+--                   - pares ya devueltos de esa línea (sumados del kardex)
+--   La devolución regresa los pares al stock y queda en el kardex como
+--   'devolucion_cliente' con referencia al pedido. Es transaccional: si algo
+--   falla, no se toca ni el stock ni el kardex (ROLLBACK + RESIGNAL).
+-- Cambio E4:   antes solo se comparaba contra lo vendido, por lo que la misma
+--              línea podía devolverse varias veces (defecto encontrado en
+--              pruebas). Ahora se descuenta lo ya devuelto, y la fila del
+--              pedido se bloquea (FOR UPDATE) para que dos devoluciones
+--              simultáneas del mismo pedido no pasen ambas la validación.
 -- Dependencias: pedido, detalle_pedido, presentacion_venta, variante_producto,
---               movimiento_stock
--- Estándar:     S2, S3, S6
+--               movimiento_stock (con pedido_id, ver ddl/07_ajustes_entrega4.sql)
+-- Estándar:     S2, S3, S6, S7 (lo devuelto se calcula, no se almacena)
 -- =============================================================================
 
 USE pavanamoon;
@@ -28,8 +36,9 @@ CREATE PROCEDURE sp_registrar_devolucion(
     IN p_empleado_id INT
 )
 BEGIN
-    DECLARE v_estado        VARCHAR(20);
-    DECLARE v_pares_vendidos INT;
+    DECLARE v_estado          VARCHAR(20);
+    DECLARE v_pares_vendidos  INT;
+    DECLARE v_pares_devueltos INT;
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -39,7 +48,9 @@ BEGIN
 
     START TRANSACTION;
 
-    SELECT estado INTO v_estado FROM pedido WHERE pedido_id = p_pedido_id;
+    -- Bloquea el pedido mientras dura la transacción (concurrencia).
+    SELECT estado INTO v_estado FROM pedido WHERE pedido_id = p_pedido_id FOR UPDATE;
+
     IF v_estado IS NULL OR v_estado <> 'completado' THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'Solo se aceptan devoluciones de pedidos completados.';
@@ -54,17 +65,23 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La variante no pertenece a ese pedido.';
     END IF;
 
-    IF p_pares IS NULL OR p_pares <= 0 OR p_pares > v_pares_vendidos THEN
+    SELECT COALESCE(SUM(cantidad), 0) INTO v_pares_devueltos
+      FROM movimiento_stock
+     WHERE pedido_id = p_pedido_id
+       AND variante_id = p_variante_id
+       AND tipo_movimiento = 'devolucion_cliente';
+
+    IF p_pares IS NULL OR p_pares <= 0 OR p_pares > v_pares_vendidos - v_pares_devueltos THEN
         SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Cantidad a devolver inválida (mayor a lo vendido o <= 0).';
+            SET MESSAGE_TEXT = 'Cantidad a devolver inválida (supera lo pendiente de devolver o es <= 0).';
     END IF;
 
     UPDATE variante_producto
        SET stock_actual = stock_actual + p_pares
      WHERE variante_id = p_variante_id;
 
-    INSERT INTO movimiento_stock (variante_id, empleado_id, tipo_movimiento, cantidad)
-    VALUES (p_variante_id, p_empleado_id, 'devolucion_cliente', p_pares);
+    INSERT INTO movimiento_stock (variante_id, empleado_id, tipo_movimiento, cantidad, pedido_id)
+    VALUES (p_variante_id, p_empleado_id, 'devolucion_cliente', p_pares, p_pedido_id);
 
     COMMIT;
 END$$

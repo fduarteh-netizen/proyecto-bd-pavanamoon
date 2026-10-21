@@ -41,7 +41,19 @@ async function crear({ furgon_id, bodega_destino, empleado_id, lineas }) {
        VALUES (?, ?, ?, 'completado')`,
       [furgon_id, empleado_id, bodega_destino]
     );
-    for (const linea of lineas) {
+    // Concurrencia (Entrega 4, Lote 5): bloquear las variantes ANTES de
+    // insertar el detalle y siempre en orden de variante_id. Sin esto, dos
+    // ingresos simultáneos de la misma variante tomaban primero un bloqueo
+    // compartido (por la FK de detalle_ingreso) y luego ambos pedían el
+    // exclusivo para sumar stock en trg_detalle_ingreso_ai: deadlock
+    // (detectado por INT-02 de entrega4_integracion_stock.test.cjs).
+    const lineasOrdenadas = [...lineas].sort((a, b) => Number(a.variante_id) - Number(b.variante_id));
+    await conn.query(
+      'SELECT variante_id FROM variante_producto WHERE variante_id IN (?) ORDER BY variante_id FOR UPDATE',
+      [lineasOrdenadas.map((l) => l.variante_id)]
+    );
+
+    for (const linea of lineasOrdenadas) {
       await conn.query(
         'INSERT INTO detalle_ingreso (ingreso_id, variante_id, cantidad, costo_unitario) VALUES (?, ?, ?, ?)',
         [result.insertId, linea.variante_id, linea.cantidad, linea.costo_unitario]

@@ -1,0 +1,109 @@
+<%- include('../partials/header') %>
+<% const q = function (n) { return 'Q ' + Number(n).toLocaleString('es-GT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }; %>
+<% const fecha = function (d) { return d ? new Date(d).toISOString().slice(0, 10) : '—'; }; %>
+
+<h1>Reportes</h1>
+
+<form class="filters" method="GET" action="/reportes">
+  <label>Desde <input type="date" name="desde" value="<%= filtros.desde %>" /></label>
+  <label>Hasta <input type="date" name="hasta" value="<%= filtros.hasta %>" /></label>
+  <label>Ranking
+    <select name="orden">
+      <option value="mas" <%= filtros.orden === 'mas' ? 'selected' : '' %>>Más vendidos</option>
+      <option value="menos" <%= filtros.orden === 'menos' ? 'selected' : '' %>>Menos vendidos</option>
+    </select>
+  </label>
+  <label>Mostrar
+    <select name="limite">
+      <% limites.forEach(function (n) { %>
+        <option value="<%= n %>" <%= filtros.limite === n ? 'selected' : '' %>><%= n %> modelos</option>
+      <% }); %>
+    </select>
+  </label>
+  <button class="btn btn-primary" type="submit">Aplicar</button>
+  <a class="btn-link" href="/reportes">Limpiar</a>
+</form>
+
+<% if (errores.length) { %>
+  <div class="alert alert-error"><ul><% errores.forEach(function (e) { %><li><%= e %></li><% }); %></ul></div>
+<% } else { %>
+
+<h2>Ventas del periodo</h2>
+<p class="muted">Solo pedidos <strong>completados</strong>. Fuente: vista <code>vw_ventas_diarias</code>.
+  <% if (resumen.primera_venta) { %>Ventas entre <%= fecha(resumen.primera_venta) %> y <%= fecha(resumen.ultima_venta) %>.<% } %></p>
+
+<div class="kpis">
+  <div class="kpi"><span>Monto vendido</span><strong><%= q(resumen.monto) %></strong></div>
+  <div class="kpi"><span>Pedidos</span><strong><%= resumen.pedidos %></strong></div>
+  <div class="kpi"><span>Pares vendidos</span><strong><%= resumen.pares %></strong></div>
+  <div class="kpi"><span>Ticket promedio</span><strong><%= q(resumen.ticket) %></strong></div>
+</div>
+
+<h3>Por mes</h3>
+<% const maxMes = porMes.reduce(function (m, r) { return Math.max(m, Number(r.monto)); }, 0); %>
+<div class="table-wrap">
+<table class="table">
+  <thead><tr><th>Periodo</th><th class="num">Pedidos</th><th class="num">Pares</th><th class="num">Monto</th><th style="width:35%"></th></tr></thead>
+  <tbody>
+    <% if (porMes.length === 0) { %><tr><td colspan="5">Sin ventas en el rango seleccionado.</td></tr><% } %>
+    <% porMes.forEach(function (r) { %>
+      <tr>
+        <td><%= r.periodo %></td>
+        <td class="num"><%= r.pedidos %></td>
+        <td class="num"><%= r.pares %></td>
+        <td class="num"><%= q(r.monto) %></td>
+        <td><div class="barra"><i style="width:<%= maxMes ? Math.round(Number(r.monto) * 100 / maxMes) : 0 %>%"></i></div></td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>
+</div>
+
+<details>
+  <summary>Ver detalle por día (<%= porDia.length %> días con ventas)</summary>
+  <div class="table-wrap">
+  <table class="table">
+    <thead><tr><th>Fecha</th><th class="num">Pedidos</th><th class="num">Pares</th><th class="num">Monto</th><th class="num">Ticket promedio</th></tr></thead>
+    <tbody>
+      <% porDia.forEach(function (r) { %>
+        <tr>
+          <td><%= fecha(r.fecha) %></td>
+          <td class="num"><%= r.pedidos %></td>
+          <td class="num"><%= r.pares_vendidos %></td>
+          <td class="num"><%= q(r.monto_vendido) %></td>
+          <td class="num"><%= q(r.ticket_promedio) %></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+  </div>
+</details>
+
+<h2 style="margin-top:2rem"><%= filtros.orden === 'menos' ? 'Modelos que menos rotan' : 'Modelos más vendidos' %></h2>
+<p class="muted">Histórico completo (no depende del rango de fechas). Netos = vendidos − devueltos.
+  Fuente: vista <code>vw_ventas_por_modelo</code>.</p>
+<% const maxNetos = modelos.reduce(function (m, r) { return Math.max(m, Number(r.pares_netos)); }, 0); %>
+<div class="table-wrap">
+<table class="table">
+  <thead><tr><th>#</th><th>Modelo</th><th>Categoría</th><th>Suela</th><th class="num">Vendidos</th><th class="num">Devueltos</th><th class="num">Netos</th><th class="num">Monto</th><th style="width:20%"></th></tr></thead>
+  <tbody>
+    <% modelos.forEach(function (m, i) { %>
+      <tr>
+        <td><%= i + 1 %></td>
+        <td><%= m.modelo %></td>
+        <td><%= m.categoria %></td>
+        <td><%= m.tipo_suela %></td>
+        <td class="num"><%= m.pares_vendidos %></td>
+        <td class="num"><%= m.pares_devueltos %></td>
+        <td class="num"><strong><%= m.pares_netos %></strong></td>
+        <td class="num"><%= q(m.monto_vendido) %></td>
+        <td><div class="barra"><i style="width:<%= maxNetos > 0 ? Math.max(0, Math.round(Number(m.pares_netos) * 100 / maxNetos)) : 0 %>%"></i></div></td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>
+</div>
+
+<% } %>
+
+<%- include('../partials/footer') %>

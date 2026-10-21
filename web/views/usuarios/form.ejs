@@ -1,0 +1,57 @@
+<%- include('../partials/header') %>
+
+<% const editando = usuario && usuario.usuario_id; %>
+<h1><%= editando ? 'Editar usuario: ' + usuario.username : 'Nuevo usuario' %></h1>
+
+<% if (errores && errores.length) { %>
+  <div class="alert alert-error"><ul><% errores.forEach(function (e) { %><li><%= e %></li><% }); %></ul></div>
+<% } %>
+
+<form action="<%= editando ? '/usuarios/' + usuario.usuario_id + '?_method=PUT' : '/usuarios' %>" method="POST" class="form" autocomplete="off">
+
+  <% if (editando) { %>
+    <label>Empleado</label>
+    <input type="text" value="<%= usuario.nombres_apellidos %>" disabled />
+  <% } else { %>
+    <label for="username">Nombre de usuario</label>
+    <input type="text" id="username" name="username" maxlength="40" pattern="[A-Za-z0-9._\-]{3,40}" required
+           value="<%= usuario.username || '' %>" />
+
+    <label for="empleado_id">Empleado</label>
+    <select id="empleado_id" name="empleado_id" required>
+      <option value="">— Selecciona —</option>
+      <% empleadosLibres.forEach(function (e) { %>
+        <option value="<%= e.empleado_id %>" <%= String(usuario.empleado_id) === String(e.empleado_id) ? 'selected' : '' %>><%= e.nombres_apellidos %> (DPI <%= e.dpi %>)</option>
+      <% }); %>
+    </select>
+    <% if (empleadosLibres.length === 0) { %>
+      <p class="muted">Todos los empleados ya tienen usuario. Registra primero al empleado en el módulo Empleados.</p>
+    <% } %>
+  <% } %>
+
+  <label for="rol_id">Rol</label>
+  <select id="rol_id" name="rol_id" required>
+    <% roles.forEach(function (r) { %>
+      <option value="<%= r.rol_id %>" <%= String(usuario.rol_id) === String(r.rol_id) ? 'selected' : '' %>><%= r.nombre_rol %> — <%= r.descripcion %></option>
+    <% }); %>
+  </select>
+
+  <label for="estado">Estado</label>
+  <select id="estado" name="estado" required>
+    <% ['activo', 'inactivo'].forEach(function (e) { %>
+      <option value="<%= e %>" <%= usuario.estado === e ? 'selected' : '' %>><%= e %></option>
+    <% }); %>
+  </select>
+
+  <label for="password"><%= editando ? 'Nueva contraseña (dejar vacío para no cambiarla)' : 'Contraseña' %></label>
+  <input type="password" id="password" name="password" minlength="8" maxlength="72" <%= editando ? '' : 'required' %> autocomplete="new-password" />
+
+  <label for="password_confirmacion">Confirmar contraseña</label>
+  <input type="password" id="password_confirmacion" name="password_confirmacion" minlength="8" maxlength="72" <%= editando ? '' : 'required' %> autocomplete="new-password" />
+  <p class="muted">Mínimo 8 caracteres con letras y números. Se guarda solo el hash bcrypt.</p>
+
+  <button type="submit" class="btn btn-primary"><%= editando ? 'Guardar cambios' : 'Crear usuario' %></button>
+  <a href="/usuarios" class="btn-link">Cancelar</a>
+</form>
+
+<%- include('../partials/footer') %>

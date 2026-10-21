@@ -1,0 +1,46 @@
+<%- include('../partials/header') %>
+
+<div class="page-heading">
+  <h1>Empleados</h1>
+  <a class="btn btn-primary" href="/empleados/nuevo">+ Nuevo empleado</a>
+</div>
+
+<% if (mensaje) { %><div class="alert alert-ok"><%= mensaje %></div><% } %>
+<% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+<form class="filters" method="GET" action="/empleados">
+  <label>Buscar <input type="text" name="buscar" maxlength="60" placeholder="Nombre o DPI" value="<%= buscar %>" /></label>
+  <button class="btn btn-primary" type="submit">Buscar</button>
+  <a class="btn-link" href="/empleados">Limpiar</a>
+</form>
+
+<div class="table-wrap">
+<table class="table">
+  <thead><tr><th>Nombre</th><th>DPI</th><th>Teléfonos</th><th>Usuario</th><th>Rol</th><th class="num">Pedidos</th><th class="num">Ingresos</th><th>Acciones</th></tr></thead>
+  <tbody>
+    <% if (empleados.length === 0) { %><tr><td colspan="8">No hay empleados que coincidan.</td></tr><% } %>
+    <% empleados.forEach(function (e) { %>
+      <tr>
+        <td><%= e.nombres_apellidos %></td>
+        <td><%= e.dpi %></td>
+        <td><%= e.telefonos || '—' %></td>
+        <td>
+          <% if (e.username) { %><%= e.username %> <span class="tag tag-<%= e.estado_usuario %>"><%= e.estado_usuario %></span>
+          <% } else { %><span class="muted">sin usuario</span><% } %>
+        </td>
+        <td><%= e.nombre_rol || '—' %></td>
+        <td class="num"><%= e.pedidos %></td>
+        <td class="num"><%= e.ingresos %></td>
+        <td class="actions">
+          <a href="/empleados/<%= e.empleado_id %>/editar">Editar</a>
+          <form action="/empleados/<%= e.empleado_id %>?_method=DELETE" method="POST" onsubmit="return confirm('¿Eliminar a este empleado?');" style="display:inline">
+            <button type="submit" class="btn-link btn-danger">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>
+</div>
+
+<%- include('../partials/footer') %>

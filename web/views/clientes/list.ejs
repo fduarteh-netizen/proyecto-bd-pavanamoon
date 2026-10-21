@@ -5,32 +5,24 @@
   <a class="btn btn-primary" href="/clientes/nuevo">+ Nuevo cliente</a>
 </div>
 
+<% if (mensaje) { %><div class="alert alert-success"><%= mensaje %></div><% } %>
+<% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+<div class="table-wrap">
 <table class="table">
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>Tipo</th>
-      <th>Nombre</th>
-      <th>NIT</th>
-      <th>Teléfono</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
+  <thead><tr><th>#</th><th>Tipo</th><th>Nombre</th><th>NIT</th><th>Teléfonos</th><th>Acciones</th></tr></thead>
   <tbody>
-    <% if (clientes.length === 0) { %>
-      <tr><td colspan="6">No hay clientes registrados todavía.</td></tr>
-    <% } %>
+    <% if (clientes.length === 0) { %><tr><td colspan="6">No hay clientes registrados todavía.</td></tr><% } %>
     <% clientes.forEach(function(c) { %>
       <tr>
         <td><%= c.cliente_id %></td>
         <td><span class="tag tag-<%= c.tipo_cliente %>"><%= c.tipo_cliente %></span></td>
         <td><%= c.nombre_cliente %></td>
         <td><%= c.nit %></td>
-        <td><%= c.telefono || '—' %></td>
+        <td><%= c.telefonos || '—' %></td>
         <td class="actions">
           <a href="/clientes/<%= c.cliente_id %>/editar">Editar</a>
-          <form action="/clientes/<%= c.cliente_id %>?_method=DELETE" method="POST"
-                onsubmit="return confirm('¿Eliminar este cliente?');" style="display:inline">
+          <form action="/clientes/<%= c.cliente_id %>?_method=DELETE" method="POST" onsubmit="return confirm('¿Eliminar este cliente?');" style="display:inline">
             <button type="submit" class="btn-link btn-danger">Eliminar</button>
           </form>
         </td>
@@ -38,5 +30,6 @@
     <% }); %>
   </tbody>
 </table>
+</div>
 
 <%- include('../partials/footer') %>

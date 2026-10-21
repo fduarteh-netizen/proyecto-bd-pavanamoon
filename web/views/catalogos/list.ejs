@@ -1,0 +1,65 @@
+<%- include('../partials/header') %>
+
+<div class="page-heading">
+  <h1>Catálogos</h1>
+  <% if (!(clave === 'categorias' && registros.length >= 3)) { %>
+    <a class="btn btn-primary" href="/catalogos/<%= clave %>/nuevo">+ Nueva <%= def.singular %></a>
+  <% } %>
+</div>
+
+<%- include('_tabs') %>
+
+<% if (mensaje) { %><div class="alert alert-ok"><%= mensaje %></div><% } %>
+<% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+<% if (clave === 'categorias') { %>
+  <p class="muted">Clasificación por edad: solo se admiten <strong>nino</strong>, <strong>juvenil</strong> y
+    <strong>adulto</strong> (restricción <code>ck_categoria_nombre</code>).</p>
+<% } else if (clave === 'tipos-cliente') { %>
+  <p class="muted">El descuento lo aplica <code>fn_calcular_precio_linea</code> al vender. Cambiarlo solo afecta
+    pedidos nuevos: cada línea de pedido guarda el precio con que se vendió.</p>
+<% } else if (clave === 'presentaciones') { %>
+  <p class="muted">Una presentación usada en pedidos no puede cambiar su cantidad de pares ni eliminarse
+    (las devoluciones y cancelaciones dependen de ella). Desactívala para dejar de ofrecerla.</p>
+<% } %>
+
+<div class="table-wrap">
+<table class="table">
+  <thead>
+    <tr>
+      <% if (clave === 'categorias') { %><th>Categoría</th>
+      <% } else if (clave === 'tallas') { %><th>Talla</th>
+      <% } else if (clave === 'colores') { %><th>Color</th>
+      <% } else if (clave === 'tipos-cliente') { %><th>Nombre</th><th>Descripción</th><th class="num">Descuento</th>
+      <% } else { %><th>Nombre</th><th class="num">Pares</th><th>Estado</th><% } %>
+      <th class="num">En uso</th><th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (registros.length === 0) { %><tr><td colspan="6">Sin registros.</td></tr><% } %>
+    <% registros.forEach(function (r) { const id = r[def.pk]; %>
+      <tr>
+        <% if (clave === 'categorias') { %><td><%= r.nombre_categoria %></td>
+        <% } else if (clave === 'tallas') { %><td><%= r.valor_talla %></td>
+        <% } else if (clave === 'colores') { %><td><%= r.nombre_color %></td>
+        <% } else if (clave === 'tipos-cliente') { %>
+          <td><%= r.nombre %></td><td><%= r.descripcion || '—' %></td><td class="num"><%= Number(r.porcentaje_descuento).toFixed(2) %> %</td>
+        <% } else { %>
+          <td><%= r.nombre %></td><td class="num"><%= r.cantidad_pares %></td>
+          <td><span class="tag tag-<%= r.estado %>"><%= r.estado %></span></td>
+        <% } %>
+        <td class="num"><%= r.uso %></td>
+        <td class="actions">
+          <a href="/catalogos/<%= clave %>/<%= id %>/editar">Editar</a>
+          <form action="/catalogos/<%= clave %>/<%= id %>?_method=DELETE" method="POST" style="display:inline"
+                onsubmit="return confirm('¿Eliminar este registro?');">
+            <button type="submit" class="btn-link btn-danger" <%= Number(r.uso) > 0 ? 'title="En uso: no se puede eliminar"' : '' %>>Eliminar</button>
+          </form>
+        </td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>
+</div>
+
+<%- include('../partials/footer') %>

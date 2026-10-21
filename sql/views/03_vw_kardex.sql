@@ -7,6 +7,8 @@
 --               Regla de negocio: RF16 (historial auditable por variante) y
 --               RF18 (reporte por variante y rango de fechas: la app filtra
 --               esta vista con WHERE parametrizado).
+-- Cambio E4:   expone pedido_id (documento de origen) y trata
+--               'cancelacion' como reintegro de stock (efecto positivo).
 -- Dependencias: movimiento_stock, variante_producto, producto, talla, color,
 --               empleado
 -- Estándar:     S1, S2, S3, S7
@@ -21,8 +23,9 @@ SELECT
     ms.fecha_movimiento,
     ms.tipo_movimiento,
     ms.cantidad,
+    ms.pedido_id,
     CASE
-        WHEN ms.tipo_movimiento IN ('entrada', 'devolucion_cliente') THEN  ms.cantidad
+        WHEN ms.tipo_movimiento IN ('entrada', 'devolucion_cliente', 'cancelacion') THEN  ms.cantidad
         WHEN ms.tipo_movimiento = 'salida'                            THEN -ms.cantidad
         ELSE 0
     END                                  AS efecto_stock,

@@ -19,6 +19,7 @@ function errorHandler(err, req, res, next) {
   console.error('[ERROR]', new Date().toISOString(), err);
 
   let mensaje = 'Ocurrió un error inesperado. Intenta nuevamente.';
+  let status = 500;
 
   // Traducimos algunos códigos de MySQL comunes a mensajes entendibles,
   // sin filtrar el detalle técnico del motor de base de datos.
@@ -27,6 +28,23 @@ function errorHandler(err, req, res, next) {
     // trigger/procedimiento (ej. "Stock insuficiente..."): es seguro
     // mostrarlo porque no contiene detalle técnico del motor.
     mensaje = err.sqlMessage;
+  } else if (err && (err.code === 'ER_LOCK_DEADLOCK' || err.code === 'ER_LOCK_WAIT_TIMEOUT')) {
+    // Dos operaciones simultáneas sobre los mismos registros (Entrega 4).
+    // Este manejador es genérico y NO sabe si la ruta usaba una transacción,
+    // así que no afirma que "no se guardó nada":
+    //  - ER_LOCK_DEADLOCK: MySQL revierte la transacción víctima, pero si la
+    //    ruta hizo pasos previos fuera de una transacción, esos quedan.
+    //  - ER_LOCK_WAIT_TIMEOUT: con innodb_rollback_on_timeout=OFF (valor por
+    //    defecto) MySQL revierte solo la ÚLTIMA sentencia, no la transacción.
+    //    Los modelos que usan transacción (pedidos, ingresos, empleados,
+    //    clientes, variantes) hacen ROLLBACK en su catch, pero eso no se
+    //    puede garantizar aquí para cualquier ruta.
+    status = 409;
+    mensaje = err.code === 'ER_LOCK_DEADLOCK'
+      ? 'La operación coincidió con otra que modificaba los mismos datos y la base de datos la canceló. ' +
+        'Revisa si el cambio quedó registrado antes de intentarlo de nuevo.'
+      : 'La operación esperó demasiado a que terminara otra sobre los mismos datos y no se completó. ' +
+        'Revisa si el cambio quedó registrado antes de intentarlo de nuevo.';
   } else if (err && err.code === 'ER_DUP_ENTRY') {
     mensaje = 'Ya existe un registro con ese valor único (NIT, SKU, username, etc.).';
   } else if (err && err.code === 'ER_ROW_IS_REFERENCED_2') {
@@ -35,7 +53,7 @@ function errorHandler(err, req, res, next) {
     mensaje = 'No se pudo completar la operación por una restricción de la base de datos.';
   }
 
-  res.status(500).render('error', {
+  res.status(status).render('error', {
     titulo: 'Error del servidor',
     mensaje,
   });
