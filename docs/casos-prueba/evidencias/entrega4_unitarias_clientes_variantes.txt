@@ -1,0 +1,81 @@
+# =============================================================================
+# Evidencia: pruebas unitarias de clientes y variantes: node docs/casos-prueba/scripts/entrega4_variantes_clientes_unit.cjs
+# Fecha de ejecución: 2026-10-21 03:15 UTC
+# Ejecutado por: asistente de IA (Claude, Anthropic) en un entorno aislado
+#   (Linux, MySQL 8.0.46-0ubuntu0.24.04.4, Node v22.22.2), NO en Railway.
+# Código: rama docs/entrega4-final, que contiene main 28f1176 (Lotes 1 a 5).
+# Pendiente: re-ejecución por el equipo en su propia máquina (ver
+#   CASOS_PRUEBA_ENTREGA4.md, sección "Re-ejecución por el equipo").
+# Salida sin editar a partir de la línea "=== SALIDA ===".
+# =============================================================================
+=== SALIDA ===
+TAP version 13
+# Subtest: cliente: acepta 2 números, elimina duplicados
+ok 1 - cliente: acepta 2 números, elimina duplicados
+  ---
+  duration_ms: 1.807155
+  type: 'test'
+  ...
+# Subtest: cliente: rechaza más de 5 teléfonos y formatos inválidos
+ok 2 - cliente: rechaza más de 5 teléfonos y formatos inválidos
+  ---
+  duration_ms: 0.307223
+  type: 'test'
+  ...
+# Subtest: variantes: rechaza IDs no decimales y stock inválido
+ok 3 - variantes: rechaza IDs no decimales y stock inválido
+  ---
+  duration_ms: 0.298385
+  type: 'test'
+  ...
+# Subtest: variante: con stock solo puede cambiar el stock mínimo
+ok 4 - variante: con stock solo puede cambiar el stock mínimo
+  ---
+  duration_ms: 2.160427
+  type: 'test'
+  ...
+# Subtest: variante: rechaza cambiar talla cuando tiene stock
+ok 5 - variante: rechaza cambiar talla cuando tiene stock
+  ---
+  duration_ms: 1.025632
+  type: 'test'
+  ...
+# Subtest: cliente: creación inserta 2 teléfonos en una transacción
+ok 6 - cliente: creación inserta 2 teléfonos en una transacción
+  ---
+  duration_ms: 1.020898
+  type: 'test'
+  ...
+# Subtest: cliente: rollback si falla la inserción de un teléfono
+ok 7 - cliente: rollback si falla la inserción de un teléfono
+  ---
+  duration_ms: 0.80742
+  type: 'test'
+  ...
+# Subtest: variante: impide eliminar cuando hay movimientos aunque stock sea cero
+ok 8 - variante: impide eliminar cuando hay movimientos aunque stock sea cero
+  ---
+  duration_ms: 0.617018
+  type: 'test'
+  ...
+# Subtest: variante: nueva variante deriva SKU y stock inicial siempre cero
+ok 9 - variante: nueva variante deriva SKU y stock inicial siempre cero
+  ---
+  duration_ms: 0.857145
+  type: 'test'
+  ...
+# Subtest: cliente: editar actualiza los teléfonos y confirma una sola transacción
+ok 10 - cliente: editar actualiza los teléfonos y confirma una sola transacción
+  ---
+  duration_ms: 1.333802
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 28.641141

@@ -1,0 +1,85 @@
+# =============================================================================
+# Evidencia: casos web CP4-16 a CP4-22 (Catálogos): bash docs/casos-prueba/scripts/entrega4_casos_catalogos.sh
+# Fecha de ejecución: 2026-10-21 03:15 UTC
+# Ejecutado por: asistente de IA (Claude, Anthropic) en un entorno aislado
+#   (Linux, MySQL 8.0.46-0ubuntu0.24.04.4, Node v22.22.2), NO en Railway.
+# Código: rama docs/entrega4-final, que contiene main 28f1176 (Lotes 1 a 5).
+# Pendiente: re-ejecución por el equipo en su propia máquina (ver
+#   CASOS_PRUEBA_ENTREGA4.md, sección "Re-ejecución por el equipo").
+# Salida sin editar a partir de la línea "=== SALIDA ===".
+# =============================================================================
+=== SALIDA ===
+  OK    login admin
+  OK    login bodega
+  OK    login ventas
+--- CP4-16 Acceso: solo administrador
+  OK    admin  /catalogos/categorias
+  OK    admin  /catalogos/tallas
+  OK    admin  /catalogos/colores
+  OK    admin  /catalogos/tipos-cliente
+  OK    admin  /catalogos/presentaciones
+  OK    bodega /catalogos/colores -> 403
+  OK    ventas /catalogos/colores -> 403
+  OK    ventas no puede crear (POST) -> 403
+  OK    catálogo inexistente -> 404
+  OK    menú del admin muestra Catálogos
+--- CP4-17 Colores: alta normalizada, duplicado, validación, edición, borrado
+  OK    alta '  Verde   Limón '
+  OK    guardado en minúsculas y sin espacios extra
+  OK    duplicado 'VERDE LIMÓN' -> 400
+  OK    mensaje de duplicado
+  OK    con números 'r3d' -> 400
+  OK    editar a 'verde menta'
+  OK    eliminar color sin uso
+  OK    ya no existe
+  OK    eliminar color en uso -> 409
+  OK    explica cuántas variantes lo usan
+  OK    el color en uso sigue existiendo
+--- CP4-18 Tallas
+  OK    alta talla 45
+  OK    media talla '38,5' se guarda como 38.5
+  OK    duplicada -> 400
+  OK    fuera de rango '99' -> 400
+  OK    texto 'XL' -> 400
+  OK    eliminar talla 45 sin uso
+  OK    eliminar talla 38.5 sin uso
+  OK    eliminar talla en uso -> 409
+--- CP4-19 Categorías (ck_categoria_nombre)
+  OK    valor fuera de la regla 'senior' -> 400
+  OK    duplicada 'adulto' -> 400
+  OK    eliminar categoría con productos -> 409
+  OK    explica cuántos productos
+  OK    con las 3 categorías no se ofrece 'Nueva'
+--- CP4-20 Tipos de cliente: descuento llega a fn_calcular_precio_linea
+  OK    alta 'distribuidor' 20 %
+  OK    descuento guardado
+  OK    descuento 60 % -> 400 (máx 50)
+  OK    descuento negativo -> 400
+  OK    precio mayorista unidad con 20 %
+  OK    precios ya vendidos NO cambian
+  OK    descuento mayorista restaurado
+  OK    eliminar tipo con clientes -> 409
+  OK    eliminar 'distribuidor' sin clientes
+--- CP4-21 Presentaciones: protección del historial y desactivación
+  OK    alta 'media caja' (6 pares)
+  OK    aparece en el formulario de pedidos
+  OK    0 pares -> 400
+  OK    sin uso: sí puede cambiar a 8 pares
+  OK    en uso: cambiar pares de 'unidad' -> 400
+  OK    explica por qué (historial)
+  OK    'unidad' conserva 1 par
+  OK    desactivar 'media caja'
+  OK    inactiva ya no se ofrece en pedidos
+  OK    eliminar 'caja' en uso -> 409
+  OK    sugiere desactivar
+  OK    desactivar la ÚLTIMA activa -> 400
+  OK    explica que debe quedar una activa
+  OK    'caja' reactivada
+  OK    eliminar 'media caja' sin uso
+--- CP4-22 Inyección SQL y entradas maliciosas
+  OK    clave con SQL en la URL -> 404
+  OK    valor con SQL -> 400 (validación)
+  OK    tabla color intacta
+  OK    id no numérico -> 404
+==================================================
+RESULTADO: 65 OK, 0 FALLA

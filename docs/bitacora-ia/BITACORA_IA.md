@@ -29,7 +29,11 @@ prompt distinto dentro de esa sesión, con su propio resultado y validación.
 | 14 | 01/10/2026 | Claude | Regresión en el módulo de pedidos | 4 |
 | 15 | 01/10/2026 | Claude | Charset de triggers/procedimientos y script de casos BD | 4 |
 | 16 | 09/10/2026 | Claude | Reestructuración de esta bitácora | 3 |
-| | | | **Total** | **51** |
+| 17 | 17–20/10/2026 | _(completar)_ | Entrega 4, Lotes 1 a 5: módulos, cancelación, reportes, seguridad y concurrencia | _(completar)_ |
+| 18 | 20/10/2026 | _(completar)_ | Paquete de instalación de la base en Railway a partir del dump local | _(completar)_ |
+| 19 | 20/10/2026 | Claude | Revisión del paquete de Railway, auditoría de la Entrega 4 y pruebas locales | 3 |
+| 20 | 25/10/2026 | Claude | Sincronización de Railway, documentación, manuales y diagramas de la Entrega 4 | 4 |
+| | | | **Total** | **58 + Entradas 17 y 18** |
 
 ---
 
@@ -554,3 +558,133 @@ prompt distinto dentro de esa sesión, con su propio resultado y validación.
 | **Resultado obtenido** | Script que aplica las correcciones de las Entradas 13–15 y esta bitácora en 5 commits temáticos (fix web, fix SQL, fix pruebas, docs seguridad, docs bitácora) en lugar de un solo commit grande. |
 | **Validación del grupo** | Ejecutado por el integrante responsable desde su propia cuenta de Git. |
 | **Estándares aplicados (post-IA)** | R4 (participación visible), R5 (mensajes de commit descriptivos) |
+
+---
+
+## Entrada 17 — Entrega 4, Lotes 1 a 5
+
+| Campo | Detalle |
+|---|---|
+| **Fecha** | 17/10/2026 a 20/10/2026 |
+| **Herramienta** | _(completar)_ |
+| **Objetivo de la sesión** | Implementar la Entrega 4: cancelación de pedidos, devolución acumulada, kardex ligado al pedido, reportes de ventas, módulos Empleados, Usuarios y Catálogos, endurecimiento de seguridad web y concurrencia. |
+| **Consultas** | _(completar: una consulta por lote o por tarea, con su prompt, resultado y validación)_ |
+| **Responsable** | _(completar)_ |
+
+Lo que se puede verificar en Git (no sustituye el registro de las consultas):
+
+| Commit | Fecha | Contenido |
+|---|---|---|
+| `cb63d67` | 17/10/2026 | "integra lotes 1 y 2": `sql/ddl/07_ajustes_entrega4.sql`, `sp_cancelar_pedido`, devolución acumulada, vistas 05 y 06, privilegios E4, Empleados, Usuarios, Reportes, casos CP4-01 a CP4-15 |
+| `5abeb76` | 19/10/2026 | Catálogos, variantes y teléfonos de clientes; CP4-16 a CP4-22 y unitarias |
+| `ece0f84` | 19/10/2026 | Dependencias corregidas según `npm audit` |
+| `246f4bc` | 20/10/2026 | Lote 5: `seguridad.js`, `FOR UPDATE`, pruebas SEG e INT, `instalar_bd_prueba.cjs` |
+
+**Validación posterior:** las baterías de estos lotes se ejecutaron desde
+cero en la Entrada 19 (resultados en `CASOS_PRUEBA_ENTREGA4.md`).
+
+---
+
+## Entrada 18 — Paquete de instalación de la base en Railway
+
+| Campo | Detalle |
+|---|---|
+| **Fecha** | 20/10/2026 |
+| **Herramienta** | _(completar: asistente de IA distinto de Claude)_ |
+| **Objetivo** | Instalar la estructura de la base en el servicio MySQL de Railway sin copiar datos ni contraseñas de la base local. |
+| **Prompt utilizado** | Resumen: el integrante exportó la base local con `mysqldump --no-data --routines` (archivo `pavanamoon_estructura_railway.sql`) y pidió adaptarlo para la base `railway`. _(completar con el texto real)_ |
+| **Resultado obtenido** | Paquete con `pavanamoon_railway_estructura_segura.sql` (sin `DEFINER=root@localhost`, dirigido a `railway`, sin `DROP`), `pavanamoon_railway_datos_demo.sql` (datos ficticios) e instrucciones. Se importó en Railway con Workbench → Data Import. |
+| **Validación del grupo** | La importación terminó sin errores. **Problema detectado después (Entrada 19):** el dump provenía de una base local con objetos de versiones anteriores, así que Railway quedó distinta del repositorio (9 vistas, 2 funciones y 9 procedimientos frente a 6, 1 y 4). |
+| **Estándares aplicados (post-IA)** | R6 (sin credenciales en el paquete) |
+| **Responsable** | _(completar)_ |
+
+**Lección:** una base de producción se instala desde los scripts
+versionados de `sql/`, no desde un dump de una base de desarrollo.
+
+---
+
+## Entrada 19 — Revisión del paquete de Railway, auditoría y pruebas locales
+
+| Campo | Detalle |
+|---|---|
+| **Fecha** | 20/10/2026 |
+| **Herramienta** | Claude (Anthropic) |
+| **Objetivo de la sesión** | Revisar el paquete de la Entrada 18, auditar el estado real de la Entrega 4 y ejecutar las pruebas desde cero. |
+| **Consultas** | 3 (ver abajo) |
+| **Responsable** | _(completar)_ |
+
+### Consulta 19.1 — ¿El paquete de Railway está bien?
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Se pegó la conversación de la Entrada 18 con la pregunta "¿puedes ver si está bien?". |
+| **Resultado obtenido** | El agente importó el paquete en MySQL 8.0.46 con binlog activo (como Railway): 19 tablas, 9 vistas, 9 procedimientos, 2 funciones y 3 triggers, sin `DEFINER`, `DROP` ni datos reales. También hizo una prueba funcional (ingreso, pedido mayorista Q2,142.00, devolución, cancelación, stock final correcto). Concluyó que el paquete estaba bien y advirtió sobre las mayúsculas en nombres de tablas (Linux) y la zona horaria UTC. |
+| **Validación del grupo** | **Error del agente:** validó que el paquete fuera coherente consigo mismo, pero no lo comparó con `sql/` del repositorio. Lo detectó y lo reconoció en la consulta 19.2. |
+| **Estándares aplicados (post-IA)** | S8 (prueba en MySQL real); D4 incumplido en esta consulta (sin trazabilidad contra el repositorio) |
+
+### Consulta 19.2 — Auditoría técnica de la Entrega 4
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Actúa como auditor técnico… revisa el estado real del proyecto y determina qué falta para entregarlo el 27 de octubre. Primero auditoría; no modifiques archivos ni despliegues. Completado / Pendiente / Bloqueante." |
+| **Resultado obtenido** | Instalación desde cero sin errores y todas las baterías aprobadas. **Bloqueante:** la base de Railway no coincidía con el repositorio. `vw_pedidos_resumen` y `sp_crear_pedido` eran versiones antiguas y había 10 objetos ajenos (uno cancela sin devolver stock). La app de `main` conectada a una copia del esquema de Railway dio **HTTP 500** en el filtro por cliente (RF14) y 200 con el esquema del repositorio. **Otros pendientes:** documentación de la Entrega 4, diagrama sin `movimiento_stock.pedido_id`, README de `sql/` desactualizados, bitácora, certificación, etiqueta, zona horaria y el requisito de usuarios de `entrega4_seguridad.test.cjs`. |
+| **Validación del grupo** | El equipo confirmó el defecto y decidió corregir Railway antes de documentar. |
+| **Estándares aplicados (post-IA)** | S8, D4 (comparación objeto por objeto contra `sql/`), A2 |
+
+### Consulta 19.3 — Pruebas locales, evidencias y scripts de sincronización
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Prepara los documentos de la Entrega 4 sobre `docs/entrega4-final`. Antes de modificar Railway, entrégame el script con la lista de objetos, el respaldo, el plan de recuperación, las consultas de verificación y las pruebas en una base aislada. No inventes evidencias ni firmas." |
+| **Resultado obtenido** | (1) Ejecución desde cero de todas las baterías con salida sin editar en `docs/casos-prueba/evidencias/entrega4_*.txt`. Para SEG se crearon los usuarios `cabrito` y `fernanflo` desde `/usuarios`. Una primera evidencia de regresión salió con acentos corruptos (cliente `mysql` sin locale UTF-8) y se regeneró. (2) `railway_sincronizar_con_repo.sql`, `railway_verificar.sql` (solo lectura) y `railway_revertir_sincronizacion.sql`, probados sobre una copia del paquete de la Entrada 18: sincronización, repetición, reversión, interrupción a mitad, respaldo restaurado en otro servidor y sobre el mismo esquema, control negativo y app conectada. Dos anotaciones de la prueba estaban mal (el login rechazado responde 401, no 200; una ruta relativa) y se corrigieron, repitiendo toda la batería desde una base nueva. La sesión se agotó antes de entregar los documentos. |
+| **Validación del grupo** | Pendiente: re-ejecución de las baterías por un integrante (sección 5 de `CASOS_PRUEBA_ENTREGA4.md`). |
+| **Estándares aplicados (post-IA)** | S8, R6 (las evidencias no contienen contraseñas), D4 |
+
+---
+
+## Entrada 20 — Sincronización de Railway y documentación de la Entrega 4
+
+| Campo | Detalle |
+|---|---|
+| **Fecha** | 25/10/2026 |
+| **Herramienta** | Claude (Anthropic) |
+| **Objetivo de la sesión** | Corregir la base de Railway de forma segura y dejar la documentación esencial de la Entrega 4. |
+| **Consultas** | 4 (ver abajo) |
+| **Responsable** | _(completar)_ |
+
+### Consulta 20.1 — Paquete de sincronización para ejecutar en producción
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Entrégame el SQL de sincronización completo y descargable, con los objetos que modifica, cómo respaldar y comprobar el respaldo, cómo importarlo desde Workbench, consultas de verificación y qué hacer si hay un error. No borres tablas ni datos. Si no puedes demostrar que es seguro, detente." |
+| **Resultado obtenido** | El agente comprobó que `main` seguía en `28f1176` y que `sql/` no había cambiado desde las pruebas. Entregó el paquete con `GUIA_SINCRONIZACION_RAILWAY.md`: verificar (veredicto `ESTADO ANTERIOR`), respaldar con Data Export y comprobarlo en PowerShell, ejecutar con Data Import (mismo cliente `mysql` de las pruebas), volver a verificar, y planes A (reversión) y B (respaldo). Dejó explícito el límite: no se probó con Workbench en Windows ni con la versión exacta de MySQL de Railway. |
+| **Validación del grupo** | Ejecutado en Railway por el equipo el 25/10/2026: `railway_verificar.sql` dio `IGUAL AL REPOSITORIO` (19 / 6 / 1 / 4 / 3), el filtro por cliente funciona sin HTTP 500, se cerró el acceso público de MySQL y se cambió la contraseña del administrador. _(Agregar las capturas a `docs/casos-prueba/evidencias/`.)_ |
+| **Estándares aplicados (post-IA)** | S8 (verificación antes y después), R6 (rotación de la contraseña compartida), D4 |
+
+### Consulta 20.2 — Documentación esencial de la Entrega 4
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Resumen: "Prepara los archivos reales: ENTREGA4_IMPLEMENTACION, CASOS_PRUEBA_ENTREGA4, README, bitácora, README de vistas, procedimientos y triggers, y la certificación con firmas pendientes. No hagas manuales ni diagramas. No inventes resultados, capturas ni firmas. Distingue lo local de Railway." |
+| **Resultado obtenido** | Archivos completos para la rama `docs/entrega4-final`: `ENTREGA4_IMPLEMENTACION.md`, `CASOS_PRUEBA_ENTREGA4.md` (matriz de trazabilidad, tabla RW-01 a RW-08 vacía y tabla de re-ejecución), `README.md`, los tres README de `sql/`, las Entradas 17 a 20 de esta bitácora, `CERTIFICACION_ENTREGA_4.md` (casillas sin marcar), las evidencias de la Entrada 19 y `docs/entrega-4/despliegue-railway/`. No modificó código, SQL de `sql/` ni Railway. |
+| **Validación del grupo** | Pendiente: revisión del equipo antes del commit, llenado de _(completar)_ y de las tablas RW y de re-ejecución. |
+| **Estándares aplicados (post-IA)** | D4, R4 (commits hechos por los integrantes desde su cuenta) |
+
+### Consulta 20.3 — Informe final, declaración de integridad y guía de defensa
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Se compartió la tabla de ponderación de la Entrega 4 y se preguntó qué faltaba. Luego: "¿me puedes entregar todo lo faltante para concluir hoy?". |
+| **Resultado obtenido** | El agente cruzó la rúbrica con el estado real y encontró dos productos que no estaban en su lista (informe final y declaración de integridad) y un riesgo en "CRUD en todas las tablas principales": ingresos y pedidos no se editan ni se borran por diseño (auditoría del kardex). Entregó `INFORME_FINAL.md` (con la justificación del CRUD), `DECLARACION_INTEGRIDAD.md` (sin firmas) y `GUIA_DEFENSA.md`. Corrigió una afirmación de su propio borrador: la app no tiene pantalla de movimientos de `ajuste`. |
+| **Validación del grupo** | Pendiente: revisión del informe y firmas de la declaración. |
+| **Estándares aplicados (post-IA)** | D4 |
+
+### Consulta 20.4 — Manuales técnico y de usuario y diagramas actualizados
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | "Hazlo desde 0 (manuales y diagramas) para poder subirlo todo de una vez hoy." |
+| **Resultado obtenido** | (1) **Manual de usuario** con 26 capturas reales, tomadas con un navegador automatizado recorriendo cada flujo en la app instalada desde cero. Las primeras capturas salieron con la fecha 28/10/2026 por el reloj del entorno; se repitieron con MySQL a la fecha real (25/10/2026). (2) **Manual técnico:** arquitectura, variables, flujo de datos, CRUD y su justificación, despliegue, pruebas, mantenimiento y solución de problemas. Antes de redactarlo se verificaron en el código los mensajes y las reglas citadas, y se corrigió una afirmación sobre el borrado de productos. (3) **Diagrama ER:** se agregaron la relación "origina" PEDIDO (0,N) — MOVIMIENTO_STOCK (0,1) y el atributo `porcentaje_descuento` de TIPO_CLIENTE, y se exportaron el PNG y el PDF con el visor de draw.io. (4) **Modelo relacional (.mwb):** se agregaron `pedido_id`, `fk_movimiento_pedido` con su índice, `cancelacion` en el ENUM y `tipo_cliente.porcentaje_descuento`. Esta última faltaba desde la Entrega 3 y se detectó comparando el modelo con la base real tabla por tabla: 19 de 19 tablas iguales y 21 de 21 FK, con 0 referencias internas rotas. |
+| **Validación del grupo** | Pendiente: abrir el `.mwb` en Workbench, comprobar que abre y volver a exportar su PNG y PDF (no se puede renderizar fuera de Workbench). Revisar los manuales. |
+| **Estándares aplicados (post-IA)** | S8 (flujos ejecutados, no descritos de memoria), D4 (modelo comparado con la base real) |
+

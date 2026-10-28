@@ -1,0 +1,67 @@
+# =============================================================================
+# Evidencia: casos web CP4-08 a CP4-15: bash docs/casos-prueba/scripts/entrega4_casos_web.sh (app en http://localhost:3000)
+# Fecha de ejecución: 2026-10-21 03:15 UTC
+# Ejecutado por: asistente de IA (Claude, Anthropic) en un entorno aislado
+#   (Linux, MySQL 8.0.46-0ubuntu0.24.04.4, Node v22.22.2), NO en Railway.
+# Código: rama docs/entrega4-final, que contiene main 28f1176 (Lotes 1 a 5).
+# Pendiente: re-ejecución por el equipo en su propia máquina (ver
+#   CASOS_PRUEBA_ENTREGA4.md, sección "Re-ejecución por el equipo").
+# Salida sin editar a partir de la línea "=== SALIDA ===".
+# =============================================================================
+=== SALIDA ===
+  OK    login admin
+  OK    login bodega
+  OK    login ventas
+--- CP4-08 Control de acceso a módulos nuevos (solo administrador)
+  OK    admin  /reportes
+  OK    bodega /reportes
+  OK    ventas /reportes
+  OK    admin  /empleados
+  OK    bodega /empleados
+  OK    ventas /empleados
+  OK    admin  /usuarios
+  OK    bodega /usuarios
+  OK    ventas /usuarios
+--- CP4-09 Empleados: alta con 2 teléfonos (1FN), DPI duplicado, validación
+  OK    alta empleado
+  OK    2 filas en empleado_telefono
+  OK    DPI duplicado -> 400
+  OK    mensaje DPI duplicado
+  OK    DPI de 5 dígitos -> 400
+  OK    editar: deja 1 teléfono
+  OK    teléfonos tras editar
+--- CP4-10 Usuarios: alta, login del nuevo usuario, contraseña hasheada
+  OK    alta usuario vendedor
+  OK    hash bcrypt (no texto plano)
+  OK    login del usuario nuevo
+  OK    nuevo vendedor entra a /pedidos
+  OK    contraseña débil -> 400
+--- CP4-11 Cambio de rol y desactivación con la sesión ABIERTA
+  OK    ahora bodeguero: /pedidos -> 403
+  OK    ahora bodeguero: /furgones -> 200
+  OK    desactivado: sesión cerrada (redirige)
+  OK    desactivado: no puede volver a entrar
+--- CP4-12 Reglas del administrador (no bloquearse)
+  OK    admin se desactiva a sí mismo -> 400
+  OK    admin se quita el rol -> 400
+  OK    admin se elimina -> 409
+  OK    admin sigue activo
+--- CP4-13 Borrado de empleado con usuario: mensaje de negocio, no error SQL
+  OK    eliminar empleado con usuario -> 409
+  OK    explica el motivo
+  OK    eliminar usuario de prueba
+  OK    ahora sí se elimina el empleado
+  OK    teléfonos borrados en cascada
+--- CP4-14 Cancelación de pedido desde la web (vendedor)
+  OK    stock baja 3 al vender
+  OK    cancelar pedido
+  OK    stock vuelve al original
+  OK    estado cancelado
+  OK    kardex 'cancelacion' con pedido
+  OK    cancelar otra vez -> 400
+  OK    mensaje de negocio (no SQL crudo)
+--- CP4-15 Reportes cuadran con la BD
+  OK    monto en pantalla = SUM(total_pedido) completados
+  OK    rango invertido -> mensaje
+==================================================
+RESULTADO: 46 OK, 0 FALLA
