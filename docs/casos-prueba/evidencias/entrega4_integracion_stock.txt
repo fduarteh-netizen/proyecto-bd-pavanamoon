@@ -1,0 +1,93 @@
+# =============================================================================
+# Evidencia: integración de stock y concurrencia (INT-01 a INT-07) sobre la base INDEPENDIENTE pavanamoon_prueba (INSTALL.md 4.3)
+# Fecha de ejecución: 2026-10-21 03:15 UTC
+# Ejecutado por: asistente de IA (Claude, Anthropic) en un entorno aislado
+#   (Linux, MySQL 8.0.46-0ubuntu0.24.04.4, Node v22.22.2), NO en Railway.
+# Código: rama docs/entrega4-final, que contiene main 28f1176 (Lotes 1 a 5).
+# Pendiente: re-ejecución por el equipo en su propia máquina (ver
+#   CASOS_PRUEBA_ENTREGA4.md, sección "Re-ejecución por el equipo").
+# Salida sin editar a partir de la línea "=== SALIDA ===".
+# =============================================================================
+=== SALIDA ===
+$ node docs/casos-prueba/scripts/instalar_bd_prueba.cjs --recrear
+- sql/ddl/01_crear_base_datos.sql (3 sentencias)
+- sql/ddl/02_tablas_catalogo.sql (7 sentencias)
+- sql/ddl/03_tablas_personas.sql (6 sentencias)
+- sql/ddl/04_tablas_producto.sql (4 sentencias)
+- sql/ddl/05_tablas_transacciones.sql (6 sentencias)
+- sql/ddl/06_ajustes_entrega3.sql (2 sentencias)
+- sql/ddl/07_ajustes_entrega4.sql (2 sentencias)
+- sql/dml/00_seed_minimo.sql (10 sentencias)
+- sql/dml/01_datos_prueba.sql (21 sentencias)
+- sql/views/01_vw_stock_variantes.sql (3 sentencias)
+- sql/views/02_vw_pedidos_resumen.sql (3 sentencias)
+- sql/views/03_vw_kardex.sql (3 sentencias)
+- sql/views/04_vw_ingresos_detalle.sql (3 sentencias)
+- sql/views/05_vw_ventas_diarias.sql (3 sentencias)
+- sql/views/06_vw_ventas_por_modelo.sql (3 sentencias)
+- sql/triggers/01_trg_detalle_ingreso_ai.sql (4 sentencias)
+- sql/triggers/02_trg_detalle_pedido_bi.sql (4 sentencias)
+- sql/triggers/03_trg_detalle_pedido_ai.sql (4 sentencias)
+- sql/procedures/01_fn_calcular_precio_linea.sql (4 sentencias)
+- sql/procedures/02_sp_crear_pedido.sql (4 sentencias)
+- sql/procedures/03_sp_agregar_linea_pedido.sql (4 sentencias)
+- sql/procedures/04_sp_registrar_devolucion.sql (4 sentencias)
+- sql/procedures/05_sp_cancelar_pedido.sql (4 sentencias)
+- permisos sobre "pavanamoon_prueba" concedidos a pavanamoon_app@localhost
+Listo: base de prueba "pavanamoon_prueba" con 20 tablas (incluye zz_bd_de_prueba), 6 vistas, 5 rutinas y 3 triggers.
+
+$ node --test docs/casos-prueba/scripts/entrega4_integracion_stock.test.cjs   (PVM_BD_PRUEBA=pavanamoon_prueba)
+TAP version 13
+#   base de prueba verificada: pavanamoon_prueba
+#   datos de prueba: producto 56, variantes 166 y 167, furgón 56
+# Subtest: INT-01 una variante nueva inicia en 0 y el ingreso suma stock y kardex
+ok 1 - INT-01 una variante nueva inicia en 0 y el ingreso suma stock y kardex
+  ---
+  duration_ms: 41.004832
+  type: 'test'
+  ...
+# Subtest: INT-02 cuatro ingresos simultáneos de la misma variante: todos se aplican, sin deadlock
+ok 2 - INT-02 cuatro ingresos simultáneos de la misma variante: todos se aplican, sin deadlock
+  ---
+  duration_ms: 25.792787
+  type: 'test'
+  ...
+# Subtest: INT-03 seis pedidos simultáneos por más stock del que hay: no se sobrevende
+ok 3 - INT-03 seis pedidos simultáneos por más stock del que hay: no se sobrevende
+  ---
+  duration_ms: 45.166237
+  type: 'test'
+  ...
+# Subtest: INT-04 pedidos de varias líneas en orden opuesto (A,B contra B,A): sin deadlock
+ok 4 - INT-04 pedidos de varias líneas en orden opuesto (A,B contra B,A): sin deadlock
+  ---
+  duration_ms: 157.185004
+  type: 'test'
+  ...
+# Subtest: INT-05 devolución: parcial, luego dos simultáneas por el resto (solo una pasa)
+ok 5 - INT-05 devolución: parcial, luego dos simultáneas por el resto (solo una pasa)
+  ---
+  duration_ms: 10.09612
+  type: 'test'
+  ...
+# Subtest: INT-06 dos cancelaciones simultáneas del mismo pedido: el stock vuelve una sola vez
+ok 6 - INT-06 dos cancelaciones simultáneas del mismo pedido: el stock vuelve una sola vez
+  ---
+  duration_ms: 7.846349
+  type: 'test'
+  ...
+# Subtest: INT-07 invariante: stock = suma del kardex (variantes de prueba y TODA la base)
+ok 7 - INT-07 invariante: stock = suma del kardex (variantes de prueba y TODA la base)
+  ---
+  duration_ms: 24.09476
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 466.132811

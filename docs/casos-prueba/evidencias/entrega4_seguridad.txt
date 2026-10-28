@@ -1,0 +1,92 @@
+# =============================================================================
+# Evidencia: pruebas de seguridad SEG-01 a SEG-11: node --test docs/casos-prueba/scripts/entrega4_seguridad.test.cjs
+# Fecha de ejecución: 2026-10-21 03:15 UTC
+# Ejecutado por: asistente de IA (Claude, Anthropic) en un entorno aislado
+#   (Linux, MySQL 8.0.46-0ubuntu0.24.04.4, Node v22.22.2), NO en Railway.
+# Código: rama docs/entrega4-final, que contiene main 28f1176 (Lotes 1 a 5).
+# Pendiente: re-ejecución por el equipo en su propia máquina (ver
+#   CASOS_PRUEBA_ENTREGA4.md, sección "Re-ejecución por el equipo").
+# Salida sin editar a partir de la línea "=== SALIDA ===".
+# =============================================================================
+=== SALIDA ===
+# Preparación (instalación limpia): los usuarios 'cabrito' (bodeguero) y 'fernanflo' (vendedor)
+# que exige el script NO vienen en sql/dml; se crearon desde el módulo /usuarios de la app
+# (empleados 54 y 55, sin usuario previo). admin usa la contraseña del seed local.
+# Las contraseñas se pasaron por variables de entorno y no se registran aquí.
+TAP version 13
+# Subtest: SEG-01 la página de login no muestra credenciales de demostración
+ok 1 - SEG-01 la página de login no muestra credenciales de demostración
+  ---
+  duration_ms: 50.626999
+  type: 'test'
+  ...
+# Subtest: SEG-02 cookie de sesión: nombre propio, HttpOnly y SameSite=Lax
+ok 2 - SEG-02 cookie de sesión: nombre propio, HttpOnly y SameSite=Lax
+  ---
+  duration_ms: 185.235356
+  type: 'test'
+  ...
+# Subtest: SEG-03 el id de sesión cambia al iniciar sesión (sin fijación de sesión)
+ok 3 - SEG-03 el id de sesión cambia al iniciar sesión (sin fijación de sesión)
+  ---
+  duration_ms: 202.081202
+  type: 'test'
+  ...
+# Subtest: SEG-04 tras cerrar sesión la cookie ya no da acceso
+ok 4 - SEG-04 tras cerrar sesión la cookie ya no da acceso
+  ---
+  duration_ms: 118.223932
+  type: 'test'
+  ...
+# Subtest: SEG-05 cabeceras de seguridad y sin X-Powered-By
+ok 5 - SEG-05 cabeceras de seguridad y sin X-Powered-By
+  ---
+  duration_ms: 98.809715
+  type: 'test'
+  ...
+# Subtest: SEG-06 un POST desde otro sitio se rechaza aunque haya sesión (CSRF)
+ok 6 - SEG-06 un POST desde otro sitio se rechaza aunque haya sesión (CSRF)
+  ---
+  duration_ms: 114.994565
+  type: 'test'
+  ...
+# Subtest: SEG-07 límite de intentos: tras 5 fallos responde 429; otro usuario sigue entrando
+ok 7 - SEG-07 límite de intentos: tras 5 fallos responde 429; otro usuario sigue entrando
+  ---
+  duration_ms: 606.660993
+  type: 'test'
+  ...
+#   verificadas 11 rutas × 3 roles + sin sesión
+# Subtest: SEG-08 matriz de autorización: cada módulo × cada rol, y sin sesión
+ok 8 - SEG-08 matriz de autorización: cada módulo × cada rol, y sin sesión
+  ---
+  duration_ms: 636.39041
+  type: 'test'
+  ...
+# Subtest: SEG-09 en producción la app NO arranca con un SESSION_SECRET débil
+ok 9 - SEG-09 en producción la app NO arranca con un SESSION_SECRET débil
+  ---
+  duration_ms: 914.687155
+  type: 'test'
+  ...
+# Subtest: SEG-10 en producción: cookie Secure detrás de HTTPS y CSRF estricto
+ok 10 - SEG-10 en producción: cookie Secure detrás de HTTPS y CSRF estricto
+  ---
+  duration_ms: 2643.853885
+  type: 'test'
+  ...
+# Subtest: SEG-11 el mensaje de deadlock/timeout no afirma que "no se guardó nada"
+ok 11 - SEG-11 el mensaje de deadlock/timeout no afirma que "no se guardó nada"
+  ---
+  duration_ms: 1.177029
+  type: 'test'
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8036.27899

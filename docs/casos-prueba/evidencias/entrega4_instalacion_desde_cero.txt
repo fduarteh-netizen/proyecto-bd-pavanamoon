@@ -1,0 +1,66 @@
+# =============================================================================
+# Evidencia: instalación desde cero de la base pavanamoon, orden exacto de INSTALL.md (sección 1)
+# Fecha de ejecución: 2026-10-21 03:14 UTC
+# Ejecutado por: asistente de IA (Claude, Anthropic) en un entorno aislado
+#   (Linux, MySQL 8.0.46-0ubuntu0.24.04.4, Node v22.22.2), NO en Railway.
+# Código: rama docs/entrega4-final, que contiene main 28f1176 (Lotes 1 a 5).
+# Pendiente: re-ejecución por el equipo en su propia máquina (ver
+#   CASOS_PRUEBA_ENTREGA4.md, sección "Re-ejecución por el equipo").
+# Salida sin editar a partir de la línea "=== SALIDA ===".
+# =============================================================================
+=== SALIDA ===
+sql/ddl/01_crear_base_datos.sql -> código de salida 0 
+sql/ddl/02_tablas_catalogo.sql -> código de salida 0 
+sql/ddl/03_tablas_personas.sql -> código de salida 0 
+sql/ddl/04_tablas_producto.sql -> código de salida 0 
+sql/ddl/05_tablas_transacciones.sql -> código de salida 0 
+sql/ddl/06_ajustes_entrega3.sql -> código de salida 0 
+sql/ddl/07_ajustes_entrega4.sql -> código de salida 0 
+sql/dml/00_seed_minimo.sql -> código de salida 0 
+sql/dml/01_datos_prueba.sql -> código de salida 0 
+sql/views/01_vw_stock_variantes.sql -> código de salida 0 
+sql/views/02_vw_pedidos_resumen.sql -> código de salida 0 
+sql/views/03_vw_kardex.sql -> código de salida 0 
+sql/views/04_vw_ingresos_detalle.sql -> código de salida 0 
+sql/views/05_vw_ventas_diarias.sql -> código de salida 0 
+sql/views/06_vw_ventas_por_modelo.sql -> código de salida 0 
+sql/triggers/01_trg_detalle_ingreso_ai.sql -> código de salida 0 
+sql/triggers/02_trg_detalle_pedido_bi.sql -> código de salida 0 
+sql/triggers/03_trg_detalle_pedido_ai.sql -> código de salida 0 
+sql/procedures/01_fn_calcular_precio_linea.sql -> código de salida 0 
+sql/procedures/02_sp_crear_pedido.sql -> código de salida 0 
+sql/procedures/03_sp_agregar_linea_pedido.sql -> código de salida 0 
+sql/procedures/04_sp_registrar_devolucion.sql -> código de salida 0 
+sql/procedures/05_sp_cancelar_pedido.sql -> código de salida 0 
+sql/security/01_roles_privilegios.sql -> código de salida 0 
+sql/security/02_privilegios_entrega4.sql -> código de salida 0 
+
+--- Objetos creados
++--------+--------+-----------+----------------+----------+
+| tablas | vistas | funciones | procedimientos | triggers |
++--------+--------+-----------+----------------+----------+
+|     19 |      6 |         1 |              4 |        3 |
++--------+--------+-----------+----------------+----------+
++-----------+--------------------------+
+| tipo      | nombre                   |
++-----------+--------------------------+
+| FUNCTION  | fn_calcular_precio_linea |
+| PROCEDURE | sp_agregar_linea_pedido  |
+| PROCEDURE | sp_cancelar_pedido       |
+| PROCEDURE | sp_crear_pedido          |
+| PROCEDURE | sp_registrar_devolucion  |
+| TRIGGER   | trg_detalle_ingreso_ai   |
+| TRIGGER   | trg_detalle_pedido_ai    |
+| TRIGGER   | trg_detalle_pedido_bi    |
+| VIEW      | vw_ingresos_detalle      |
+| VIEW      | vw_kardex                |
+| VIEW      | vw_pedidos_resumen       |
+| VIEW      | vw_stock_variantes       |
+| VIEW      | vw_ventas_diarias        |
+| VIEW      | vw_ventas_por_modelo     |
++-----------+--------------------------+
++------------------------+------------------------------------------------------------------------------------------+
+| seguridad              | cuentas                                                                                  |
++------------------------+------------------------------------------------------------------------------------------+
+| roles y usuarios MySQL | pvm_admin@%,pvm_bodega@%,pvm_ventas@%,rol_administrador@%,rol_bodeguero@%,rol_vendedor@% |
++------------------------+------------------------------------------------------------------------------------------+
