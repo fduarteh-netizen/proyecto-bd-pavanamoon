@@ -10,6 +10,7 @@
 
 const pool = require('../config/db');
 
+/** Lista los productos con su categoría. */
 async function listarTodos() {
   const [rows] = await pool.query(
     `SELECT p.producto_id, p.modelo, p.tipo_suela, p.precio_venta,
@@ -21,6 +22,7 @@ async function listarTodos() {
   return rows;
 }
 
+/** Busca un producto por id con su categoría; devuelve null si no existe. */
 async function buscarPorId(id) {
   const [rows] = await pool.query(
     `SELECT p.*, c.nombre_categoria
@@ -32,6 +34,7 @@ async function buscarPorId(id) {
   return rows[0] || null;
 }
 
+/** Crea un producto (INSERT parametrizado); devuelve el id nuevo. */
 async function crear({ categoria_id, modelo, tipo_suela, precio_venta }) {
   const [result] = await pool.query(
     `INSERT INTO producto (categoria_id, modelo, tipo_suela, precio_venta)
@@ -41,6 +44,7 @@ async function crear({ categoria_id, modelo, tipo_suela, precio_venta }) {
   return result.insertId;
 }
 
+/** Actualiza un producto, incluido su precio de venta (RF05). */
 async function actualizar(id, { categoria_id, modelo, tipo_suela, precio_venta }) {
   await pool.query(
     `UPDATE producto
@@ -50,6 +54,7 @@ async function actualizar(id, { categoria_id, modelo, tipo_suela, precio_venta }
   );
 }
 
+/** Elimina un producto (la FK lo impide si tiene variantes). */
 async function eliminar(id) {
   await pool.query('DELETE FROM producto WHERE producto_id = ?', [id]);
 }

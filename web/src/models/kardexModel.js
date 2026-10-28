@@ -8,6 +8,7 @@
 
 const pool = require('../config/db');
 
+/** Lista los movimientos de stock desde vw_kardex, con filtros opcionales por SKU y rango de fechas (parametrizados). */
 async function listar({ sku = '', desde = '', hasta = '' } = {}) {
   const condiciones = [];
   const params = [];

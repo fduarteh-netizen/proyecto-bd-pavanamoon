@@ -5,16 +5,19 @@
 // =============================================================================
 const pool = require('../config/db');
 
+/** Arma el SKU a partir de producto, talla y color (no accede a la BD). */
 function skuDe({ producto_id, talla_id, color_id }) {
   return `PVM-${String(producto_id).padStart(3, '0')}-T${String(talla_id).padStart(2, '0')}-C${String(color_id).padStart(2, '0')}`;
 }
 
+/** Crea un error de negocio con código VARIANTE_BLOQUEADA para mostrarlo al usuario (no accede a la BD). */
 function errorNegocio(mensaje) {
   const err = new Error(mensaje);
   err.code = 'VARIANTE_BLOQUEADA';
   return err;
 }
 
+/** Lista las variantes con su stock y alerta desde vw_stock_variantes; filtros opcionales parametrizados. */
 async function listar({ soloAlertas = false, busqueda = '' } = {}) {
   const condiciones = [];
   const params = [];
@@ -31,6 +34,7 @@ async function listar({ soloAlertas = false, busqueda = '' } = {}) {
   return rows;
 }
 
+/** Lista las variantes con stock disponible para el formulario de pedidos. */
 async function listarDisponibles() {
   const [rows] = await pool.query(
     'SELECT variante_id, sku, modelo, talla, color, precio_venta, stock_actual FROM vw_stock_variantes WHERE stock_actual > 0 ORDER BY modelo, talla'
@@ -38,6 +42,7 @@ async function listarDisponibles() {
   return rows;
 }
 
+/** Lista todas las variantes (id y descripción) para el formulario de ingresos. */
 async function listarTodasSimple() {
   const [rows] = await pool.query(
     'SELECT variante_id, sku, modelo, talla, color, stock_actual FROM vw_stock_variantes ORDER BY modelo, talla'
@@ -45,6 +50,7 @@ async function listarTodasSimple() {
   return rows;
 }
 
+/** Crea una variante con SKU derivado y stock inicial 0 (solo sube con un ingreso); devuelve el id nuevo. */
 async function crear({ producto_id, talla_id, color_id, stock_minimo }) {
   const sku = skuDe({ producto_id, talla_id, color_id });
   const [result] = await pool.query(
@@ -68,6 +74,7 @@ async function tieneHistorial(conn, id) {
   return Boolean(rows[0].pedidos || rows[0].ingresos || rows[0].movimientos);
 }
 
+/** Busca una variante por id e indica si su identidad está bloqueada por tener stock o movimientos. */
 async function buscarPorId(id) {
   const [rows] = await pool.query(
     `SELECT variante_id, producto_id, talla_id, color_id, sku, stock_actual, stock_minimo
@@ -78,6 +85,7 @@ async function buscarPorId(id) {
   return { ...rows[0], identidadBloqueada: historial || Number(rows[0].stock_actual) !== 0 };
 }
 
+/** Actualiza una variante en una transacción con FOR UPDATE; si tiene stock solo permite cambiar el stock mínimo. */
 async function actualizar(id, { producto_id, talla_id, color_id, stock_minimo }) {
   const conn = await pool.getConnection();
   try {
@@ -117,6 +125,7 @@ async function actualizar(id, { producto_id, talla_id, color_id, stock_minimo })
   }
 }
 
+/** Elimina una variante en una transacción; no se permite si tiene movimientos en el kardex. */
 async function eliminar(id) {
   const conn = await pool.getConnection();
   try {

@@ -90,6 +90,7 @@ async function listar(def) {
   return rows;
 }
 
+/** Busca un registro del catálogo `def` por su PK (tabla y columna salen de la lista blanca CATALOGOS; el id va parametrizado). */
 async function buscarPorId(def, id) {
   const [rows] = await pool.query(
     `SELECT c.*, ${sqlUso(def, 'c')} AS uso FROM ${def.tabla} c WHERE c.${def.pk} = ?`,
@@ -121,6 +122,7 @@ async function crear(def, datos) {
   return result.insertId;
 }
 
+/** Actualiza un registro del catálogo `def` con los campos permitidos por su definición (UPDATE parametrizado). */
 async function actualizar(def, id, datos) {
   const columnas = def.campos.filter((c) => datos[c] !== undefined);
   await pool.query(
@@ -129,6 +131,7 @@ async function actualizar(def, id, datos) {
   );
 }
 
+/** Elimina un registro del catálogo `def` (DELETE parametrizado; la FK impide borrar si está en uso). */
 async function eliminar(def, id) {
   await pool.query(`DELETE FROM ${def.tabla} WHERE ${def.pk} = ?`, [id]);
 }

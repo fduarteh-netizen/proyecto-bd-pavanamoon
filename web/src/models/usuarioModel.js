@@ -74,11 +74,13 @@ async function buscarPorId(id) {
   return rows[0] || null;
 }
 
+/** Lista los roles (tabla rol) para el formulario de usuarios. */
 async function listarRoles() {
   const [rows] = await pool.query('SELECT rol_id, nombre_rol, descripcion FROM rol ORDER BY rol_id');
   return rows;
 }
 
+/** Crea un usuario guardando la contraseña con hash bcrypt; devuelve el id nuevo. */
 async function crear({ username, password, rol_id, empleado_id, estado }) {
   const hash = await bcrypt.hash(password, COSTO_BCRYPT);
   const [result] = await pool.query(
@@ -118,6 +120,7 @@ async function contarOtrosAdminsActivos(excluirId) {
   return fila.n;
 }
 
+/** Elimina un usuario (DELETE parametrizado). */
 async function eliminar(id) {
   await pool.query('DELETE FROM usuario WHERE usuario_id = ?', [id]);
 }

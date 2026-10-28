@@ -9,6 +9,7 @@
 
 const pool = require('../config/db');
 
+/** Lista los furgones con la cantidad de ingresos registrados de cada uno. */
 async function listarTodos() {
   const [rows] = await pool.query(
     `SELECT f.*, (SELECT COUNT(*) FROM ingreso_mercaderia im WHERE im.furgon_id = f.furgon_id) AS ingresos
@@ -17,6 +18,7 @@ async function listarTodos() {
   return rows;
 }
 
+/** Lista los furgones disponibles para asociar a un ingreso de mercadería. */
 async function listarRecibidos() {
   const [rows] = await pool.query(
     "SELECT furgon_id, numero_furgon, fecha_llegada FROM furgon WHERE estado <> 'cancelado' ORDER BY fecha_llegada DESC"
@@ -24,11 +26,13 @@ async function listarRecibidos() {
   return rows;
 }
 
+/** Busca un furgón por id; devuelve null si no existe. */
 async function buscarPorId(id) {
   const [rows] = await pool.query('SELECT * FROM furgon WHERE furgon_id = ?', [id]);
   return rows[0] || null;
 }
 
+/** Registra un furgón (INSERT parametrizado); devuelve el id nuevo. */
 async function crear({ numero_furgon, fecha_llegada, procedencia, transportista, estado }) {
   const [result] = await pool.query(
     `INSERT INTO furgon (numero_furgon, fecha_llegada, procedencia, transportista, estado)
@@ -38,6 +42,7 @@ async function crear({ numero_furgon, fecha_llegada, procedencia, transportista,
   return result.insertId;
 }
 
+/** Actualiza los datos de un furgón (UPDATE parametrizado). */
 async function actualizar(id, { numero_furgon, fecha_llegada, procedencia, transportista, estado }) {
   await pool.query(
     `UPDATE furgon SET numero_furgon = ?, fecha_llegada = ?, procedencia = ?, transportista = ?, estado = ?
@@ -46,6 +51,7 @@ async function actualizar(id, { numero_furgon, fecha_llegada, procedencia, trans
   );
 }
 
+/** Elimina un furgón (la FK lo impide si ya tiene ingresos). */
 async function eliminar(id) {
   await pool.query('DELETE FROM furgon WHERE furgon_id = ?', [id]);
 }

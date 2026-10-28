@@ -11,6 +11,7 @@
 
 const pool = require('../config/db');
 
+/** Lista los ingresos de mercadería con totales desde la vista vw_ingresos_detalle. */
 async function listar() {
   const [rows] = await pool.query(
     'SELECT * FROM vw_ingresos_detalle ORDER BY fecha_ingreso DESC, ingreso_id DESC LIMIT 200'
@@ -18,6 +19,7 @@ async function listar() {
   return rows;
 }
 
+/** Devuelve un ingreso con sus líneas (detalle_ingreso + vw_stock_variantes); null si no existe. */
 async function buscarDetalle(id) {
   const [cab] = await pool.query('SELECT * FROM vw_ingresos_detalle WHERE ingreso_id = ?', [id]);
   if (!cab[0]) return null;

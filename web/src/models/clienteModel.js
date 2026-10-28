@@ -6,11 +6,13 @@
 const pool = require('../config/db');
 const { extraerTelefonos } = require('../utils/validate');
 
+/** Devuelve la lista de teléfonos ya validada del formulario (no accede a la BD). */
 function telefonosDe(datos) {
   if (Array.isArray(datos.telefonos)) return datos.telefonos;
   return extraerTelefonos(datos.telefonos ?? datos.telefono);
 }
 
+/** Lista los clientes con su tipo y sus teléfonos (cliente, tipo_cliente y cliente_telefono). */
 async function listarTodos() {
   const [rows] = await pool.query(
     `SELECT c.cliente_id, c.nombre_cliente, c.nit,
@@ -26,6 +28,7 @@ async function listarTodos() {
   return rows;
 }
 
+/** Busca un cliente por id con sus teléfonos; devuelve null si no existe. */
 async function buscarPorId(id) {
   const [rows] = await pool.query('SELECT * FROM cliente WHERE cliente_id = ?', [id]);
   if (!rows[0]) return null;
@@ -39,6 +42,7 @@ async function buscarPorId(id) {
   };
 }
 
+/** Crea un cliente y sus teléfonos en una sola transacción (rollback si falla un teléfono); devuelve el id nuevo. */
 async function crear(datos) {
   const { tipo_cliente_id, nombre_cliente, nit } = datos;
   const telefonos = telefonosDe(datos);
@@ -62,6 +66,7 @@ async function crear(datos) {
   }
 }
 
+/** Actualiza un cliente y reemplaza sus teléfonos en una transacción, bloqueando la fila con FOR UPDATE; devuelve false si no existe. */
 async function actualizar(id, datos) {
   const { tipo_cliente_id, nombre_cliente, nit } = datos;
   const telefonos = telefonosDe(datos);
@@ -92,11 +97,13 @@ async function actualizar(id, datos) {
   }
 }
 
+/** Cuenta los pedidos de un cliente (se usa para impedir su eliminación). */
 async function contarPedidos(id) {
   const [rows] = await pool.query('SELECT COUNT(*) AS total FROM pedido WHERE cliente_id = ?', [id]);
   return Number(rows[0].total);
 }
 
+/** Elimina un cliente (DELETE parametrizado); devuelve true si se borró una fila. */
 async function eliminar(id) {
   const [result] = await pool.query('DELETE FROM cliente WHERE cliente_id = ?', [id]);
   return result.affectedRows > 0;

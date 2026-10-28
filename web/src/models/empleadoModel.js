@@ -82,6 +82,7 @@ async function enTransaccion(fn) {
   }
 }
 
+/** Crea un empleado y sus teléfonos dentro de una transacción (enTransaccion); devuelve el id nuevo. */
 async function crear({ nombres_apellidos, dpi, telefonos }) {
   return enTransaccion(async (conn) => {
     const [result] = await conn.query(
@@ -93,6 +94,7 @@ async function crear({ nombres_apellidos, dpi, telefonos }) {
   });
 }
 
+/** Actualiza nombre y DPI de un empleado y reemplaza sus teléfonos dentro de una transacción. */
 async function actualizar(id, { nombres_apellidos, dpi, telefonos }) {
   await enTransaccion(async (conn) => {
     await conn.query(

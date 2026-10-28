@@ -19,6 +19,7 @@
 
 const pool = require('../config/db');
 
+/** Lista los pedidos desde vw_pedidos_resumen; si se indica clienteId, solo los de ese cliente (RF14). */
 async function listar({ clienteId = null } = {}) {
   const where = clienteId ? 'WHERE cliente_id = ?' : '';
   const [rows] = await pool.query(
@@ -33,6 +34,7 @@ async function listar({ clienteId = null } = {}) {
   return rows;
 }
 
+/** Devuelve un pedido con sus líneas y lo vendido/devuelto por variante (para la devolución); null si no existe. */
 async function buscarDetalle(id) {
   const [cab] = await pool.query(
     'SELECT * FROM vw_pedidos_resumen WHERE pedido_id = ?',
@@ -69,6 +71,7 @@ async function buscarDetalle(id) {
   return { ...cab[0], lineas };
 }
 
+/** Crea un pedido completo en una transacción: sp_crear_pedido + sp_agregar_linea_pedido por línea; los triggers validan y descuentan el stock. */
 async function crear({ cliente_id, empleado_id, lineas }) {
   const conn = await pool.getConnection();
 
@@ -115,6 +118,7 @@ async function crear({ cliente_id, empleado_id, lineas }) {
   }
 }
 
+/** Marca un pedido como completado solo si está pendiente; devuelve true si cambió. */
 async function completar(id) {
   const [result] = await pool.query(
     "UPDATE pedido SET estado = 'completado' WHERE pedido_id = ? AND estado = 'pendiente'",
@@ -124,6 +128,7 @@ async function completar(id) {
   return result.affectedRows === 1;
 }
 
+/** Registra una devolución con sp_registrar_devolucion (valida lo vendido menos lo ya devuelto y repone el stock). */
 async function registrarDevolucion({
   pedido_id,
   variante_id,
