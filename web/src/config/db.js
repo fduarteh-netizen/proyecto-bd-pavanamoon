@@ -19,6 +19,7 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
+  timezone: 'Z',
   decimalNumbers: true, // devuelve DECIMAL como number en vez de string
 });
 

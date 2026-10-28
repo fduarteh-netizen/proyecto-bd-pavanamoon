@@ -20,7 +20,7 @@
     <% movimientos.forEach(function(m) { %>
       <tr>
         <td><%= m.movimiento_id %></td>
-        <td><%= new Date(m.fecha_movimiento).toLocaleString('es-GT') %></td>
+        <td><%= new Date(m.fecha_movimiento).toLocaleString('es-GT', { timeZone: 'America/Guatemala' }) %></td>
         <td><span class="tag tag-<%= m.tipo_movimiento %>"><%= m.tipo_movimiento %></span></td>
         <td><%= m.sku %></td><td><%= m.modelo %></td><td><%= m.talla %></td><td><%= m.color %></td>
         <td class="num"><strong><%= m.efecto_stock > 0 ? '+' : '' %><%= m.efecto_stock %></strong></td>

@@ -13,7 +13,7 @@
     <% ingresos.forEach(function(i) { %>
       <tr>
         <td><%= i.ingreso_id %></td>
-        <td><%= new Date(i.fecha_ingreso).toLocaleString('es-GT') %></td>
+        <td><%= new Date(i.fecha_ingreso).toLocaleString('es-GT', { timeZone: 'America/Guatemala' }) %></td>
         <td><%= i.numero_furgon %></td>
         <td><%= i.bodega_destino || '—' %></td>
         <td><%= i.responsable %></td>

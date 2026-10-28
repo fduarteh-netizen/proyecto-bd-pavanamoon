@@ -21,7 +21,7 @@
         <td><%= u.nombres_apellidos %></td>
         <td><%= u.nombre_rol %></td>
         <td><span class="tag tag-<%= u.estado %>"><%= u.estado %></span></td>
-        <td><%= new Date(u.fecha_creacion).toLocaleDateString('es-GT') %></td>
+        <td><%= new Date(u.fecha_creacion).toLocaleDateString('es-GT', { timeZone: 'America/Guatemala' }) %></td>
         <td class="actions">
           <a href="/usuarios/<%= u.usuario_id %>/editar">Editar</a>
           <% if (!usuarioActual || u.usuario_id !== usuarioActual.usuario_id) { %>

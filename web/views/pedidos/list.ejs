@@ -25,7 +25,7 @@
     <% pedidos.forEach(function(p) { %>
       <tr>
         <td><%= p.pedido_id %></td>
-        <td><%= new Date(p.fecha_pedido).toLocaleString('es-GT') %></td>
+        <td><%= new Date(p.fecha_pedido).toLocaleString('es-GT', { timeZone: 'America/Guatemala' }) %></td>
         <td><%= p.nombre_cliente %></td>
         <td><span class="tag tag-<%= p.tipo_cliente %>"><%= p.tipo_cliente %></span></td>
         <td><%= p.vendedor %></td>
