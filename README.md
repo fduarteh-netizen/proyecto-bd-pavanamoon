@@ -41,7 +41,7 @@ pavanamoon/
 | Entrega 1 — Análisis y diseño conceptual | ✅ Completada | `entrega-1` |
 | Entrega 2 — Diseño lógico e implementación base | ✅ Completada | `entrega-2` |
 | Entrega 3 — Implementación avanzada, seguridad y pruebas | ✅ Completada (vistas, triggers, procedimientos, 3 roles, 8/8 pruebas, web ≈70 %) | `entrega-3` |
-| Entrega 4 — Integración y defensa oral | ⏳ Pendiente | `entrega-4` |
+| Entrega 4 — Integración y defensa oral | 🔄 En cierre: web completa, seguridad y concurrencia (PR #2), desplegada en Railway, con manuales, diagramas e informe final; faltan las pruebas manuales en Railway y las firmas | `entrega-4` _(se crea al cerrar)_ |
 
 > **Nota de corrección (Entrega 2):** se detectó que el texto de
 > `docs/entrega-1/ENTREGA1_PROPUESTA.md` no reflejaba el diagrama ER final aprobado en
@@ -60,6 +60,8 @@ Pavanamoon es marca propia de calzado deportivo especializado en fútbol, con mo
 
 Ver [`INSTALL.md`](./INSTALL.md): scripts DDL ejecutables (`sql/ddl/`), datos semilla y pasos para levantar la aplicación web localmente.
 
+Tras la Entrega 4, la base completa tiene **19 tablas, 6 vistas, 1 función, 4 procedimientos y 3 triggers**. La versión desplegada en Railway usa el esquema `railway` y se verificó igual al repositorio el 25/10/2026 (ver `docs/entrega-4/ENTREGA4_IMPLEMENTACION.md`, sección 4).
+
 ## Documentación
 
 - Propuesta y diseño conceptual (Entrega 1): [`docs/entrega-1/ENTREGA1_PROPUESTA.md`](./docs/entrega-1/ENTREGA1_PROPUESTA.md)
@@ -71,8 +73,18 @@ Ver [`INSTALL.md`](./INSTALL.md): scripts DDL ejecutables (`sql/ddl/`), datos se
 - Casos de prueba y evidencia real de ejecución (SQL + app web): [`docs/casos-prueba/CASOS_PRUEBA.md`](./docs/casos-prueba/CASOS_PRUEBA.md) (Entrega 2) y [`docs/casos-prueba/CASOS_PRUEBA_ENTREGA3.md`](./docs/casos-prueba/CASOS_PRUEBA_ENTREGA3.md) (Entrega 3, con matriz de trazabilidad)
 - Implementación avanzada y seguridad (Entrega 3): [`docs/entrega-3/ENTREGA3_IMPLEMENTACION.md`](./docs/entrega-3/ENTREGA3_IMPLEMENTACION.md)
 - Avance de la aplicación web (Entrega 3, ≈70 %): [`docs/entrega-3/AVANCE_WEB.md`](./docs/entrega-3/AVANCE_WEB.md)
+- Integración, despliegue y seguridad (Entrega 4): [`docs/entrega-4/ENTREGA4_IMPLEMENTACION.md`](./docs/entrega-4/ENTREGA4_IMPLEMENTACION.md)
+- Casos de prueba de la Entrega 4, con matriz de trazabilidad y verificación en Railway: [`docs/casos-prueba/CASOS_PRUEBA_ENTREGA4.md`](./docs/casos-prueba/CASOS_PRUEBA_ENTREGA4.md)
+- Sincronización de la base de Railway con el repositorio (scripts, guía y pruebas): [`docs/entrega-4/despliegue-railway/`](./docs/entrega-4/despliegue-railway/)
+- **Informe final** (consolida las 4 entregas): [`docs/entrega-4/INFORME_FINAL.md`](./docs/entrega-4/INFORME_FINAL.md)
+- Declaración de integridad académica: [`docs/entrega-4/DECLARACION_INTEGRIDAD.md`](./docs/entrega-4/DECLARACION_INTEGRIDAD.md)
+- Guía de preparación de la defensa oral: [`docs/entrega-4/GUIA_DEFENSA.md`](./docs/entrega-4/GUIA_DEFENSA.md)
+- **Manual técnico:** [`docs/entrega-4/MANUAL_TECNICO.md`](./docs/entrega-4/MANUAL_TECNICO.md)
+- **Manual de usuario** (con capturas de cada flujo): [`docs/entrega-4/MANUAL_USUARIO.md`](./docs/entrega-4/MANUAL_USUARIO.md)
+- Diagramas actualizados a la Entrega 4 (relación "origina" PEDIDO–MOVIMIENTO_STOCK y `tipo_cliente.porcentaje_descuento`): [`docs/diagramas/`](./docs/diagramas/)
 
 ## Enlaces
 
 - Repositorio: https://github.com/fduarteh-netizen/proyecto-bd-pavanamoon
-- Aplicación desplegada: _(pendiente; ver estándar S5, se agrega antes de Entrega 4)_
+- Aplicación desplegada (Railway, despliegue automático desde `main`): https://grand-acceptance-production-0ac1.up.railway.app
+  — acceso con usuario y contraseña; las credenciales de producción no se publican en el repositorio.

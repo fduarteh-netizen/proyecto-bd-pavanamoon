@@ -1,0 +1,302 @@
+correr_pruebas.sh: line 13: railway: command not found
+correr_pruebas.sh: line 13: pavanamoon: command not found
+# =============================================================================
+# Evidencia: pruebas aisladas de railway_sincronizar_con_repo.sql,
+#            railway_verificar.sql y railway_revertir_sincronizacion.sql
+# Fecha: 2026-10-21 03:21 UTC
+# Ejecutado por: asistente de IA (Claude, Anthropic). NADA se ejecutó en Railway.
+# Entorno: Linux, MySQL 8.0.46-0ubuntu0.24.04.4, binlog activo (como Railway).
+#   Servidor A (puerto 3306): simula Railway. Esquema  creado vacío e
+#     instalado con el MISMO paquete que se importó en Railway
+#     (pavanamoon_railway_estructura_segura.sql + pavanamoon_railway_datos_demo.sql),
+#     más 1 usuario admin y actividad de demostración (1 ingreso, 2 pedidos).
+#     En el mismo servidor está , instalado desde cero con sql/
+#     del repositorio: es la referencia de "cómo debe quedar".
+#   Servidor B (puerto 3307): independiente; simula el MySQL local del equipo
+#     para probar que el respaldo se puede restaurar.
+# "Huella" = SHA-256 de la definición de cada vista, rutina, trigger y de la
+#   estructura de cada tabla + CHECKSUM TABLE de los datos (huella.sql).
+# =============================================================================
+
+################################################################################
+# 0. Estado inicial (simulación de Railway antes de sincronizar)
+################################################################################
+19 tablas | 9 vistas | 2 funciones | 9 procedimientos | 3 triggers
+veredicto de railway_verificar.sql: ESTADO ANTERIOR (dump local): falta sincronizar
+huella inicial: 61 líneas (42 objetos/tablas + 19 checksums de datos)
+
+################################################################################
+# 1. Respaldo completo (equivalente a Workbench > Data Export, Self-Contained File, con rutinas, triggers y 'Include Create Schema')
+################################################################################
+código de salida mysqldump: 0
+tamaño del archivo: 72487 bytes
+Comprobaciones del archivo (las mismas que la guía pide hacer en PowerShell):
+  'CREATE TABLE `'                    : 19  (esperado 19)
+  'Final view structure for view'     : 9  (esperado 9)
+  'PROCEDURE `' en CREATE             : 9  (esperado 9)
+  'FUNCTION `' en CREATE              : 2  (esperado 2)
+  '*/ /*!50003 TRIGGER `'             : 3  (esperado 3)
+  'INSERT INTO `usuario`'             : 1  (esperado 1 o más)
+  'Dump completed'                    : 1  (esperado 1, última línea)
+
+################################################################################
+# 1b. Restauración de prueba del respaldo en el servidor B (independiente)
+################################################################################
+Para imitar Railway, el DEFINER root@localhost del respaldo se cambia a root@'%' en esta copia.
+código de salida de la restauración en B: 0
+RESULTADO: huellas IDÉNTICAS (respaldo restaurado en B vs. estado inicial de A)
+
+################################################################################
+# 2. railway_sincronizar_con_repo.sql (primera ejecución)
+################################################################################
++--------+--------+-----------+----------------+----------+
+| tablas | vistas | funciones | procedimientos | triggers |
++--------+--------+-----------+----------------+----------+
+|     19 |      6 |         1 |              4 |        3 |
++--------+--------+-----------+----------------+----------+
+código de salida: 0
+19 tablas | 6 vistas | 1 funciones | 4 procedimientos | 3 triggers
+veredicto de railway_verificar.sql: IGUAL AL REPOSITORIO
+
+################################################################################
+# 2b. Comparación con el repositorio: cada objeto de `railway` vs. el mismo objeto de `pavanamoon` instalado desde sql/
+################################################################################
+(sin tabla de resultados = 0 diferencias: los 14 objetos son idénticos al repositorio)
+
+################################################################################
+# 2c. Los DATOS y la estructura de las tablas no cambiaron
+################################################################################
+RESULTADO: huellas IDÉNTICAS (19 tablas: estructura y checksum de datos, antes vs. después)
+
+################################################################################
+# 3. Segunda ejecución del mismo script (¿es repetible?)
+################################################################################
++--------+--------+-----------+----------------+----------+
+| tablas | vistas | funciones | procedimientos | triggers |
++--------+--------+-----------+----------------+----------+
+|     19 |      6 |         1 |              4 |        3 |
++--------+--------+-----------+----------------+----------+
+código de salida: 0
+RESULTADO: huellas IDÉNTICAS (después de la 1.ª vs. después de la 2.ª ejecución)
+
+################################################################################
+# 4. Plan A de recuperación: railway_revertir_sincronizacion.sql
+################################################################################
++--------+--------+-----------+----------------+----------+
+| tablas | vistas | funciones | procedimientos | triggers |
++--------+--------+-----------+----------------+----------+
+|     19 |      9 |         2 |              9 |        3 |
++--------+--------+-----------+----------------+----------+
+código de salida: 0
+veredicto: ESTADO ANTERIOR (dump local): falta sincronizar
+RESULTADO: huellas IDÉNTICAS (estado tras revertir vs. estado inicial)
+Segunda ejecución de la reversión (¿es repetible?):
+código de salida: 0
+RESULTADO: huellas IDÉNTICAS (tras revertir dos veces vs. estado inicial)
+
+################################################################################
+# 5. Interrupción a mitad de camino (simulada): solo se ejecuta la parte A (eliminaciones)
+################################################################################
+sentencias ejecutadas: 10 DROP
+código de salida: 0
+19 tablas | 6 vistas | 1 funciones | 4 procedimientos | 2 triggers
+veredicto: MIXTO: no continuar, revisar los puntos 3 y 4
+Se vuelve a ejecutar el script COMPLETO, como indica la guía:
+código de salida: 0
+19 tablas | 6 vistas | 1 funciones | 4 procedimientos | 3 triggers
+veredicto: IGUAL AL REPOSITORIO
+RESULTADO: huellas IDÉNTICAS (tras recuperarse de la interrupción vs. sincronización normal)
+
+################################################################################
+# 6. Plan B de recuperación: restaurar el respaldo completo SOBRE `railway` (sin borrar el esquema)
+################################################################################
+código de salida: 0
+19 tablas | 9 vistas | 2 funciones | 9 procedimientos | 3 triggers
+veredicto: ESTADO ANTERIOR (dump local): falta sincronizar
+RESULTADO: huellas IDÉNTICAS (tras restaurar el respaldo vs. estado inicial (objetos, tablas y datos))
+
+################################################################################
+# 7. Sincronización definitiva para las pruebas funcionales
+################################################################################
+código de salida: 0
+veredicto: IGUAL AL REPOSITORIO
+
+################################################################################
+# 8. Control negativo: ¿la comparación del paso 2b detecta diferencias cuando las hay?
+################################################################################
+Con el estado ANTERIOR (revertido), la misma comparación debe listar las 2 diferencias:
++----------------------------+--------------------+
+| d                          | o                  |
++----------------------------+--------------------+
+| vista con otra definición  | vw_pedidos_resumen |
+| rutina con otro código     | sp_crear_pedido    |
++----------------------------+--------------------+
+Tras sincronizar de nuevo (veredicto: IGUAL AL REPOSITORIO), la misma consulta:
+(sin tabla = 0 diferencias)
+
+################################################################################
+# 9. Aplicación web (main 28f1176) conectada a la base `railway` sincronizada
+################################################################################
+login admin -> HTTP 302 (302 = correcto)
+GET /pedidos -> HTTP 200
+    # Fecha Cliente Tipo Vendedor Pares Total Estado 2 21/10/2026, 3:21:38 a. m. Cliente Demo Individual individual Administrador Demo 2 Q 640.00 pendiente Ver 1 21/10/2026, 3:21:38 a. m. Cliente Demo Mayorista mayorista Administrador Demo 12 Q 2142.00 completado Ver Pavanamoon · Sistema de Gestión de Inventario y Distribución de Ca
+GET /pedidos?cliente=1 (filtro RF14; antes de sincronizar daba 500) -> HTTP 200
+    # Fecha Cliente Tipo Vendedor Pares Total Estado 1 21/10/2026, 3:21:38 a. m. Cliente Demo Mayorista mayorista Administrador Demo 12 Q 2142.00 completado Ver Pavanamoon · Sistema de Gestión de Inventar
+GET /pedidos/1 -> HTTP 200
+    Clientes Pedidos Kardex Reportes Empleados Usuarios Catálogos Administrador Demo · administrador Cerrar sesión Pedido #1 completado ← Volver Cliente Cliente Demo Mayorista Tipo de cliente mayorista Ve
+GET /inventario -> HTTP 200
+GET /ingresos -> HTTP 200
+GET /kardex -> HTTP 200
+GET /reportes -> HTTP 200
+GET /clientes -> HTTP 200
+GET /usuarios -> HTTP 200
+
+################################################################################
+# 10. Rotación de la contraseña del administrador desde Usuarios > Editar (bloqueante B2)
+################################################################################
+PUT /usuarios/1 (nueva contraseña) -> 302 http://localhost:3001/usuarios?ok=Usuario+actualizado
+login con la contraseña ANTERIOR -> HTTP 401 (401 = rechazado)
+login con la contraseña NUEVA    -> HTTP 302 (302 = aceptado)
+(contraseñas de este entorno aislado; no son ni deben ser las de Railway)
+
+################################################################################
+# 11. Prueba funcional en SQL sobre `railway` sincronizada (objetos del repositorio)
+################################################################################
++------------------------------------------------------------------+
+| caso                                                             |
++------------------------------------------------------------------+
+| 11a ingreso de 12 pares a la variante 1 (trg_detalle_ingreso_ai) |
++------------------------------------------------------------------+
++-------------+-------------------------------+
+| stock_antes | stock_despues_esperado_mas_12 |
++-------------+-------------------------------+
+|           0 |                            12 |
++-------------+-------------------------------+
++-----------------+----------+--------------------+
+| tipo_movimiento | cantidad | responsable        |
++-----------------+----------+--------------------+
+| entrada         |       12 | Administrador Demo |
++-----------------+----------+--------------------+
+
+11b sp_crear_pedido con un cliente inexistente (validación que solo tiene la versión del repositorio):
+ERROR 1644 (45000) at line 1: El cliente indicado no existe.
++----------------------------------------------------------------------------------------------------------------+
+| caso                                                                                                           |
++----------------------------------------------------------------------------------------------------------------+
+| 11c pedido mayorista de 1 docena + cancelación (sp_crear_pedido, sp_agregar_linea_pedido, sp_cancelar_pedido)  |
++----------------------------------------------------------------------------------------------------------------+
++-----------+------------------------+--------------------+---------------+--------------+-----------+
+| pedido_id | nombre_cliente         | vendedor           | pares_totales | total_pedido | estado    |
++-----------+------------------------+--------------------+---------------+--------------+-----------+
+|         3 | Cliente Demo Mayorista | Administrador Demo |            12 |      2142.00 | pendiente |
++-----------+------------------------+--------------------+---------------+--------------+-----------+
++------------------------+------------------------------------+-----------+
+| stock_antes_del_pedido | stock_tras_cancelar_esperado_igual | estado    |
++------------------------+------------------------------------+-----------+
+|                     12 |                                 12 | cancelado |
++------------------------+------------------------------------+-----------+
++------------------------------------------------------+
+| caso                                                 |
++------------------------------------------------------+
+| 11d devolución de 2 pares del pedido 1 (completado)  |
++------------------------------------------------------+
++--------------------+----------+-----------+
+| tipo_movimiento    | cantidad | pedido_id |
++--------------------+----------+-----------+
+| salida             |       12 |         1 |
+| devolucion_cliente |        2 |         1 |
++--------------------+----------+-----------+
+
+################################################################################
+# 12. railway_verificar.sql completo sobre el estado final (salida tal como la vería el equipo)
+################################################################################
++-------------+-------------------------+----------+-------------------+
+| base_actual | version_mysql           | servidor | usuario_conectado |
++-------------+-------------------------+----------+-------------------+
+| railway     | 8.0.46-0ubuntu0.24.04.4 | vm       | root@localhost    |
++-------------+-------------------------+----------+-------------------+
++--------+--------+-----------+----------------+----------+
+| tablas | vistas | funciones | procedimientos | triggers |
++--------+--------+-----------+----------------+----------+
+|     19 |      6 |         1 |              4 |        3 |
++--------+--------+-----------+----------------+----------+
++-----------+-------------------------------+----------------+
+| tipo      | nombre                        | estado         |
++-----------+-------------------------------+----------------+
+| FUNCTION  | fn_calcular_precio_linea      | presente       |
+| PROCEDURE | sp_agregar_linea_pedido       | presente       |
+| PROCEDURE | sp_cancelar_pedido            | presente       |
+| PROCEDURE | sp_crear_pedido               | presente       |
+| PROCEDURE | sp_registrar_devolucion       | presente       |
+| TRIGGER   | trg_detalle_ingreso_ai        | presente       |
+| TRIGGER   | trg_detalle_pedido_ai         | presente       |
+| TRIGGER   | trg_detalle_pedido_bi         | presente       |
+| VIEW      | vw_ingresos_detalle           | presente       |
+| VIEW      | vw_kardex                     | presente       |
+| VIEW      | vw_pedidos_resumen            | presente       |
+| VIEW      | vw_stock_variantes            | presente       |
+| VIEW      | vw_ventas_diarias             | presente       |
+| VIEW      | vw_ventas_por_modelo          | presente       |
+| FUNCTION  | fn_calcular_total_pedido      | (ya no existe) |
+| PROCEDURE | sp_agregar_variante_ingreso   | (ya no existe) |
+| PROCEDURE | sp_agregar_variante_pedido    | (ya no existe) |
+| PROCEDURE | sp_cambiar_estado_pedido      | (ya no existe) |
+| PROCEDURE | sp_completar_ingreso          | (ya no existe) |
+| PROCEDURE | sp_registrar_ingreso          | (ya no existe) |
+| TRIGGER   | trg_registrar_entrada_ingreso | (ya no existe) |
+| VIEW      | vw_kardex_movimientos         | (ya no existe) |
+| VIEW      | vw_stock_bajo_minimo          | (ya no existe) |
+| VIEW      | vw_ventas_por_categoria       | (ya no existe) |
++-----------+-------------------------------+----------------+
++-----------------------------+------------------------------+
+| columnas_vw_pedidos_resumen | columnas_que_usa_la_app_de_3 |
++-----------------------------+------------------------------+
+|                          12 |                            3 |
++-----------------------------+------------------------------+
++-------------------------+------------------------+
+| ROUTINE_NAME            | es_version_repositorio |
++-------------------------+------------------------+
+| sp_agregar_linea_pedido |                      1 |
+| sp_cancelar_pedido      |                      1 |
+| sp_crear_pedido         |                      1 |
+| sp_registrar_devolucion |                      1 |
++-------------------------+------------------------+
++-----------------------+------------------------------+
+| TRIGGER_NAME          | es_version_repositorio_lote5 |
++-----------------------+------------------------------+
+| trg_detalle_pedido_bi |                            1 |
++-----------------------+------------------------------+
++----------------------+---------------------------+------------------------+
+| veredicto            | objetos_repositorio_de_14 | objetos_antiguos_de_10 |
++----------------------+---------------------------+------------------------+
+| IGUAL AL REPOSITORIO |                        14 |                      0 |
++----------------------+---------------------------+------------------------+
++--------------------+-------+
+| tabla              | filas |
++--------------------+-------+
+| categoria          |     3 |
+| cliente            |     2 |
+| cliente_telefono   |     0 |
+| color              |     4 |
+| detalle_ingreso    |     3 |
+| detalle_pedido     |     3 |
+| empleado           |     1 |
+| empleado_telefono  |     0 |
+| furgon             |     1 |
+| ingreso_mercaderia |     2 |
+| movimiento_stock   |     8 |
+| pedido             |     3 |
+| presentacion_venta |     3 |
+| producto           |     2 |
+| rol                |     3 |
+| talla              |     6 |
+| tipo_cliente       |     2 |
+| usuario            |     1 |
+| variante_producto  |     3 |
++--------------------+-------+
++-----------+------------+------------------------+--------------------+---------------+--------------+------------+
+| pedido_id | cliente_id | nombre_cliente         | vendedor           | pares_totales | total_pedido | estado     |
++-----------+------------+------------------------+--------------------+---------------+--------------+------------+
+|         3 |          1 | Cliente Demo Mayorista | Administrador Demo |            12 |      2142.00 | cancelado  |
+|         1 |          1 | Cliente Demo Mayorista | Administrador Demo |            12 |      2142.00 | completado |
++-----------+------------+------------------------+--------------------+---------------+--------------+------------+
