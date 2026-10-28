@@ -8,8 +8,8 @@
 > la aplicación (mismo código que la versión publicada, `main` `28f1176`),
 > instalada en un entorno local con los datos de prueba del repositorio
 > (`sql/dml`). En la versión publicada, los nombres y cantidades serán los de
-> los datos ficticios de Railway, y la hora se mostrará en UTC (6 horas
-> adelantada; ver "Preguntas frecuentes").
+> los datos ficticios de Railway. Desde el 27/10/2026 (PR #4), las fechas se
+> muestran en hora de Guatemala.
 
 ## Contenido
 
@@ -297,9 +297,10 @@ presentaciones con historial se desactivan.
 Porque ya movieron el stock y quedaron en el kardex. Un pedido se corrige con
 **cancelación** (si está pendiente) o con **devolución** (si está completado).
 
-**¿Por qué la hora del sistema publicado no coincide con la mía?**
-El servidor usa la hora UTC, 6 horas adelante de Guatemala. Es una
-limitación conocida y no afecta los datos.
+**¿En qué hora se muestran las fechas?**
+En hora de Guatemala. En **Reportes**, una venta registrada después de las
+6:00 p. m. puede aparecer en el día siguiente, porque el servidor agrupa las
+ventas por la fecha UTC.
 
 **Olvidé mi contraseña.**
 Pida al administrador que le asigne una nueva desde **Usuarios → Editar**.

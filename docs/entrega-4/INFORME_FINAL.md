@@ -188,9 +188,9 @@ incluidos los errores de la IA detectados en la validación. Ver también la
 
 ## 9. Limitaciones y trabajo futuro
 
-- **Zona horaria:** el servidor usa UTC, así que las fechas se ven 6 horas
-  adelantadas. La corrección está identificada (`SET time_zone` por conexión)
-  y no se aplicó para no cambiar el código cerca de la entrega.
+- **Zona horaria:** se corrigió en pantalla con el PR #4 (27/10/2026): el
+  servidor guarda en UTC y la app muestra la hora de Guatemala. Falta que el
+  reporte de ventas diarias agrupe por la fecha de Guatemala.
 - **Sesiones en memoria:** la app debe correr en una sola instancia. Se
   resolvería con un almacén de sesiones en la base de datos.
 - **Roles de MySQL:** se demuestran en la instalación local. En Railway la app

@@ -183,7 +183,7 @@ repositorio (`railway_verificar.sql`).
 | Usuario de la app | `pavanamoon_app` (privilegios mínimos) | Cuenta del servicio MySQL de Railway |
 | Roles `pvm_*` / `rol_*` (`sql/security`) | Instalados y probados (CP3-06, CP3-07) | No instalados: el esquema se llama distinto y el acceso a MySQL es solo privado. Se demuestran en local |
 | Datos | DML de prueba (≥ 50 registros por tabla) | Datos ficticios de demostración |
-| Zona horaria | La de la máquina | UTC (ver sección 7) |
+| Zona horaria | La de la máquina | UTC en el servidor; las pantallas muestran hora de Guatemala desde el PR #4 (sección 7) |
 
 ## 5. Pruebas
 
@@ -211,14 +211,20 @@ Detalle, matriz de trazabilidad y evidencias:
 | `ece0f84` | 19/10/2026 | Dependencias corregidas según `npm audit` |
 | `246f4bc` | 20/10/2026 | Lote 5: seguridad web, concurrencia (`FOR UPDATE`), pruebas SEG e INT |
 | `28f1176` | 20/10/2026 | Merge del PR #2 en `main` |
+| `f9cf7a7` / `8dfedfa` | 27/10/2026 | PR #4: botón Cerrar sesión visible y fechas en hora de Guatemala. Cambio de presentación posterior a las pruebas del 20 al 25/10 |
 
 ## 7. Limitaciones conocidas y pendientes
 
-- **Zona horaria.** Railway usa UTC, así que las fechas se muestran 6 horas
-  adelantadas y `vw_ventas_diarias` agrupa por fecha UTC. Posible corrección:
-  `SET time_zone = '-06:00'` al abrir cada conexión en `web/src/config/db.js`,
-  más la variable `TZ=America/Guatemala`. Probado localmente, pero **no
-  aplicado**: cambia código y no es crítico para la entrega.
+- **Zona horaria: corregida en pantalla con el PR #4 (27/10/2026, commit
+  `f9cf7a7`).** El servidor de Railway guarda las fechas en UTC. La app ahora
+  las lee como UTC (`timezone: 'Z'` en `web/src/config/db.js`) y las muestra
+  en hora de Guatemala (`timeZone: 'America/Guatemala'` en las vistas).
+  Queda pendiente:
+  - `vw_ventas_diarias` agrupa por la fecha UTC, así que en Reportes una venta
+    hecha después de las 18:00 cuenta para el día siguiente;
+  - en una instalación local con MySQL en hora de Guatemala, las horas se ven
+    6 horas antes. Se evita configurando MySQL en UTC
+    (`default-time-zone='+00:00'`).
 - **Una sola instancia** por `MemoryStore` (sección 3.2).
 - **`entrega4_seguridad.test.cjs`** exige los usuarios `cabrito` (bodeguero) y
   `fernanflo` (vendedor), que no vienen en `sql/dml`. En una instalación

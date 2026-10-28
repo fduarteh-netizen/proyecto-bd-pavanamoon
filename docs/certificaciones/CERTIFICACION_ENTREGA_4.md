@@ -63,10 +63,10 @@ Entrega 4 cumple con lo siguiente:
 
 | Nombre completo | Carné | Firma / Confirmación |
 |---|---|---|
-| Fernando Rafael Duarte Hernández | 2690-24-7341 | Confirmado – 28/10/2026 |
-| Luis Adolfo Martínez Hernández | 2690-23-6092 | | Confirmado – 28/10/2026
-| Cristian Otoniel Pérez Ríos | 2690-22-18389 | | Confirmado – 27/10/2026
-| José Alejandro Cabrera Gramajo | 2690-23-11913 | | Confirmado – 27/10/2026
+| Fernando Rafael Duarte Hernández | 2690-24-7341 | Confirmado – 27/10/2026 |
+| Luis Adolfo Martínez Hernández | 2690-23-6092 | Confirmado – 27/10/2026 |
+| Cristian Otoniel Pérez Ríos | 2690-22-18389 | Confirmado – 27/10/2026 |
+| José Alejandro Cabrera Gramajo | 2690-23-11913 | Confirmado – 27/10/2026 |
 
 **Fecha de firma:** 27/10/2026
 

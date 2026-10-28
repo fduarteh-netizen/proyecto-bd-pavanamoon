@@ -6,7 +6,8 @@ instalar paso a paso se remite a [`INSTALL.md`](../../INSTALL.md), que es la
 referencia y no se repite aquí. El uso funcional está en el
 [Manual de Usuario](./MANUAL_USUARIO.md).
 
-**Versión documentada:** `main` `28f1176` (Entrega 4).
+**Versión documentada:** `main` `28f1176` (Entrega 4), más el PR #4
+(27/10/2026): hora de Guatemala en pantalla y botón Cerrar sesión visible.
 
 ## 1. Arquitectura
 
@@ -202,13 +203,13 @@ prueba, y las INT son destructivas. Resultados y matriz de trazabilidad en
 | `Unknown column 'cliente_id'` en `/pedidos` | Base instalada desde un dump antiguo | Guía de sincronización y `railway_verificar.sql` |
 | `Table 'x' doesn't exist` solo en Railway | Linux distingue mayúsculas en los nombres de tabla | Use nombres en minúsculas, como en `sql/` |
 | Se cierran las sesiones tras un despliegue | Sesiones en memoria | Es esperado: vuelva a iniciar sesión |
-| La hora sale 6 horas adelantada | El servidor está en UTC | Limitación conocida (sección 10) |
+| En una instalación local, las horas salen 6 horas antes | MySQL local en hora de Guatemala, y la app lee las fechas como UTC (PR #4) | Configure MySQL local en UTC: `default-time-zone='+00:00'` en `my.ini` |
 
 ## 10. Limitaciones conocidas
 
-- **Hora en UTC en Railway.** Corrección propuesta y probada localmente:
-  ejecutar `SET time_zone = '-06:00'` al abrir cada conexión en `db.js` y
-  definir `TZ=America/Guatemala`. No se aplicó.
+- **Fechas:** el servidor guarda en UTC y la app muestra la hora de Guatemala
+  (PR #4: `timezone: 'Z'` en `db.js` y `timeZone: 'America/Guatemala'` en las
+  vistas). `vw_ventas_diarias` todavía agrupa por la fecha UTC.
 - **Sesiones en `MemoryStore`:** una sola instancia, y las sesiones se pierden
   en cada despliegue.
 - **Roles `pvm_*`:** instalados en local, no en Railway, donde la app usa la

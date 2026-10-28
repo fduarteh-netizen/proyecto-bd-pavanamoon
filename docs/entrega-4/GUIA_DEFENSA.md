@@ -86,9 +86,10 @@ comparando contra el repositorio y se corrigió con un script probado en una
 base aislada, sin tocar datos. Lección: producción se instala desde los
 scripts versionados.
 
-**¿Por qué la hora sale diferente en la app publicada?**
-El servidor de Railway usa UTC. La corrección está identificada y
-documentada como limitación conocida.
+**¿Cómo manejan la zona horaria?**
+El servidor de Railway guarda las fechas en UTC. Desde el PR #4, la app las lee
+como UTC y las muestra en hora de Guatemala. Queda pendiente que el reporte
+diario agrupe por la fecha de Guatemala.
 
 **¿Cómo usaron la IA?**
 Como asistente. Todo está en la bitácora, con lo que se pidió, lo que se

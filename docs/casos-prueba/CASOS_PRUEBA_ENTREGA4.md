@@ -180,7 +180,7 @@ anote el resultado real; deje "—" si no se hizo.
 | RW-04 | `/inventario` y `/kardex` de esa variante | Stock −12; movimiento `salida 12` con el pedido | | | `e4_05_*.png` |
 | RW-05 | Crear otro pedido pendiente y cancelarlo desde el detalle | Estado `cancelado`; el stock vuelve; kardex `cancelacion` | | | `e4_06_*.png` |
 | RW-06 | Completar el pedido de RW-03 y devolver 2 pares; intentar devolver más de lo vendido | La primera devolución pasa; la segunda se rechaza con mensaje | | | `e4_07_*.png` |
-| RW-07 | `/reportes` para el día de hoy | Aparece la venta completada de RW-03 (fecha en UTC, ver limitaciones) | | | `e4_08_*.png` |
+| RW-07 | `/reportes` para el día de hoy | Aparece la venta completada de RW-03 (si la venta fue después de las 18:00, puede salir en el día siguiente: el reporte agrupa por fecha UTC) | | | `e4_08_*.png` |
 | RW-08 | `/usuarios`: crear un usuario ficticio, iniciar sesión con él y desactivarlo | El usuario desactivado ya no puede entrar | | | `e4_09_*.png` |
 
 ---
