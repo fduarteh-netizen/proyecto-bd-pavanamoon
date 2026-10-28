@@ -13,6 +13,8 @@ Entrega 4 cumple con lo siguiente:
       encabezado (S3), regla de negocio explicada (S6), sin datos calculables
       duplicados (S7) y todo probado antes de entregar (S8). Los cambios de
       esquema están en un script nuevo (`sql/ddl/07_ajustes_entrega4.sql`).
+- [x] Cumplimos los estándares de repositorio (Sección 6.1, R1 a R8): ver
+      `docs/entrega-4/ENTREGA4_IMPLEMENTACION.md`, sección 9.2.
 - [x] La base se instala desde cero con `INSTALL.md` sin errores: 19 tablas,
       6 vistas, 1 función, 4 procedimientos y 3 triggers.
 - [x] La base de producción (Railway) es igual al repositorio:
@@ -30,13 +32,15 @@ Entrega 4 cumple con lo siguiente:
 - [x] El manual técnico, el manual de usuario y el diagrama actualizado están
       en el repositorio, y el diagrama refleja `movimiento_stock.pedido_id`.
       El manual técnico justifica el CRUD de ingresos y pedidos
-      (`INFORME_FINAL.md`, sección 6.1).
+      (`ENTREGA4_INFORME_FINAL.md`, sección 6.1).
 - [x] Los flujos del manual de usuario se verificaron en la aplicación
       (instalación local, 25/10/2026). [ ] Pendiente: repetirlos en la app
       publicada (pruebas RW).
-- [x] El informe final (`docs/entrega-4/INFORME_FINAL.md`) está en el
-      repositorio. [ ] Pendiente: firmas de la declaración de integridad.
-- [ ] La aplicación cumple los estándares web de la Sección 6.3 de la guía.
+- [x] El informe final (`docs/entrega-4/ENTREGA4_INFORME_FINAL.md`) está en el
+      repositorio y los cuatro integrantes confirmaron la declaración de
+      integridad (`docs/entrega-4/ENTREGA4_DECLARACION_INTEGRIDAD.md`).
+- [x] Cumplimos los estándares de aplicación (Sección 6.3, A1 a A6): revisión
+      punto por punto en `docs/entrega-4/ENTREGA4_IMPLEMENTACION.md`, sección 9.3.
 - [ ] La bitácora de IA está actualizada (Entradas 17 a 20) y los campos
       _(completar)_ están llenos.
 - [x] No hay credenciales expuestas: el repositorio no contiene `.env` real ni
@@ -57,7 +61,7 @@ Entrega 4 cumple con lo siguiente:
 | Pruebas unitarias | 10 | ✅ local |
 | Prueba manual en Railway (RW) | 8 | ⏳ pendiente |
 | Despliegue público | Railway | ✅ |
-| Informe final + declaración de integridad | 2 | ✅ informe · ⏳ firmas |
+| Informe final + declaración de integridad | 2 | ✅ |
 
 ## Firmas
 

@@ -32,8 +32,8 @@ prompt distinto dentro de esa sesión, con su propio resultado y validación.
 | 17 | 17–20/10/2026 | _(completar)_ | Entrega 4, Lotes 1 a 5: módulos, cancelación, reportes, seguridad y concurrencia | _(completar)_ |
 | 18 | 20/10/2026 | _(completar)_ | Paquete de instalación de la base en Railway a partir del dump local | _(completar)_ |
 | 19 | 20/10/2026 | Claude | Revisión del paquete de Railway, auditoría de la Entrega 4 y pruebas locales | 3 |
-| 20 | 25/10/2026 | Claude | Sincronización de Railway, documentación, manuales y diagramas de la Entrega 4 | 4 |
-| | | | **Total** | **58 + Entradas 17 y 18** |
+| 20 | 25–27/10/2026 | Claude | Sincronización de Railway, documentación, manuales, diagramas y revisión contra la guía | 5 |
+| | | | **Total** | **59 + Entradas 17 y 18** |
 
 ---
 
@@ -45,7 +45,7 @@ prompt distinto dentro de esa sesión, con su propio resultado y validación.
 | **Fecha** | 17/08/2026 |
 | **Herramienta** | Claude (Anthropic) |
 | **Objetivo de la sesión** | Generar la base de la Entrega 1 (propuesta, requerimientos, modelo ER, cronograma y estructura del repositorio). |
-| **Consultas** | 4 (ver abajo) |
+| **Consultas** | 5 (ver abajo) |
 | **Responsable** | Fernando Rafael Duarte Hernández |
 
 ### Consulta 1.1 — Propuesta, RF/RD y matriz de trazabilidad
@@ -675,7 +675,7 @@ versionados de `sql/`, no desde un dump de una base de desarrollo.
 | Campo | Detalle |
 |---|---|
 | **Prompt utilizado** | Se compartió la tabla de ponderación de la Entrega 4 y se preguntó qué faltaba. Luego: "¿me puedes entregar todo lo faltante para concluir hoy?". |
-| **Resultado obtenido** | El agente cruzó la rúbrica con el estado real y encontró dos productos que no estaban en su lista (informe final y declaración de integridad) y un riesgo en "CRUD en todas las tablas principales": ingresos y pedidos no se editan ni se borran por diseño (auditoría del kardex). Entregó `INFORME_FINAL.md` (con la justificación del CRUD), `DECLARACION_INTEGRIDAD.md` (sin firmas) y `GUIA_DEFENSA.md`. Corrigió una afirmación de su propio borrador: la app no tiene pantalla de movimientos de `ajuste`. |
+| **Resultado obtenido** | El agente cruzó la rúbrica con el estado real y encontró dos productos que no estaban en su lista (informe final y declaración de integridad) y un riesgo en "CRUD en todas las tablas principales": ingresos y pedidos no se editan ni se borran por diseño (auditoría del kardex). Entregó `ENTREGA4_INFORME_FINAL.md` (con la justificación del CRUD), `ENTREGA4_DECLARACION_INTEGRIDAD.md` (sin firmas) y `ENTREGA4_GUIA_DEFENSA.md`. Corrigió una afirmación de su propio borrador: la app no tiene pantalla de movimientos de `ajuste`. |
 | **Validación del grupo** | Pendiente: revisión del informe y firmas de la declaración. |
 | **Estándares aplicados (post-IA)** | D4 |
 
@@ -685,6 +685,15 @@ versionados de `sql/`, no desde un dump de una base de desarrollo.
 |---|---|
 | **Prompt utilizado** | "Hazlo desde 0 (manuales y diagramas) para poder subirlo todo de una vez hoy." |
 | **Resultado obtenido** | (1) **Manual de usuario** con 26 capturas reales, tomadas con un navegador automatizado recorriendo cada flujo en la app instalada desde cero. Las primeras capturas salieron con la fecha 28/10/2026 por el reloj del entorno; se repitieron con MySQL a la fecha real (25/10/2026). (2) **Manual técnico:** arquitectura, variables, flujo de datos, CRUD y su justificación, despliegue, pruebas, mantenimiento y solución de problemas. Antes de redactarlo se verificaron en el código los mensajes y las reglas citadas, y se corrigió una afirmación sobre el borrado de productos. (3) **Diagrama ER:** se agregaron la relación "origina" PEDIDO (0,N) — MOVIMIENTO_STOCK (0,1) y el atributo `porcentaje_descuento` de TIPO_CLIENTE, y se exportaron el PNG y el PDF con el visor de draw.io. (4) **Modelo relacional (.mwb):** se agregaron `pedido_id`, `fk_movimiento_pedido` con su índice, `cancelacion` en el ENUM y `tipo_cliente.porcentaje_descuento`. Esta última faltaba desde la Entrega 3 y se detectó comparando el modelo con la base real tabla por tabla: 19 de 19 tablas iguales y 21 de 21 FK, con 0 referencias internas rotas. |
-| **Validación del grupo** | Pendiente: abrir el `.mwb` en Workbench, comprobar que abre y volver a exportar su PNG y PDF (no se puede renderizar fuera de Workbench). Revisar los manuales. |
+| **Validación del grupo** | El 27/10/2026 se subió todo a `main` con la etiqueta `entrega-4`. Después, el agente generó el PNG y el PDF del modelo relacional a partir de los datos del `.mwb`: las mismas posiciones y el estilo de Workbench, 19 tablas, 21 FK, y en el PDF se verificó que aparecen `pedido_id` y `porcentaje_descuento`. No son una exportación de Workbench. Pendiente opcional: abrir el `.mwb` en Workbench para confirmar que abre. |
 | **Estándares aplicados (post-IA)** | S8 (flujos ejecutados, no descritos de memoria), D4 (modelo comparado con la base real) |
+
+### Consulta 20.5 — Revisión contra la guía del proyecto (secciones 5, 6.1, 6.3, 7, 8 y D2)
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | Se compartió el PDF *Proyecto – Base de datos* con la pregunta: "aquí puedes encontrar la sección 6.3… entrégame lo que puedes hacer para subirlo de una vez". |
+| **Resultado obtenido** | El agente revisó la guía contra el código y el repositorio. **A1, A2, A4 y A5** se cumplían, con evidencia citada. **A6** no: 50 de las 78 funciones de `web/src/models/` no tenían comentario. Se agregaron 50 comentarios de una línea, se verificó que fueran el **único** cambio en el código (0 líneas distintas a comentarios) y se repitieron las pruebas (unitarias 10/10, web 46/46, catálogos 65/65). **D2:** los 5 documentos nuevos se renombraron con el prefijo `ENTREGA4_` y se actualizaron sus enlaces. **Sección 8:** a la certificación le faltaba la casilla de estándares de repositorio (6.1) y se agregó. **Repositorio final:** la evidencia de la Entrega 2 (`pruebas_restricciones_sql.log`) nunca se subió porque `.gitignore` excluye `*.log`. No se reconstruyó el registro original: se escribió `scripts/entrega2_restricciones.sql` con los mismos 10 casos y se re-ejecutó, marcado como re-ejecución del 27/10/2026. La primera versión del script falló en CP-10 por un error del agente (subconsulta sobre la tabla que modifica el trigger, error 1442); se corrigió y el resultado fue 10/10. **Sección 13:** se informó al equipo que la fecha de la Entrega 4 y la defensa es el 03/11/2026. Todo quedó documentado en `ENTREGA4_IMPLEMENTACION.md`, sección 9. |
+| **Validación del grupo** | Pendiente: revisión del equipo antes del commit. |
+| **Estándares aplicados (post-IA)** | A1–A6, R1–R8, D2, D4 |
 

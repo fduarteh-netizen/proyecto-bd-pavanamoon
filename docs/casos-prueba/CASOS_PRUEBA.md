@@ -3,9 +3,13 @@
 
 Todas las pruebas de este documento se ejecutaron de verdad contra una instancia
 MySQL/MariaDB real y la aplicación web corriendo localmente (no son pruebas
-hipotéticas). El log completo de la sesión SQL está en
-[`evidencias/pruebas_restricciones_sql.log`](./evidencias/pruebas_restricciones_sql.log)
-y las capturas de pantalla reales de la app están en [`evidencias/`](./evidencias/).
+hipotéticas). El log original de la sesión SQL (`evidencias/pruebas_restricciones_sql.log`)
+no llegó al repositorio porque `.gitignore` excluye `*.log`. *(Nota del
+27/10/2026: los casos CP-01 a CP-10 se reprodujeron en
+[`scripts/entrega2_restricciones.sql`](./scripts/entrega2_restricciones.sql)
+y se re-ejecutaron sobre la versión final, con salida en
+[`evidencias/entrega2_restricciones_sql.txt`](./evidencias/entrega2_restricciones_sql.txt):
+10/10 con el resultado esperado.)* Las capturas de pantalla reales de la app están en [`evidencias/`](./evidencias/).
 
 **Entorno de prueba:** MariaDB 10.11, Node.js 22, scripts ejecutados en el orden de
 `INSTALL.md` desde una base de datos vacía (`DROP DATABASE` + recreación completa).
@@ -49,8 +53,8 @@ usuario             1
 | CP-09 | Borrar una `categoria` referenciada por un `producto` | `FK ... ON DELETE RESTRICT` (implícito) | Rechazado | ✅ PASA — `ERROR 1451: a foreign key constraint fails` |
 | CP-10 | Insertar en `detalle_ingreso` con `cantidad=10, costo_unitario=85.50` | Columna generada `subtotal` | `subtotal = 855.00`, calculado por MySQL | ✅ PASA — valor exacto confirmado |
 
-**10/10 pruebas pasaron.** Evidencia completa (comandos y salida real de MySQL) en
-`evidencias/pruebas_restricciones_sql.log`.
+**10/10 pruebas pasaron.** Re-ejecución del 27/10/2026 en MySQL 8 (los CHECK fallan con ERROR 3819 en
+lugar de 4025): `evidencias/entrega2_restricciones_sql.txt`.
 
 ---
 

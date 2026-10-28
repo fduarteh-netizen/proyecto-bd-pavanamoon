@@ -33,13 +33,13 @@ enlazarán aquí cuando se integren.
 | Endurecimiento de seguridad web (Lote 5) | `web/src/middleware/seguridad.js` | ✅ |
 | Casos de prueba + matriz de trazabilidad | [`../casos-prueba/CASOS_PRUEBA_ENTREGA4.md`](../casos-prueba/CASOS_PRUEBA_ENTREGA4.md) | ✅ local · ⏳ Railway |
 | Despliegue público | https://grand-acceptance-production-0ac1.up.railway.app | ✅ |
-| Informe final (consolida las 4 entregas) | [`INFORME_FINAL.md`](./INFORME_FINAL.md) | ✅ |
-| Declaración de integridad | [`DECLARACION_INTEGRIDAD.md`](./DECLARACION_INTEGRIDAD.md) | ⏳ firmas |
-| Guía de defensa oral | [`GUIA_DEFENSA.md`](./GUIA_DEFENSA.md) | ✅ |
-| Manual técnico | [`MANUAL_TECNICO.md`](./MANUAL_TECNICO.md) | ✅ |
-| Manual de usuario (26 capturas reales de los flujos) | [`MANUAL_USUARIO.md`](./MANUAL_USUARIO.md) | ✅ |
+| Informe final (consolida las 4 entregas) | [`ENTREGA4_INFORME_FINAL.md`](./ENTREGA4_INFORME_FINAL.md) | ✅ |
+| Declaración de integridad | [`ENTREGA4_DECLARACION_INTEGRIDAD.md`](./ENTREGA4_DECLARACION_INTEGRIDAD.md) | ⏳ firmas |
+| Guía de defensa oral | [`ENTREGA4_GUIA_DEFENSA.md`](./ENTREGA4_GUIA_DEFENSA.md) | ✅ |
+| Manual técnico | [`ENTREGA4_MANUAL_TECNICO.md`](./ENTREGA4_MANUAL_TECNICO.md) | ✅ |
+| Manual de usuario (26 capturas reales de los flujos) | [`ENTREGA4_MANUAL_USUARIO.md`](./ENTREGA4_MANUAL_USUARIO.md) | ✅ |
 | Diagrama ER (Chen): relación "origina" y `porcentaje_descuento` | `docs/diagramas/Pavanamoon_er_chen_corregido.*` | ✅ |
-| Modelo relacional (Workbench): `pedido_id`, `fk_movimiento_pedido`, `cancelacion`, `porcentaje_descuento` | `docs/diagramas/Modelo_Entidad_R_Pavanamoon.mwb` | ✅ `.mwb` · ⏳ volver a exportar PNG/PDF desde Workbench |
+| Modelo relacional (Workbench): `pedido_id`, `fk_movimiento_pedido`, `cancelacion`, `porcentaje_descuento` | `docs/diagramas/Modelo_Entidad_R_Pavanamoon.mwb` + `Modelo_Entidad_Relacion.png` y `Modelo_Entidad_R_Pavanamoon.pdf` | ✅ (PNG/PDF dibujados a partir del `.mwb`, 27/10/2026) |
 | Certificación de la Entrega 4 | [`../certificaciones/CERTIFICACION_ENTREGA_4.md`](../certificaciones/CERTIFICACION_ENTREGA_4.md) | ⏳ firmas |
 
 Objetos de base de datos tras la Entrega 4: **19 tablas, 6 vistas, 1 función,
@@ -236,16 +236,59 @@ Detalle, matriz de trazabilidad y evidencias:
 
 ## 8. Pendiente para cerrar la entrega
 
+Ya hecho el 27/10/2026: certificación y declaración de integridad
+confirmadas por los cuatro, merge del PR #3 en `main` y etiqueta `entrega-4`.
+
+Queda pendiente (fecha de entrega y defensa: **03/11/2026**, sección 13 de la guía):
+
 1. Prueba manual en Railway con datos ficticios (RW-01 a RW-08 en
-   `CASOS_PRUEBA_ENTREGA4.md`), con capturas en
+   `CASOS_PRUEBA_ENTREGA4.md`), siguiendo los flujos del manual de usuario
+   (criterio "flujos del manual verificados"), con capturas en
    `docs/casos-prueba/evidencias/e4_*.png`.
 2. Re-ejecución local de las baterías por un integrante (misma sección).
-3. Abrir `Modelo_Entidad_R_Pavanamoon.mwb` en Workbench, comprobar que abre y
-   volver a exportar `Modelo_Entidad_Relacion.png` y `Modelo_Entidad_R_Pavanamoon.pdf`
-   (File → Export). Los manuales y el diagrama ER ya están actualizados.
-4. Revisar la Sección 6.3 de la guía (estándares web) contra la aplicación.
-5. Las pruebas RW deben seguir los mismos flujos del manual de usuario
-   (criterio "flujos del manual verificados"). La justificación del CRUD ya
-   está en `MANUAL_TECNICO.md`, sección 4.2.
-6. Firmas de la certificación y de la declaración de integridad, merge del
-   PR #3 y etiqueta `entrega-4`.
+3. Campos _(completar)_ de la bitácora (Entradas 17 a 20).
+4. Opcional: abrir `Modelo_Entidad_R_Pavanamoon.mwb` en Workbench para
+   confirmar que abre. El PNG y el PDF del modelo relacional ya están
+   actualizados.
+5. Preparar la defensa oral grupal e individual con `ENTREGA4_GUIA_DEFENSA.md`.
+
+## 9. Cumplimiento de la guía del proyecto
+
+Revisión punto por punto contra *Proyecto – Base de datos* (guía del curso).
+Las cifras se midieron el 27/10/2026 sobre `main` instalado desde cero.
+
+### 9.1 Requisitos mínimos (sección 5)
+
+| # | Requisito | Cumple | Evidencia |
+|---|---|---|---|
+| 1 | ≥ 8 entidades principales | ✅ | 17 tablas no asociativas (19 en total) |
+| 2 | ≥ 2 relaciones N:M resueltas | ✅ | `detalle_ingreso` (ingreso ↔ variante) y `detalle_pedido` (pedido ↔ variante) |
+| 3 | 3FN demostrada con ejemplo | ✅ | `docs/entrega-2/ENTREGA2_DISENO_LOGICO.md`, sección 3 |
+| 4 | ≥ 15 restricciones explícitas | ✅ | 65 restricciones con nombre (19 PK, 21 FK, 13 UNIQUE, 12 CHECK) y 52 columnas `NOT NULL` |
+| 5 | ≥ 2 triggers y ≥ 2 procedimientos o funciones | ✅ | 3 triggers, 4 procedimientos y 1 función, con su regla de negocio (`sql/*/README.md`) |
+| 6 | ≥ 3 roles con privilegios diferenciados | ✅ | `rol_administrador`, `rol_bodeguero`, `rol_vendedor` (`sql/security/`, CP3-06 y CP3-07) |
+| 7 | ≥ 50 registros por tabla principal | ✅ | `sql/dml/01_datos_prueba.sql` (Entrega 3). Los catálogos de referencia, como tipos de cliente o presentaciones, tienen solo los valores que existen en el negocio |
+
+### 9.2 Estándares del repositorio (6.1)
+
+| # | Estándar | Cumple | Evidencia |
+|---|---|---|---|
+| R1 | Estructura de la sección 7 | ✅ | En la raíz: `README.md`, `.gitignore`, `.env.example`, `INSTALL.md`, `docs/` (entrega-1 a entrega-4, diagramas, certificaciones, bitacora-ia, casos-prueba), `sql/` (ddl, dml, views, triggers, procedures, security) y `web/` |
+| R2 | README | ✅ | Nombre, integrantes, SGBD, instalación y enlaces (incluida la app publicada) |
+| R3 | Commits descriptivos | ✅ | La mayoría usa el formato `tipo(ámbito): descripción` (por ejemplo, `feat(entrega4): …`, `docs(sql): …`) |
+| R4 | Participación visible | ✅ | Los cuatro integrantes tienen commits propios en `main` |
+| R5 | Etiquetas por entrega | ✅ | `entrega-1`, `entrega-2`, `entrega-3` y `entrega-4` |
+| R6 | Sin credenciales | ✅ | Ningún `.env` versionado; hay `.env.example` y `web/.env.example`; la contraseña de producción se cambió |
+| R7 | `.gitignore` | ✅ | Excluye `node_modules/`, `.env`, `*.env` y registros (logs) |
+| R8 | Acceso del catedrático | ✅ | Repositorio público |
+
+### 9.3 Estándares de código de aplicación (6.3)
+
+| # | Estándar | Cumple | Evidencia en el código |
+|---|---|---|---|
+| A1 | Separación de capas | ✅ | La conexión está en `web/src/config/db.js` y el SQL solo en `web/src/models/`. Ninguna ruta ni vista accede a la base directamente; la interfaz está en `web/views/` (EJS) |
+| A2 | Manejo de errores | ✅ | `web/src/middleware/errorHandler.js` traduce los errores de MySQL (duplicado, FK, deadlock, timeout) a mensajes comprensibles. Solo se muestra el texto de los `SIGNAL 45000`, que son mensajes de negocio escritos por el equipo (por ejemplo, "Stock insuficiente…"). Ninguna pantalla muestra errores SQL sin traducir |
+| A3 | Validación de entrada | ✅ | `web/src/utils/validate.js` y `validateCatalogo.js` validan tipos, campos requeridos y formatos (NIT, DPI de 13 dígitos, teléfonos, IDs enteros, precios) antes de llamar al modelo (CP4-09, CP4-17 a CP4-21) |
+| A4 | Consultas parametrizadas | ✅ | Todos los valores van con `?` en `mysql2`. El único identificador dinámico (`DELETE FROM ${def.tabla}` en `catalogoAdminModel.js`) sale de la lista blanca fija `CATALOGOS`, nunca de la entrada del usuario. La inyección SQL se prueba en CP4-22 |
+| A5 | Código legible | ✅ | Un router y un modelo por módulo, con nombres descriptivos (`listarDisponibles`, `registrarDevolucion`…), y una función por operación |
+| A6 | Comentarios en funciones que acceden a la BD | ✅ | 78 de 78 funciones de `web/src/models/` comentadas. El 27/10/2026 se agregaron 50 comentarios de una línea, **sin ningún otro cambio en el código**; después se repitieron las pruebas (unitarias 10/10, web 46/46, catálogos 65/65, CP4-01 a CP4-07 correctos) |

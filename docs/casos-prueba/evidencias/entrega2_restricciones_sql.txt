@@ -1,0 +1,89 @@
+# =============================================================================
+# Evidencia: casos CP-01 a CP-10 de la Entrega 2 (restricciones de integridad)
+# RE-EJECUCIÓN del 27/10/2026, no el registro original. El log original de la
+# Entrega 2 (MariaDB 10.11, evidencias/pruebas_restricciones_sql.log) nunca se
+# subió al repositorio porque .gitignore excluye *.log.
+# Ejecutado por: asistente de IA (Claude, Anthropic) en un entorno aislado
+#   (Linux, MySQL 8.0.46-0ubuntu0.24.04.4), base instalada desde cero (main 8cca1f6).
+# Comando: mysql -t --force -u root < docs/casos-prueba/scripts/entrega2_restricciones.sql
+# En MySQL 8 los CHECK fallan con ERROR 3819 (en MariaDB era 4025).
+# Salida sin editar a partir de la línea "=== SALIDA ===".
+# =============================================================================
+=== SALIDA ===
++------------------------------------------+
+| caso                                     |
++------------------------------------------+
+| CP-01 cliente con NIT nuevo (debe pasar) |
++------------------------------------------+
++------------+----------------+---------+
+| cliente_id | nombre_cliente | nit     |
++------------+----------------+---------+
+|         61 | Cliente CP-01  | 9990001 |
++------------+----------------+---------+
++--------------------------------------------------------------+
+| caso                                                         |
++--------------------------------------------------------------+
+| CP-02 cliente con NIT repetido (debe fallar: uq_cliente_nit) |
++--------------------------------------------------------------+
+ERROR 1062 (23000) at line 18: Duplicate entry '9990001' for key 'cliente.uq_cliente_nit'
++-----------------------------------------------------------------+
+| caso                                                            |
++-----------------------------------------------------------------+
+| CP-03 producto con precio -10 (debe fallar: ck_producto_precio) |
++-----------------------------------------------------------------+
+ERROR 3819 (HY000) at line 21: Check constraint 'ck_producto_precio' is violated.
++-----------------------------------------------------------------------+
+| caso                                                                  |
++-----------------------------------------------------------------------+
+| CP-04 producto con categoria 999 (debe fallar: fk_producto_categoria) |
++-----------------------------------------------------------------------+
+ERROR 1452 (23000) at line 24: Cannot add or update a child row: a foreign key constraint fails (`pavanamoon`.`producto`, CONSTRAINT `fk_producto_categoria` FOREIGN KEY (`categoria_id`) REFERENCES `categoria` (`categoria_id`) ON DELETE RESTRICT ON UPDATE CASCADE)
++---------------------------------------------------------------------+
+| caso                                                                |
++---------------------------------------------------------------------+
+| CP-05 variante con stock -5 (debe fallar: ck_variante_stock_actual) |
++---------------------------------------------------------------------+
+ERROR 3819 (HY000) at line 29: Check constraint 'ck_variante_stock_actual' is violated.
++--------------------------------------------------+
+| caso                                             |
++--------------------------------------------------+
+| CP-06 variante válida con stock 10 (debe pasar)  |
++--------------------------------------------------+
++-------------+-----------------+--------------+
+| variante_id | sku             | stock_actual |
++-------------+-----------------+--------------+
+|         166 | SKU-E2-TEST-001 |           10 |
++-------------+-----------------+--------------+
++----------------------------------------------------------------+
+| caso                                                           |
++----------------------------------------------------------------+
+| CP-07 variante con el mismo SKU (debe fallar: uq_variante_sku) |
++----------------------------------------------------------------+
+ERROR 1062 (23000) at line 36: Duplicate entry 'SKU-E2-TEST-001' for key 'variante_producto.uq_variante_sku'
++------------------------------------------------------------------------------------------------------+
+| caso                                                                                                 |
++------------------------------------------------------------------------------------------------------+
+| CP-08 variante con la misma combinación producto-talla-color (debe fallar: uq_variante_combinacion)  |
++------------------------------------------------------------------------------------------------------+
+ERROR 1062 (23000) at line 39: Duplicate entry '57-1-1' for key 'variante_producto.uq_variante_combinacion'
++--------------------------------------------------------------------------------+
+| caso                                                                           |
++--------------------------------------------------------------------------------+
+| CP-09 borrar una categoría con productos (debe fallar: FK ON DELETE RESTRICT)  |
++--------------------------------------------------------------------------------+
+ERROR 1451 (23000) at line 42: Cannot delete or update a parent row: a foreign key constraint fails (`pavanamoon`.`producto`, CONSTRAINT `fk_producto_categoria` FOREIGN KEY (`categoria_id`) REFERENCES `categoria` (`categoria_id`) ON DELETE RESTRICT ON UPDATE CASCADE)
++------------------------------+
+| categoria_1_sigue_existiendo |
++------------------------------+
+|                            1 |
++------------------------------+
++---------------------------------------------------------------------------+
+| caso                                                                      |
++---------------------------------------------------------------------------+
+| CP-10 detalle_ingreso 10 x 85.50: subtotal generado = 855.00 (debe pasar) |
++---------------------------------------------------------------------------+
++----------+----------------+----------+
+| cantidad | costo_unitario | subtotal |
++----------+----------------+----------+
+|       10 |          85.50 |   855.00 |
++----------+----------------+----------+

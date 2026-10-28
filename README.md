@@ -76,11 +76,11 @@ Tras la Entrega 4, la base completa tiene **19 tablas, 6 vistas, 1 función, 4 p
 - Integración, despliegue y seguridad (Entrega 4): [`docs/entrega-4/ENTREGA4_IMPLEMENTACION.md`](./docs/entrega-4/ENTREGA4_IMPLEMENTACION.md)
 - Casos de prueba de la Entrega 4, con matriz de trazabilidad y verificación en Railway: [`docs/casos-prueba/CASOS_PRUEBA_ENTREGA4.md`](./docs/casos-prueba/CASOS_PRUEBA_ENTREGA4.md)
 - Sincronización de la base de Railway con el repositorio (scripts, guía y pruebas): [`docs/entrega-4/despliegue-railway/`](./docs/entrega-4/despliegue-railway/)
-- **Informe final** (consolida las 4 entregas): [`docs/entrega-4/INFORME_FINAL.md`](./docs/entrega-4/INFORME_FINAL.md)
-- Declaración de integridad académica: [`docs/entrega-4/DECLARACION_INTEGRIDAD.md`](./docs/entrega-4/DECLARACION_INTEGRIDAD.md)
-- Guía de preparación de la defensa oral: [`docs/entrega-4/GUIA_DEFENSA.md`](./docs/entrega-4/GUIA_DEFENSA.md)
-- **Manual técnico:** [`docs/entrega-4/MANUAL_TECNICO.md`](./docs/entrega-4/MANUAL_TECNICO.md)
-- **Manual de usuario** (con capturas de cada flujo): [`docs/entrega-4/MANUAL_USUARIO.md`](./docs/entrega-4/MANUAL_USUARIO.md)
+- **Informe final** (consolida las 4 entregas): [`docs/entrega-4/ENTREGA4_INFORME_FINAL.md`](./docs/entrega-4/ENTREGA4_INFORME_FINAL.md)
+- Declaración de integridad académica: [`docs/entrega-4/ENTREGA4_DECLARACION_INTEGRIDAD.md`](./docs/entrega-4/ENTREGA4_DECLARACION_INTEGRIDAD.md)
+- Guía de preparación de la defensa oral: [`docs/entrega-4/ENTREGA4_GUIA_DEFENSA.md`](./docs/entrega-4/ENTREGA4_GUIA_DEFENSA.md)
+- **Manual técnico:** [`docs/entrega-4/ENTREGA4_MANUAL_TECNICO.md`](./docs/entrega-4/ENTREGA4_MANUAL_TECNICO.md)
+- **Manual de usuario** (con capturas de cada flujo): [`docs/entrega-4/ENTREGA4_MANUAL_USUARIO.md`](./docs/entrega-4/ENTREGA4_MANUAL_USUARIO.md)
 - Diagramas actualizados a la Entrega 4 (relación "origina" PEDIDO–MOVIMIENTO_STOCK y `tipo_cliente.porcentaje_descuento`): [`docs/diagramas/`](./docs/diagramas/)
 
 ## Enlaces

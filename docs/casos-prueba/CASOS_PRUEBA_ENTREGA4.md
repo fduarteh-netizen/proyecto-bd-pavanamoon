@@ -27,6 +27,7 @@ bases con nombre `*_prueba`.
 | [`scripts/entrega4_seguridad.test.cjs`](./scripts/entrega4_seguridad.test.cjs) | SEG-01 a SEG-11 | **11/11** | [`entrega4_seguridad.txt`](./evidencias/entrega4_seguridad.txt) |
 | [`scripts/entrega4_integracion_stock.test.cjs`](./scripts/entrega4_integracion_stock.test.cjs) | INT-01 a INT-07 | **7/7** (base `pavanamoon_prueba`) | [`entrega4_integracion_stock.txt`](./evidencias/entrega4_integracion_stock.txt) |
 | [`scripts/entrega4_variantes_clientes_unit.cjs`](./scripts/entrega4_variantes_clientes_unit.cjs) | 10 unitarias | **10/10** | [`entrega4_unitarias_clientes_variantes.txt`](./evidencias/entrega4_unitarias_clientes_variantes.txt) |
+| [`scripts/entrega2_restricciones.sql`](./scripts/entrega2_restricciones.sql) (regresión) | CP-01 a CP-10 de la Entrega 2 | 10/10 como se esperaba (7 rechazos con su restricción y 3 éxitos; subtotal 855.00) | [`entrega2_restricciones_sql.txt`](./evidencias/entrega2_restricciones_sql.txt) |
 | Scripts de la Entrega 3 (regresión) | CP3-01 a CP3-08 | Mismos resultados que en la Entrega 3 | [`entrega4_regresion_entrega3.txt`](./evidencias/entrega4_regresion_entrega3.txt) |
 
 **Preparación necesaria para SEG.** El script exige los usuarios `cabrito`
@@ -161,7 +162,7 @@ _(Agregar las capturas de `railway_verificar.sql` y del filtro como
 ### 4.2 Prueba manual con datos ficticios (pendiente)
 
 > **Flujos del manual de usuario, verificados localmente (25/10/2026).** Las
-> 26 capturas de [`MANUAL_USUARIO.md`](../entrega-4/MANUAL_USUARIO.md) se
+> 26 capturas de [`ENTREGA4_MANUAL_USUARIO.md`](../entrega-4/ENTREGA4_MANUAL_USUARIO.md) se
 > tomaron recorriendo cada flujo en la app instalada desde cero: ingreso
 > (stock +24 y kardex `entrada`), pedido mayorista de 1 caja (Q2,652.00 =
 > 260 × 12 × 0.85), completar, devolución de 2 pares, cancelación con
