@@ -117,3 +117,16 @@ body {
 .barra > i { display: block; height: 100%; background: var(--color-primary); border-radius: 3px; }
 .inline-form { display: flex; gap: 0.5rem; align-items: flex-end; flex-wrap: wrap; }
 .muted { color: #5d6d7e; font-size: 0.85rem; }
+
+/* Botón Cerrar sesión visible en la barra superior */
+.navbar-user .btn-link {
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.navbar-user .btn-link:hover {
+  color: #ffffff;
+  opacity: 0.8;
+}

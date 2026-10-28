@@ -34,7 +34,7 @@
 
   <div>
     <span>Fecha</span>
-    <strong><%= new Date(pedido.fecha_pedido).toLocaleString('es-GT') %></strong>
+    <strong><%= new Date(pedido.fecha_pedido).toLocaleString('es-GT', { timeZone: 'America/Guatemala' }) %></strong>
   </div>
 
   <div>

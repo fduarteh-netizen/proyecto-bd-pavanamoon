@@ -7,7 +7,7 @@
 
 <div class="resumen">
   <div><span>Furgón</span><strong><%= ingreso.numero_furgon %></strong></div>
-  <div><span>Fecha</span><strong><%= new Date(ingreso.fecha_ingreso).toLocaleString('es-GT') %></strong></div>
+  <div><span>Fecha</span><strong><%= new Date(ingreso.fecha_ingreso).toLocaleString('es-GT', { timeZone: 'America/Guatemala' }) %></strong></div>
   <div><span>Bodega</span><strong><%= ingreso.bodega_destino %></strong></div>
   <div><span>Responsable</span><strong><%= ingreso.responsable %></strong></div>
   <div><span>Pares recibidos</span><strong><%= ingreso.pares_recibidos %></strong></div>
