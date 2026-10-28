@@ -186,7 +186,10 @@ anote el resultado real; deje "—" si no se hizo.
 
 ---
 
-## 5. Re-ejecución por el equipo (pendiente)
+## 5. Re-ejecución por el equipo (opcional)
+
+> La guía no la exige: el catedrático instala desde cero en la revisión
+> funcional. Si un integrante la hace, que anote aquí el resultado.
 
 Las evidencias `entrega4_*.txt` las generó un asistente de IA en un entorno
 aislado. Un integrante debe repetir al menos la instalación desde cero,

@@ -245,12 +245,10 @@ Queda pendiente (fecha de entrega y defensa: **03/11/2026**, sección 13 de la g
    `CASOS_PRUEBA_ENTREGA4.md`), siguiendo los flujos del manual de usuario
    (criterio "flujos del manual verificados"), con capturas en
    `docs/casos-prueba/evidencias/e4_*.png`.
-2. Re-ejecución local de las baterías por un integrante (misma sección).
-3. Campos _(completar)_ de la bitácora (Entradas 17 a 20).
-4. Opcional: abrir `Modelo_Entidad_R_Pavanamoon.mwb` en Workbench para
+2. Opcional: abrir `Modelo_Entidad_R_Pavanamoon.mwb` en Workbench para
    confirmar que abre. El PNG y el PDF del modelo relacional ya están
    actualizados.
-5. Preparar la defensa oral grupal e individual con `ENTREGA4_GUIA_DEFENSA.md`.
+3. Preparar la defensa oral grupal e individual con `ENTREGA4_GUIA_DEFENSA.md`.
 
 ## 9. Cumplimiento de la guía del proyecto
 

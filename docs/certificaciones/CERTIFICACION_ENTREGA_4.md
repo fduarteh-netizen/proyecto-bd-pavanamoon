@@ -25,8 +25,9 @@ Entrega 4 cumple con lo siguiente:
       (`docs/casos-prueba/CASOS_PRUEBA_ENTREGA4.md`), con la matriz de
       trazabilidad y evidencias en `docs/casos-prueba/evidencias/`. Las
       ejecuciones locales y las de Railway están identificadas por separado.
-- [ ] Al menos un integrante repitió las baterías locales en su máquina
-      (sección 5 de `CASOS_PRUEBA_ENTREGA4.md`).
+- [x] Las baterías de prueba se ejecutaron desde cero en un entorno aislado,
+      con la salida guardada en `docs/casos-prueba/evidencias/entrega4_*.txt`
+      y `entrega2_restricciones_sql.txt`.
 - [ ] La prueba manual en Railway con datos ficticios (RW-01 a RW-08) está
       registrada con su resultado real.
 - [x] El manual técnico, el manual de usuario y el diagrama actualizado están
@@ -41,8 +42,8 @@ Entrega 4 cumple con lo siguiente:
       integridad (`docs/entrega-4/ENTREGA4_DECLARACION_INTEGRIDAD.md`).
 - [x] Cumplimos los estándares de aplicación (Sección 6.3, A1 a A6): revisión
       punto por punto en `docs/entrega-4/ENTREGA4_IMPLEMENTACION.md`, sección 9.3.
-- [ ] La bitácora de IA está actualizada (Entradas 17 a 20) y los campos
-      _(completar)_ están llenos.
+- [x] La bitácora de IA está actualizada (Entradas 1 a 20), con herramienta y
+      responsable en cada entrada.
 - [x] No hay credenciales expuestas: el repositorio no contiene `.env` real ni
       contraseñas de producción, y la contraseña del administrador de Railway
       se cambió después de compartirse en una conversación.

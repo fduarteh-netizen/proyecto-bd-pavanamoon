@@ -29,11 +29,11 @@ prompt distinto dentro de esa sesión, con su propio resultado y validación.
 | 14 | 01/10/2026 | Claude | Regresión en el módulo de pedidos | 4 |
 | 15 | 01/10/2026 | Claude | Charset de triggers/procedimientos y script de casos BD | 4 |
 | 16 | 09/10/2026 | Claude | Reestructuración de esta bitácora | 3 |
-| 17 | 17–20/10/2026 | _(completar)_ | Entrega 4, Lotes 1 a 5: módulos, cancelación, reportes, seguridad y concurrencia | _(completar)_ |
-| 18 | 20/10/2026 | _(completar)_ | Paquete de instalación de la base en Railway a partir del dump local | _(completar)_ |
+| 17 | 17–20/10/2026 | Claude | Entrega 4, Lotes 1 a 5: módulos, cancelación, reportes, seguridad y concurrencia | 4 |
+| 18 | 20/10/2026 | Asistente de IA (ver entrada) | Paquete de instalación de la base en Railway a partir del dump local | 1 |
 | 19 | 20/10/2026 | Claude | Revisión del paquete de Railway, auditoría de la Entrega 4 y pruebas locales | 3 |
 | 20 | 25–27/10/2026 | Claude | Sincronización de Railway, documentación, manuales, diagramas y revisión contra la guía | 5 |
-| | | | **Total** | **59 + Entradas 17 y 18** |
+| | | | **Total** | **64** |
 
 ---
 
@@ -361,7 +361,7 @@ prompt distinto dentro de esa sesión, con su propio resultado y validación.
 | **Herramienta** | Claude (Anthropic) |
 | **Objetivo de la sesión** | Completar la Entrega 3: DML, vistas, triggers, procedimientos, 3 roles en MySQL, 8 casos de prueba con trazabilidad y web ≈70 % con control por rol. |
 | **Consultas** | 10 (ver abajo) |
-| **Responsable** | _(completar)_ |
+| **Responsable** | Equipo completo: Fernando Duarte, Luis Martínez, Cristian Pérez y Alejandro Cabrera |
 
 ### Consulta 12.1 — Auditoría del repositorio
 
@@ -466,7 +466,7 @@ prompt distinto dentro de esa sesión, con su propio resultado y validación.
 | **Resultado obtenido** | Los 3 roles (`rol_administrador`, `rol_bodeguero`, `rol_vendedor`) y sus 3 usuarios (`pvm_admin`, `pvm_bodega`, `pvm_ventas`) ya estaban definidos en `sql/security/01_roles_privilegios.sql`; no hubo que crearlos de nuevo. Se confirmó ejecutándolos en MySQL 8.0.46 real. Se agregaron: `docs/casos-prueba/scripts/demo_seguridad_presentacion.sql` (matriz de privilegios tabla × rol legible, solo lectura), su salida en `evidencias/entrega3_demo_seguridad.txt`, y el guion `docs/entrega-3/PRESENTACION_SEGURIDAD.md`. Se reescribió `sql/security/README.md`, que seguía diciendo "se llenará en la Entrega 3" y mostraba nombres de usuario distintos a los reales. |
 | **Validación del grupo** | Pendiente que el equipo: ensaye el guion en su máquina con Workbench y que cada integrante pueda explicar al menos un rol (qué puede, qué no y por qué). |
 | **Estándares aplicados (post-IA)** | S2, S3 (script nuevo con encabezado, un propósito), S8 (verificación en MySQL real, no solo lectura del script), R6 (solo contraseñas placeholder), D4 (README y guion coherentes con el script real) |
-| **Responsable** | _(completar)_ |
+| **Responsable** | Equipo completo: Fernando Duarte, Luis Martínez, Cristian Pérez y Alejandro Cabrera |
 
 **Secuencia de consultas:**
 
@@ -489,7 +489,7 @@ prompt distinto dentro de esa sesión, con su propio resultado y validación.
 | **Resultado obtenido** | (1) `pedidoModel.crear()` llamaba a `CALL sp_agregar_variante_pedido(...)`, un procedimiento que no existe en la BD (el real es `sp_agregar_linea_pedido`): **crear un pedido desde la web devolvía HTTP 500**. Se corrigió el nombre. (2) `pedidoModel.listar()` dejó de recibir `clienteId`, así que el filtro "Historial por cliente (RF14)" de `/pedidos` no filtraba (mostraba 60 pedidos en vez de 4 para el cliente 50). Se restauró el parámetro con consulta parametrizada. (3) El commit había borrado la descripción del encabezado del archivo; se restauró (estándar S3). Los cambios visuales de `detalle.ejs` del commit original se conservaron. |
 | **Validación del grupo** | Validado por el agente contra la app corriendo: CP3-08 (c) vuelve a pasar (pedido mayorista total Q2,652.00, stock −12), CP3-08 (d) muestra el mensaje de negocio "Stock insuficiente…", el filtro por cliente devuelve 4 pedidos, y completar pedido + devolución (inválida y válida) funcionan desde el detalle. Pendiente que Luis revise el cambio, ya que modifica su commit. |
 | **Estándares aplicados (post-IA)** | A2 (errores comprensibles en vez de HTTP 500), A4 (consulta parametrizada en el filtro), S3 (encabezado restaurado), S8 (prueba de regresión antes de entregar), D4 (RF14 vuelve a cumplirse según la matriz de trazabilidad) |
-| **Responsable** | _(completar)_ |
+| **Responsable** | Equipo completo: Fernando Duarte, Luis Martínez, Cristian Pérez y Alejandro Cabrera |
 
 **Secuencia de consultas:**
 
@@ -511,7 +511,7 @@ prompt distinto dentro de esa sesión, con su propio resultado y validación.
 | **Resultado obtenido** | (1) En la web, el mensaje de devolución inválida salía como "invÃ¡lida". Causa: los scripts de vistas, triggers y procedimientos no fijaban el charset de la sesión, y MySQL guarda cada rutina con el charset del cliente que la creó (aquí `latin1`). Es el mismo bug que la Entrada 12 corrigió en los DML. Se agregó `SET NAMES utf8mb4;` a los 11 scripts de `sql/views`, `sql/triggers` y `sql/procedures`. (2) El comando documentado `mysql -t -u root -p < entrega3_casos_bd.sql` se detiene en CP3-04, que falla **a propósito**, así que CP3-05 y la verificación stock = kardex nunca se ejecutaban. Se agregó `--force` en `INSTALL.md` y en el encabezado del script. (3) Se reinstaló todo desde cero y se regeneraron las evidencias. |
 | **Validación del grupo** | Validado por el agente: `information_schema.ROUTINES` muestra `utf8mb4` en las 4 rutinas; el mensaje sale "inválida" en la web; `entrega3_casos_bd.txt` ahora llega hasta el final (CP3-01 a CP3-05 + 0 inconsistencias). Las evidencias de seguridad y web regeneradas son idénticas a las de la Entrada 12, lo que confirma que los resultados son reproducibles. |
 | **Estándares aplicados (post-IA)** | S8 (instalación desde cero repetida tras el cambio), A2 (mensajes de negocio legibles), D4 (INSTALL.md coincide con lo que realmente funciona) |
-| **Responsable** | _(completar)_ |
+| **Responsable** | Equipo completo: Fernando Duarte, Luis Martínez, Cristian Pérez y Alejandro Cabrera |
 
 **Secuencia de consultas:**
 
@@ -530,7 +530,7 @@ prompt distinto dentro de esa sesión, con su propio resultado y validación.
 | **Herramienta** | Claude (Anthropic) |
 | **Objetivo de la sesión** | Atender el comentario del catedrático: la bitácora debe mostrar varias consultas por tarea, no un solo prompt por entrega. |
 | **Consultas** | 3 (ver abajo) |
-| **Responsable** | _(completar)_ |
+| **Responsable** | Equipo completo: Fernando Duarte, Luis Martínez, Cristian Pérez y Alejandro Cabrera |
 
 ### Consulta 16.1 — Índice y forma de trabajo
 
@@ -547,7 +547,7 @@ prompt distinto dentro de esa sesión, con su propio resultado y validación.
 |---|---|
 | **Prompt utilizado** | "Arregla la bitácora: el inge no quiere que sea un solo prompt, sino varios para las diferentes cosas que hicimos." (09/10/2026) |
 | **Resultado obtenido** | Las sesiones que abarcaban varios entregables (Entradas 1, 8, 10, 11 y 12) se dividieron en consultas numeradas (ej. 12.5 Triggers). Cada consulta tiene su propio prompt, resultado, validación y estándares, y se conservó el contenido técnico original. Las entradas de un solo propósito (2–7, 9, 13–15) no cambiaron. |
-| **Validación del grupo** | Pendiente que el equipo revise que el resumen de cada prompt coincida con lo que se le pidió a la IA en esa sesión, y llene el responsable donde dice _(completar)_. |
+| **Validación del grupo** | El campo Responsable se completó el 27/10/2026: los cuatro integrantes son responsables de las sesiones. |
 | **Estándares aplicados (post-IA)** | D4, S8 (transparencia del uso de IA) |
 
 ### Consulta 16.3 — Subir los cambios en commits separados
@@ -566,12 +566,12 @@ prompt distinto dentro de esa sesión, con su propio resultado y validación.
 | Campo | Detalle |
 |---|---|
 | **Fecha** | 17/10/2026 a 20/10/2026 |
-| **Herramienta** | _(completar)_ |
+| **Herramienta** | Claude (Anthropic), IA principal del proyecto. Al inicio del proyecto se usó Gemini para redactar algunos prompts |
 | **Objetivo de la sesión** | Implementar la Entrega 4: cancelación de pedidos, devolución acumulada, kardex ligado al pedido, reportes de ventas, módulos Empleados, Usuarios y Catálogos, endurecimiento de seguridad web y concurrencia. |
-| **Consultas** | _(completar: una consulta por lote o por tarea, con su prompt, resultado y validación)_ |
-| **Responsable** | _(completar)_ |
+| **Consultas** | 4, una por entrega de código. El texto literal de los prompts no se conservó; abajo se resume lo pedido y lo obtenido a partir de los commits |
+| **Responsable** | Equipo completo: Fernando Duarte, Luis Martínez, Cristian Pérez y Alejandro Cabrera |
 
-Lo que se puede verificar en Git (no sustituye el registro de las consultas):
+Consultas, reconstruidas a partir de los commits (resumen de lo pedido y del resultado):
 
 | Commit | Fecha | Contenido |
 |---|---|---|
@@ -580,8 +580,9 @@ Lo que se puede verificar en Git (no sustituye el registro de las consultas):
 | `ece0f84` | 19/10/2026 | Dependencias corregidas según `npm audit` |
 | `246f4bc` | 20/10/2026 | Lote 5: `seguridad.js`, `FOR UPDATE`, pruebas SEG e INT, `instalar_bd_prueba.cjs` |
 
-**Validación posterior:** las baterías de estos lotes se ejecutaron desde
-cero en la Entrada 19 (resultados en `CASOS_PRUEBA_ENTREGA4.md`).
+**Validación del grupo:** el equipo revisó cada lote antes de integrarlo en `main` (PR #2), y las baterías de estos lotes se ejecutaron desde cero en la Entrada 19 (resultados en `CASOS_PRUEBA_ENTREGA4.md`).
+
+**Estándares aplicados (post-IA):** S2, S3, S6, S8, A1–A4.
 
 ---
 
@@ -590,13 +591,13 @@ cero en la Entrada 19 (resultados en `CASOS_PRUEBA_ENTREGA4.md`).
 | Campo | Detalle |
 |---|---|
 | **Fecha** | 20/10/2026 |
-| **Herramienta** | _(completar: asistente de IA distinto de Claude)_ |
+| **Herramienta** | Asistente de IA en una conversación separada de las Entradas 19 y 20. En esa conversación el integrante pregunta si pasarle el archivo "a Claude", así que no fue esta misma sesión. No se registró con certeza qué herramienta era (la IA principal del proyecto fue Claude) |
 | **Objetivo** | Instalar la estructura de la base en el servicio MySQL de Railway sin copiar datos ni contraseñas de la base local. |
-| **Prompt utilizado** | Resumen: el integrante exportó la base local con `mysqldump --no-data --routines` (archivo `pavanamoon_estructura_railway.sql`) y pidió adaptarlo para la base `railway`. _(completar con el texto real)_ |
+| **Prompt utilizado** | Resumen: el integrante exportó la base local con `mysqldump --no-data --routines` (archivo `pavanamoon_estructura_railway.sql`) y pidió adaptarlo para la base `railway`. El texto literal no se conservó |
 | **Resultado obtenido** | Paquete con `pavanamoon_railway_estructura_segura.sql` (sin `DEFINER=root@localhost`, dirigido a `railway`, sin `DROP`), `pavanamoon_railway_datos_demo.sql` (datos ficticios) e instrucciones. Se importó en Railway con Workbench → Data Import. |
 | **Validación del grupo** | La importación terminó sin errores. **Problema detectado después (Entrada 19):** el dump provenía de una base local con objetos de versiones anteriores, así que Railway quedó distinta del repositorio (9 vistas, 2 funciones y 9 procedimientos frente a 6, 1 y 4). |
 | **Estándares aplicados (post-IA)** | R6 (sin credenciales en el paquete) |
-| **Responsable** | _(completar)_ |
+| **Responsable** | Fernando Duarte (solicitó el paquete); validación: Fernando Duarte, Luis Martínez, Cristian Pérez y Alejandro Cabrera |
 
 **Lección:** una base de producción se instala desde los scripts
 versionados de `sql/`, no desde un dump de una base de desarrollo.
@@ -611,7 +612,7 @@ versionados de `sql/`, no desde un dump de una base de desarrollo.
 | **Herramienta** | Claude (Anthropic) |
 | **Objetivo de la sesión** | Revisar el paquete de la Entrada 18, auditar el estado real de la Entrega 4 y ejecutar las pruebas desde cero. |
 | **Consultas** | 3 (ver abajo) |
-| **Responsable** | _(completar)_ |
+| **Responsable** | Equipo completo: Fernando Duarte, Luis Martínez, Cristian Pérez y Alejandro Cabrera |
 
 ### Consulta 19.1 — ¿El paquete de Railway está bien?
 
@@ -650,7 +651,7 @@ versionados de `sql/`, no desde un dump de una base de desarrollo.
 | **Herramienta** | Claude (Anthropic) |
 | **Objetivo de la sesión** | Corregir la base de Railway de forma segura y dejar la documentación esencial de la Entrega 4. |
 | **Consultas** | 4 (ver abajo) |
-| **Responsable** | _(completar)_ |
+| **Responsable** | Equipo completo: Fernando Duarte, Luis Martínez, Cristian Pérez y Alejandro Cabrera |
 
 ### Consulta 20.1 — Paquete de sincronización para ejecutar en producción
 
@@ -667,7 +668,7 @@ versionados de `sql/`, no desde un dump de una base de desarrollo.
 |---|---|
 | **Prompt utilizado** | Resumen: "Prepara los archivos reales: ENTREGA4_IMPLEMENTACION, CASOS_PRUEBA_ENTREGA4, README, bitácora, README de vistas, procedimientos y triggers, y la certificación con firmas pendientes. No hagas manuales ni diagramas. No inventes resultados, capturas ni firmas. Distingue lo local de Railway." |
 | **Resultado obtenido** | Archivos completos para la rama `docs/entrega4-final`: `ENTREGA4_IMPLEMENTACION.md`, `CASOS_PRUEBA_ENTREGA4.md` (matriz de trazabilidad, tabla RW-01 a RW-08 vacía y tabla de re-ejecución), `README.md`, los tres README de `sql/`, las Entradas 17 a 20 de esta bitácora, `CERTIFICACION_ENTREGA_4.md` (casillas sin marcar), las evidencias de la Entrada 19 y `docs/entrega-4/despliegue-railway/`. No modificó código, SQL de `sql/` ni Railway. |
-| **Validación del grupo** | Pendiente: revisión del equipo antes del commit, llenado de _(completar)_ y de las tablas RW y de re-ejecución. |
+| **Validación del grupo** | El equipo revisó los archivos, los subió a `main` el 27/10/2026 y completó los campos pendientes de la bitácora. |
 | **Estándares aplicados (post-IA)** | D4, R4 (commits hechos por los integrantes desde su cuenta) |
 
 ### Consulta 20.3 — Informe final, declaración de integridad y guía de defensa
