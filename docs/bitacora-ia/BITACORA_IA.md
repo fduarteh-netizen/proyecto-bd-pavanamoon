@@ -32,8 +32,8 @@ prompt distinto dentro de esa sesión, con su propio resultado y validación.
 | 17 | 17–20/10/2026 | Claude | Entrega 4, Lotes 1 a 5: módulos, cancelación, reportes, seguridad y concurrencia | 4 |
 | 18 | 20/10/2026 | Asistente de IA (ver entrada) | Paquete de instalación de la base en Railway a partir del dump local | 1 |
 | 19 | 20/10/2026 | Claude | Revisión del paquete de Railway, auditoría de la Entrega 4 y pruebas locales | 3 |
-| 20 | 25–27/10/2026 | Claude | Sincronización de Railway, documentación, manuales, diagramas y revisión contra la guía | 5 |
-| | | | **Total** | **64** |
+| 20 | 25–27/10/2026 | Claude | Sincronización de Railway, documentación, manuales, diagramas y revisión contra la guía | 6 |
+| | | | **Total** | **65** |
 
 ---
 
@@ -45,7 +45,7 @@ prompt distinto dentro de esa sesión, con su propio resultado y validación.
 | **Fecha** | 17/08/2026 |
 | **Herramienta** | Claude (Anthropic) |
 | **Objetivo de la sesión** | Generar la base de la Entrega 1 (propuesta, requerimientos, modelo ER, cronograma y estructura del repositorio). |
-| **Consultas** | 5 (ver abajo) |
+| **Consultas** | 6 (ver abajo) |
 | **Responsable** | Fernando Rafael Duarte Hernández |
 
 ### Consulta 1.1 — Propuesta, RF/RD y matriz de trazabilidad
@@ -697,4 +697,13 @@ versionados de `sql/`, no desde un dump de una base de desarrollo.
 | **Resultado obtenido** | El agente revisó la guía contra el código y el repositorio. **A1, A2, A4 y A5** se cumplían, con evidencia citada. **A6** no: 50 de las 78 funciones de `web/src/models/` no tenían comentario. Se agregaron 50 comentarios de una línea, se verificó que fueran el **único** cambio en el código (0 líneas distintas a comentarios) y se repitieron las pruebas (unitarias 10/10, web 46/46, catálogos 65/65). **D2:** los 5 documentos nuevos se renombraron con el prefijo `ENTREGA4_` y se actualizaron sus enlaces. **Sección 8:** a la certificación le faltaba la casilla de estándares de repositorio (6.1) y se agregó. **Repositorio final:** la evidencia de la Entrega 2 (`pruebas_restricciones_sql.log`) nunca se subió porque `.gitignore` excluye `*.log`. No se reconstruyó el registro original: se escribió `scripts/entrega2_restricciones.sql` con los mismos 10 casos y se re-ejecutó, marcado como re-ejecución del 27/10/2026. La primera versión del script falló en CP-10 por un error del agente (subconsulta sobre la tabla que modifica el trigger, error 1442); se corrigió y el resultado fue 10/10. **Sección 13:** se informó al equipo que la fecha de la Entrega 4 y la defensa es el 03/11/2026. Todo quedó documentado en `ENTREGA4_IMPLEMENTACION.md`, sección 9. |
 | **Validación del grupo** | Pendiente: revisión del equipo antes del commit. |
 | **Estándares aplicados (post-IA)** | A1–A6, R1–R8, D2, D4 |
+
+### Consulta 20.6 — Evidencia del despliegue en Railway
+
+| Campo | Detalle |
+|---|---|
+| **Prompt utilizado** | El equipo envió 5 capturas del panel de Railway en lugar de las 12 capturas de las pruebas RW. |
+| **Resultado obtenido** | El agente indicó que las capturas muestran la infraestructura y no los flujos de la app, así que **no sustituyen** las pruebas RW y esa casilla de la certificación quedó sin marcar. Se incorporaron 4 capturas como evidencia del despliegue: servicios en línea; despliegue desde GitHub con 1 réplica; MySQL sin acceso público; base con 19 tablas y solo las 6 vistas del repositorio. La quinta se descartó porque repetía la tercera y mostraba pestañas personales del navegador. |
+| **Validación del grupo** | El equipo tomó las capturas en su cuenta de Railway (27/10/2026). |
+| **Estándares aplicados (post-IA)** | S5 (desplegado en internet), R6 (sin datos sensibles en las capturas), D4 |
 

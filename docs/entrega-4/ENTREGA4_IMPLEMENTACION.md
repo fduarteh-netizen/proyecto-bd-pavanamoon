@@ -171,6 +171,11 @@ restauración del respaldo y aplicación conectada (ver
 | Acceso público de MySQL | Cerrado de nuevo |
 | Contraseña del administrador | Cambiada (la anterior se había compartido en una conversación) |
 
+Evidencia del panel de Railway (27/10/2026): servicios en línea, despliegue
+desde GitHub con 1 réplica, MySQL sin acceso público y la base con 19 tablas
+y las 6 vistas del repositorio (`docs/casos-prueba/evidencias/e4_railway_01`
+a `04`; detalle en `CASOS_PRUEBA_ENTREGA4.md`, sección 4.1).
+
 **Lección:** una base de producción se instala desde los scripts versionados,
 no desde un dump de una base de desarrollo, y después se compara con el
 repositorio (`railway_verificar.sql`).

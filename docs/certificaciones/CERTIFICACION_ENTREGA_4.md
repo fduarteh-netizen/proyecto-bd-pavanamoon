@@ -18,7 +18,8 @@ Entrega 4 cumple con lo siguiente:
 - [x] La base se instala desde cero con `INSTALL.md` sin errores: 19 tablas,
       6 vistas, 1 función, 4 procedimientos y 3 triggers.
 - [x] La base de producción (Railway) es igual al repositorio:
-      `railway_verificar.sql` dio `IGUAL AL REPOSITORIO`.
+      `railway_verificar.sql` dio `IGUAL AL REPOSITORIO` (captura
+      `docs/casos-prueba/evidencias/e4_railway_04_tablas_y_vistas.png`).
 - [x] La aplicación pública funciona con control por rol:
       https://grand-acceptance-production-0ac1.up.railway.app
 - [x] Los casos de prueba están documentados y ejecutados

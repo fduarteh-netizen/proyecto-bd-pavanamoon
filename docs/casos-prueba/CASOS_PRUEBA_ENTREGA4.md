@@ -156,8 +156,17 @@ se comprobó por regresión.
 | Contraseña del administrador | Cambiada |
 | Acceso público de MySQL | Cerrado |
 
-_(Agregar las capturas de `railway_verificar.sql` y del filtro como
-`evidencias/e4_01_railway_verificar.png` y `e4_02_filtro_cliente.png`.)_
+Capturas del panel de Railway (tomadas por el equipo el 27/10/2026):
+
+| Captura | Qué demuestra |
+|---|---|
+| [`e4_railway_01_proyecto_en_linea.png`](./evidencias/e4_railway_01_proyecto_en_linea.png) | El proyecto en producción, con 2/2 servicios en línea (app y MySQL) |
+| [`e4_railway_02_despliegue_desde_github.png`](./evidencias/e4_railway_02_despliegue_desde_github.png) | Despliegue automático desde GitHub (`main`), con el estado "Deployment successful", 1 réplica y Node 18 |
+| [`e4_railway_03_mysql_sin_acceso_publico.png`](./evidencias/e4_railway_03_mysql_sin_acceso_publico.png) | MySQL **sin acceso público** (aparece la opción "Agregar acceso público") y conectado por red privada (`mysql.railway.internal`) |
+| [`e4_railway_04_tablas_y_vistas.png`](./evidencias/e4_railway_04_tablas_y_vistas.png) | Base `railway` con las 19 tablas y solo las 6 vistas del repositorio: ya no aparecen las vistas antiguas eliminadas en la sincronización |
+
+Estas capturas muestran la **infraestructura**, no los flujos de la aplicación;
+las pruebas RW de la sección 4.2 siguen pendientes.
 
 ### 4.2 Prueba manual con datos ficticios (pendiente)
 
