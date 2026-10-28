@@ -602,7 +602,30 @@
         <mxCell id="PV_ESTADO_E" edge="1" parent="1" source="PRESENTACION_VENTA" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#b7950b;" target="PV_ESTADO">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-      </root>
+              <!-- Entrega 4: PEDIDO origina MOVIMIENTO_STOCK (movimiento_stock.pedido_id, sql/ddl/07_ajustes_entrega4.sql) -->
+        <mxCell id="E4_ORIGINA" value="origina" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#2e7d32;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1280" y="796" width="94" height="58" as="geometry" />
+        </mxCell>
+        <mxCell id="E4_ORIGINA_PED" value="(0,N)" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#555555;fontSize=10;" edge="1" parent="1" source="n14" target="E4_ORIGINA">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1440" y="460" as="sourcePoint" />
+            <mxPoint x="1355" y="792" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="E4_ORIGINA_MOV" value="(0,1)" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#555555;fontSize=10;" edge="1" parent="1" source="n15" target="E4_ORIGINA">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1355" y="908" as="sourcePoint" />
+            <mxPoint x="1355" y="850" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <!-- Entrega 3/4: tipo_cliente.porcentaje_descuento (sql/ddl/06_ajustes_entrega3.sql, RF13) -->
+        <mxCell id="E4_TC_DESC" value="porcentaje_descuento" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#b7950b;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1710" y="-336" width="150" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="E4_TC_DESC_E" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#b7950b;" edge="1" parent="1" source="TIPO_CLIENTE" target="E4_TC_DESC">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+</root>
     </mxGraphModel>
   </diagram>
 </mxfile>
